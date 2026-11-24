@@ -1,0 +1,178 @@
+/* Shared control theme owner.
+   Window-scoped PyQt form/button colors and workflow heading surfaces live
+   here; toolbar-specific controls remain in the toolbar lane. */
+/* All-window modernization pass: shared PyQt subwindow controls keep stable
+   desktop-tool sizing here, before the shared clinical theme refines
+   color and hierarchy. */
+.pyqt-main-window{
+  --window-gap:12px;
+  --window-radius:8px;
+  --window-border:#cbd8e6;
+  --window-panel:#ffffff;
+  --window-muted:#f6f9fc;
+  --window-text:#182234;
+  --window-subtle:#52627a;
+  --window-primary:var(--lab-cobalt);
+  --window-control-h:34px;
+  --window-control-h-sm:30px;
+}
+
+.modal-card input:not([type="checkbox"]):not([type="radio"]),
+.modal-card select,
+.modal-card textarea,
+.workspace-tabs input:not([type="checkbox"]):not([type="radio"]),
+.workspace-tabs select,
+.workspace-tabs textarea,
+.pyqt-sidebar-card input:not([type="checkbox"]):not([type="radio"]),
+.pyqt-sidebar-card select{
+  min-block-size:var(--window-control-h)!important;
+  border:1px solid #a9b8ca!important;
+  border-radius:6px!important;
+  background:#fff!important;
+  color:var(--window-text)!important;
+  font-size:var(--fs-base)!important;
+}
+
+.modal-card button,
+.workspace-tabs button,
+.pyqt-sidebar-card button{
+  min-block-size:var(--window-control-h)!important;
+  border-radius:6px!important;
+  font-size:var(--fs-base)!important;
+  font-weight:400!important;
+  white-space:nowrap!important;
+}
+
+.modal-card .primary-action,
+.workspace-tabs .primary-action,
+.pyqt-sidebar-card .primary-action,
+.quick-detection-action-strip [data-testid="pyqt-quick_detection_primary_run"]{
+  border-color:#1d4ed8!important;
+  background:var(--window-primary)!important;
+  color:#fff!important;
+  font-weight:400!important;
+}
+
+.modal-card button:disabled,
+.workspace-tabs button:disabled,
+.pyqt-sidebar-card button:disabled{
+  border-color:#d6dee8!important;
+  background:#eef3f8!important;
+  color:#8b99aa!important;
+  opacity:1!important;
+}
+
+.modal-card h2,
+.modal-card h3,
+.modal-card h4,
+.empty-state-card h2,
+.pyqt-sidebar-card h3,
+.pyqt-sidebar-card h4,
+.panel-card h4{
+  color:var(--window-text)!important;
+  font-weight:400!important;
+  letter-spacing:0!important;
+}
+
+.modal-card strong,
+.modal-card legend,
+.pyqt-sidebar-card strong{
+  font-weight:400!important;
+}
+
+.workflow-panel-heading{
+  min-block-size:64px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  padding:12px 14px!important;
+  border:1px solid var(--window-border)!important;
+  border-radius:var(--window-radius)!important;
+  background:#fbfdff!important;
+}
+
+.workflow-panel-heading h3{
+  margin:0 0 3px!important;
+  font-size:var(--fs-md)!important;
+}
+
+.workflow-panel-heading .helper-copy{
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  font-size:var(--fs-base)!important;
+  line-height:1.3!important;
+}
+
+button,
+input,
+select,
+textarea{
+  font-family:var(--ui-font);
+  letter-spacing:0;
+}
+
+button{
+  min-block-size:30px;
+  border-color:var(--lab-line-strong);
+  border-radius:var(--lab-radius);
+  background:#fbfdfd;
+  color:var(--lab-ink);
+  box-shadow:var(--lab-inset);
+  font-weight:400!important;
+  transition:background .14s ease,border-color .14s ease,box-shadow .14s ease,color .14s ease,transform .14s ease;
+}
+
+button:hover{
+  background:#f1f7f6;
+  border-color:#86aaa5;
+  box-shadow:var(--lab-inset);
+}
+
+button:active{
+  transform:none;
+}
+
+button:disabled{
+  opacity:.54;
+  cursor:not-allowed;
+  transform:none;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible{
+  outline:2px solid var(--lab-cobalt);
+  outline-offset:2px;
+}
+
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea{
+  border:1px solid #b8c8d3;
+  border-radius:7px;
+  background:#fff;
+  color:var(--lab-ink);
+  box-shadow:inset 0 1px 1px rgba(17,24,39,.04);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):focus,
+select:focus,
+textarea:focus{
+  border-color:var(--lab-cobalt);
+  box-shadow:0 0 0 3px rgba(32,90,155,.14),inset 0 1px 1px rgba(17,24,39,.04);
+}
+
+input::placeholder,
+textarea::placeholder{
+  color:#7f8fa3;
+}
+
+input[type="checkbox"],
+input[type="radio"]{
+  accent-color:var(--lab-cobalt);
+}

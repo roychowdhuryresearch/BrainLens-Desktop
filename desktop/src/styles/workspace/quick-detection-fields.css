@@ -1,0 +1,122 @@
+/* Quick Detection fields owner. Owns compact filter and detector parameter grids without touching classifier model controls. */
+.quick-detection-dialog .quick-filter-grid,
+.quick-detection-dialog .quick-classifier-param-grid{
+  grid-template-columns:repeat(auto-fit,minmax(var(--ui-density-field-short-min),var(--ui-density-field-short)))!important;
+  justify-content:start!important;
+  justify-items:stretch!important;
+  align-items:end!important;
+  gap:var(--ui-density-gap-y) var(--ui-density-gap-x)!important;
+}
+
+.quick-detection-dialog .quick-filter-field,
+.quick-detection-dialog .quick-classifier-param-grid label{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  max-inline-size:var(--ui-density-field-short)!important;
+  gap:4px!important;
+  white-space:normal!important;
+}
+
+.quick-detection-dialog .quick-filter-field{
+  grid-template-rows:auto var(--ui-density-control-h)!important;
+}
+
+.quick-detection-dialog [data-testid="pyqt-qd_filters"] .quick-filter-grid{
+  grid-template-columns:repeat(auto-fit,minmax(var(--ui-density-field-short-min),var(--ui-density-field-short)))!important;
+  grid-template-rows:none!important;
+  grid-auto-rows:min-content!important;
+  column-gap:var(--ui-density-gap-x)!important;
+  row-gap:var(--ui-density-gap-y)!important;
+  align-items:end!important;
+}
+
+.quick-detection-dialog [data-testid="pyqt-qd_filters"] .quick-filter-field,
+.quick-detection-dialog [data-testid="pyqt-qd_filters"] .quick-filter-field:nth-child(n){
+  grid-column:auto!important;
+  grid-row:auto!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:auto var(--ui-density-control-h)!important;
+  gap:2px!important;
+}
+
+.quick-detection-dialog .quick-filter-grid input,
+.quick-detection-dialog .quick-classifier-param-grid input{
+  inline-size:100%!important;
+  width:100%!important;
+  max-inline-size:100%!important;
+  block-size:var(--ui-density-control-h)!important;
+  min-block-size:var(--ui-density-control-h)!important;
+  max-block-size:var(--ui-density-control-h)!important;
+  padding-inline:8px!important;
+}
+
+.quick-detection-dialog .detector-field-grid{
+  grid-template-columns:repeat(auto-fit,minmax(calc(var(--quick-detector-input) + 40px),1fr))!important;
+  justify-content:start!important;
+  justify-items:stretch!important;
+  align-items:end!important;
+  gap:var(--ui-density-gap-y) var(--ui-density-gap-x)!important;
+}
+
+.quick-detection-dialog .quick-detector-heading{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:8px!important;
+}
+
+.quick-detection-dialog .quick-detector-field{
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  max-inline-size:var(--ui-density-field-medium)!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:auto var(--ui-density-control-h)!important;
+  align-items:stretch!important;
+  gap:4px!important;
+  white-space:normal!important;
+}
+
+.quick-detection-dialog .quick-detector-field:has([data-testid="pyqt-qd_lsm_parameter_file_input"]){
+  max-inline-size:var(--ui-density-field-long)!important;
+  grid-column:span 2!important;
+}
+
+.quick-detection-dialog .quick-detector-field .inline-field{
+  display:grid!important;
+  inline-size:100%!important;
+  justify-self:stretch!important;
+  grid-template-columns:minmax(0,var(--quick-detector-input)) max-content!important;
+  align-items:center!important;
+  gap:4px!important;
+}
+
+.quick-detection-dialog .quick-detector-field .inline-field input,
+.quick-detection-dialog .quick-detector-field .inline-field select{
+  inline-size:var(--quick-detector-input)!important;
+  width:var(--quick-detector-input)!important;
+  min-inline-size:0!important;
+  max-inline-size:var(--quick-detector-input)!important;
+  block-size:var(--ui-density-control-h)!important;
+  min-block-size:var(--ui-density-control-h)!important;
+  max-block-size:var(--ui-density-control-h)!important;
+}
+
+.quick-detection-dialog .quick-detector-field:has([data-testid="pyqt-qd_lsm_parameter_file_input"]) .inline-field{
+  grid-template-columns:minmax(0,1fr) auto auto!important;
+}
+
+.quick-detection-dialog .quick-detector-field:has([data-testid="pyqt-qd_lsm_parameter_file_input"]) .inline-field input{
+  inline-size:100%!important;
+  width:100%!important;
+  max-inline-size:100%!important;
+}
+
+.quick-detection-grid .quick-detector-field .inline-field>span{
+  inline-size:34px!important;
+  min-inline-size:34px!important;
+  max-inline-size:34px!important;
+}

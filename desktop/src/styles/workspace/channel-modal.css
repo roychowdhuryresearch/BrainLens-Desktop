@@ -1,0 +1,292 @@
+/* Channel/Bipolar dialog owner. Channel selection, selected-channels
+   compare UI, bipolar pair creation, and their footer actions live here instead
+   of foundation, dialog clearance, or generic modal layers. */
+.channel-dialog{
+  width:min(860px,calc(100vw - 48px))!important;
+  min-width:min(580px,calc(100vw - 48px))!important;
+  grid-template-rows:auto auto minmax(120px,.8fr) minmax(180px,1fr) auto!important;
+  overflow:hidden!important;
+}
+
+.bipolar-dialog{
+  width:min(760px,68vw)!important;
+  min-width:min(620px,calc(100vw - 48px))!important;
+  grid-template-rows:auto auto minmax(0,1fr) auto!important;
+  overflow:hidden!important;
+}
+
+.channel-dialog-scroll{
+  min-block-size:0!important;
+  max-block-size:30vh!important;
+  overflow:auto!important;
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:10px 12px!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#f8fafc!important;
+  padding:14px!important;
+}
+
+/* Select-all/none are commands, not state — a quiet button row above the list with a
+   live count, instead of two indeterminate checkboxes that read as contradictory settings. */
+.channel-select-actions{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  margin-block-end:8px!important;
+}
+
+.channel-select-actions-count{
+  margin-inline-end:auto!important;
+  color:var(--lab-muted)!important;
+  font-size:var(--fs-xs)!important;
+  font-variant-numeric:tabular-nums!important;
+}
+
+/* Each row: checkbox · channel name (the scannable token, bold + ellipsized) ·
+   amplitude as right-aligned tabular secondary text. */
+.channel-dialog .channel-choice{
+  display:grid!important;
+  grid-template-columns:16px minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:8px!important;
+  min-inline-size:0!important;
+}
+
+.channel-dialog .channel-choice-name{
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+  font-weight:600!important;
+  color:var(--lab-ink)!important;
+}
+
+.channel-dialog .channel-choice-amp{
+  color:var(--lab-muted)!important;
+  font-size:var(--fs-xs)!important;
+  font-variant-numeric:tabular-nums!important;
+  white-space:nowrap!important;
+}
+
+/* The Compare-To list keeps a plain single-token row. */
+.channel-dialog .compare-channel-scroll .channel-choice{
+  grid-template-columns:16px minmax(0,1fr)!important;
+}
+
+.channel-dialog .channel-choice span{
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+.bipolar-form-card{
+  min-block-size:0!important;
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:10px 12px!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#f8fafc!important;
+  padding:14px!important;
+}
+
+.bipolar-form-card label{
+  display:grid!important;
+  gap:6px!important;
+  min-inline-size:0!important;
+  font-weight:400!important;
+}
+
+.bipolar-form-card select{
+  min-inline-size:0!important;
+  min-block-size:var(--ui-control-h,34px)!important;
+  padding:.4rem!important;
+  border:1px solid #94a3b8!important;
+  border-radius:6px!important;
+  background:#fff!important;
+}
+
+.bipolar-form-card .helper-copy{
+  grid-column:1/-1!important;
+  margin:2px 0 0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  text-align:left!important;
+  color:var(--lab-muted)!important;
+}
+
+.channel-dialog>.helper-copy,
+.bipolar-dialog>.helper-copy{
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  color:var(--lab-muted)!important;
+}
+
+.channel-dialog .selected-channels-dialog{
+  min-block-size:0!important;
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+  gap:10px!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  padding:12px!important;
+}
+
+.channel-dialog .selected-channels-dialog h3{
+  margin:0!important;
+  font-size:var(--fs-md)!important;
+}
+
+.channel-dialog .selected-channels-grid{
+  min-block-size:0!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 20px minmax(0,1fr)!important;
+  align-items:stretch!important;
+  gap:12px!important;
+}
+
+.channel-dialog .selected-channel-list{
+  min-inline-size:0!important;
+  min-block-size:0!important;
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr)!important;
+  gap:8px!important;
+  margin:0!important;
+  padding:10px!important;
+  border:1px solid var(--window-border,var(--lab-line))!important;
+  border-radius:var(--lab-radius)!important;
+  background:#f8fafc!important;
+  font-weight:400!important;
+  letter-spacing:0!important;
+}
+
+.channel-dialog fieldset.selected-channel-list{
+  appearance:none!important;
+}
+
+.channel-dialog fieldset.selected-channel-list legend{
+  padding:0 4px!important;
+  color:var(--window-text,#1f2937)!important;
+  font-size:var(--fs-base)!important;
+  font-weight:400!important;
+}
+
+.channel-dialog .selected-channel-list select,
+.channel-dialog .compare-channel-scroll{
+  min-block-size:0!important;
+  inline-size:100%!important;
+  block-size:100%!important;
+  overflow:auto!important;
+  border-color:var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  padding:8px!important;
+  font-weight:400!important;
+}
+
+.channel-dialog .compare-channel-scroll{
+  display:grid!important;
+  gap:1px!important;
+  max-block-size:none!important;
+  align-content:start!important;
+  padding-block:4px 12px!important;
+}
+
+.channel-dialog .selected-channel-spacer{
+  min-inline-size:20px!important;
+}
+
+.channel-dialog .selected-channels-dialog .helper-copy{
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+
+.channel-dialog .modal-actions,
+.bipolar-dialog .modal-actions{
+  display:flex!important;
+  justify-content:flex-end!important;
+  align-items:center!important;
+  gap:10px!important;
+}
+
+.channel-dialog .modal-actions button,
+.bipolar-dialog .modal-actions button{
+  inline-size:auto!important;
+  min-inline-size:112px!important;
+  max-inline-size:max-content!important;
+  flex:0 0 auto!important;
+}
+
+.bipolar-dialog .modal-actions button{
+  width:124px!important;
+  inline-size:124px!important;
+  min-inline-size:124px!important;
+  max-inline-size:124px!important;
+  flex:0 0 124px!important;
+  font-size:var(--fs-base)!important;
+  padding-inline:6px!important;
+}
+
+@media(max-width:760px){
+  .channel-dialog .selected-channels-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+
+  .channel-dialog .selected-channel-spacer{
+    display:none!important;
+  }
+}
+
+/* The montage editor is the list: each row is an editable pair (Channel 1 | Channel 2 | Remove),
+   with a + at the end to append one. Rows share the dialog grid so the two dropdowns line up with
+   the header, and the whole list scrolls once a full 10-20 montage is loaded. */
+.bipolar-form-card .bipolar-pair-heading,
+.bipolar-form-card .bipolar-pair-list li{
+  grid-column:1/-1!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:8px!important;
+}
+
+.bipolar-form-card .bipolar-pair-heading{
+  font-size:var(--fs-sm,.78rem)!important;
+  opacity:.75!important;
+  padding:0 2px 2px!important;
+}
+
+.bipolar-form-card .bipolar-pair-list{
+  grid-column:1/-1!important;
+  list-style:none!important;
+  margin:0!important;
+  padding:0!important;
+  max-block-size:230px!important;
+  overflow-y:auto!important;
+  display:grid!important;
+  gap:4px!important;
+}
+
+.bipolar-form-card .bipolar-pair-list select{inline-size:100%!important;}
+.bipolar-form-card .bipolar-pair-remove{white-space:nowrap!important;}
+
+.bipolar-form-card .bipolar-pair-add-row{
+  grid-column:1/-1!important;
+  display:flex!important;
+  justify-content:flex-start!important;
+  padding-block-start:2px!important;
+}
+
+.bipolar-form-card .bipolar-pair-add{
+  inline-size:34px!important;
+  min-inline-size:34px!important;
+  font-size:1.05rem!important;
+  line-height:1!important;
+  font-weight:600!important;
+}

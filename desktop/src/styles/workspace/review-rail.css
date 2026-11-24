@@ -1,0 +1,54 @@
+/* Review rail geometry owner. This deliberately avoids the waveform toolbar
+   strip; it only reserves room for the review rail and keeps outer rail
+   containers visible at the Electron 1024x800 minimum window. */
+@media(max-width:1180px){
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>.waveform-header,
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>.loaded-workspace{
+    margin-inline-end:calc(var(--pyqt-main-sidebar-width) + var(--pyqt-main-sidebar-gap))!important;
+  }
+
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]:has(.loaded-workspace[data-workflow-expanded="true"])>.waveform-header,
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]:has(.loaded-workspace[data-workflow-expanded="true"])>.loaded-workspace{
+    margin-inline-end:0!important;
+  }
+}
+
+/* The review rail is absolutely positioned against the shell, but it remains a
+   child of the waveform workspace in the DOM. Keep only the outer containers
+   visible so the rail can sit beside the header/toolbar; waveform pane clipping
+   stays in the waveform pane contract. */
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>.loaded-workspace[data-workflow-expanded="false"],
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .loaded-workspace[data-workflow-expanded="false"]>.waveform-stage{
+  overflow:visible!important;
+}
+
+/* Top-align the review rail with the loaded waveform header. The shared base
+   rule tucks the rail at 58px (under the top toolbar) for the unloaded state;
+   in the loaded waveform review the header (EEG/iEEG Review) sits at 73px, so
+   RUN ACTIONS should start on that same line rather than 15px higher. */
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .waveform-right-sidebar{
+  inset-block-start:73px;
+}
+
+@media(max-width:1180px),(max-height:820px){
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .loaded-workspace[data-workflow-expanded="false"]>.waveform-stage{
+    block-size:100%!important;
+    min-block-size:0!important;
+    grid-template-rows:minmax(0,1fr)!important;
+  }
+
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .loaded-workspace[data-workflow-expanded="false"]>.waveform-stage>.waveform-pane{
+    block-size:100%!important;
+    min-block-size:0!important;
+    max-block-size:100%!important;
+  }
+
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .waveform-right-sidebar{
+    grid-auto-rows:min-content!important;
+    align-items:start!important;
+    align-content:start!important;
+    gap:6px!important;
+    padding-block-end:24px!important;
+    scroll-padding-block-end:24px!important;
+  }
+}

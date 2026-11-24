@@ -1,0 +1,71 @@
+/* Shared clinical theme owner.
+   Global clinical tokens, document typography, and tiny reusable helpers live
+   here. Surface-specific chrome lives in the following shared owner files. */
+:root{
+  --ui-font:"Avenir Next","Aptos","IBM Plex Sans","Segoe UI",sans-serif;
+  --ui-mono:"SFMono-Regular","Cascadia Mono","Liberation Mono",monospace;
+  --lab-ink:#111827;
+  --lab-muted:#546779;
+  --lab-faint:#77889a;
+  --lab-canvas:#edf2f4;
+  --lab-shell:#f6f8f7;
+  --lab-panel:#fcfdfc;
+  --lab-panel-2:#f2f6f5;
+  --lab-line:#d1dbe2;
+  --lab-line-strong:#a8bac5;
+  --lab-graphite:#16212a;
+  --lab-graphite-2:#16181b;
+  --lab-cobalt:#205a9b;
+  --lab-cobalt-2:#174978;
+  --lab-teal:#137f78;
+  --lab-teal-soft:#e5f5f2;
+  --lab-amber:#b66a14;
+  --lab-amber-soft:#fff2dd;
+  --lab-red:#b42318;
+  --lab-green:#247c50;
+  --lab-radius:6px;
+  --lab-shadow:0 1px 1px rgba(17,24,39,.04),0 8px 20px rgba(31,41,55,.06);
+  --lab-inset:inset 0 1px 0 rgba(255,255,255,.78);
+  /* Canonical card elevation. Every card container reads its shadow from this
+     one token so the whole workspace shares a single surface treatment. */
+  --lab-card-shadow:0 1px 1px rgba(20,33,61,.045),var(--lab-inset);
+  /* Type scale — one ramp replaces ~25 ad-hoc rem sizes (design-refinement.md US-003). */
+  --fs-2xs:.6875rem;
+  --fs-xs:.75rem;
+  --fs-sm:.8125rem;
+  --fs-base:.875rem;
+  --fs-md:1rem;
+  --fs-lg:1.25rem;
+  --fs-xl:1.5rem;
+  color:var(--lab-ink);
+  background:var(--lab-canvas);
+  font-family:var(--ui-font);
+}
+
+body{
+  background:var(--lab-canvas);
+  color:var(--lab-ink);
+  font-family:var(--ui-font);
+  font-size:var(--fs-base);
+  letter-spacing:0;
+  text-rendering:optimizeLegibility;
+}
+
+.sr-only{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+  border:0!important;
+}
+
+.select-toggle{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}

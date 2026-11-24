@@ -1,0 +1,210 @@
+/* Quick Detection shell/status owner. This file owns the modal shell,
+   header, close affordance, shared input sizing, checkbox alignment, and runtime
+   status density; grid, rails, fields, classifier/export, and responsive rules
+   live in adjacent Quick Detection owner files. */
+.quick-detection-backdrop{
+  padding:12px!important;
+}
+
+.quick-detection-dialog{
+  --quick-detector-input:104px;
+  position:relative!important;
+  inline-size:min(1720px,calc(100vw - 48px))!important;
+  /* Shrink-wrap to content (capped at the viewport) so the footer hugs the columns
+     instead of stranding the Run row ~300px below the last field in a dead white band. */
+  block-size:auto!important;
+  max-inline-size:none!important;
+  max-block-size:calc(100vh - 64px)!important;
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+  gap:6px!important;
+  padding:16px!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain!important;
+  scrollbar-gutter:stable both-edges!important;
+}
+
+.quick-detection-header{
+  grid-row:1!important;
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:start!important;
+  gap:10px!important;
+  min-block-size:46px!important;
+  max-block-size:none!important;
+  padding:0 72px 8px 0!important;
+  border-block-end:1px solid #d7e0ea!important;
+  overflow:visible!important;
+}
+
+.quick-detection-header h2{
+  margin:0!important;
+  font-size:var(--fs-md)!important;
+  font-weight:400!important;
+  line-height:1.2!important;
+}
+
+.quick-detection-header .helper-copy{
+  margin:.25rem 0 0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  max-inline-size:860px!important;
+}
+
+.quick-detection-header>div,
+.quick-detection-header>div>*{
+  position:static!important;
+  inline-size:auto!important;
+  block-size:auto!important;
+  max-inline-size:none!important;
+  max-block-size:none!important;
+  overflow:visible!important;
+  clip:auto!important;
+  clip-path:none!important;
+  white-space:normal!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+
+.quick-detection-header [data-testid="pyqt-quick_detection_return_hint"]{
+  display:none!important;
+}
+
+.quick-detection-header .modal-window-close-button,
+.quick-detection-header [data-testid="pyqt-quick_detection_close_button"]{
+  position:absolute!important;
+  inset-block-start:0!important;
+  inset-inline-end:0!important;
+  inline-size:auto!important;
+  min-inline-size:58px!important;
+  block-size:var(--ui-control-h)!important;
+  min-block-size:var(--ui-control-h)!important;
+  max-block-size:var(--ui-control-h)!important;
+  overflow:visible!important;
+  clip:auto!important;
+  clip-path:none!important;
+  opacity:1!important;
+  color:#172033!important;
+  background:#f8fafc!important;
+  z-index:40!important;
+}
+
+.quick-detection-dialog input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.quick-detection-dialog select{
+  min-block-size:var(--ui-control-h)!important;
+  block-size:var(--ui-control-h)!important;
+  font-size:var(--fs-base)!important;
+  line-height:1.2!important;
+}
+
+.quick-detection-dialog label:has(>input[type="checkbox"]){
+  display:grid!important;
+  grid-template-columns:16px minmax(0,1fr)!important;
+  gap:6px!important;
+  align-items:center!important;
+  justify-content:start!important;
+}
+
+.quick-detection-dialog label:has(>input[type="checkbox"])>input[type="checkbox"]{
+  inline-size:16px!important;
+  block-size:16px!important;
+  margin:0!important;
+  justify-self:start!important;
+}
+
+.quick-detection-status-card .quick-detection-runtime[data-run-status="idle"]{
+  display:none!important;
+}
+
+.quick-detection-status-card .quick-detection-runtime[data-run-status="running"],
+.quick-detection-status-card .quick-detection-runtime[data-run-status="error"]{
+  position:static!important;
+  inline-size:100%!important;
+  block-size:auto!important;
+  min-block-size:0!important;
+  max-block-size:clamp(96px,18vh,150px)!important;
+  display:grid!important;
+  gap:6px!important;
+  margin-block:6px!important;
+  overflow:auto!important;
+  clip:auto!important;
+  clip-path:none!important;
+  white-space:normal!important;
+  pointer-events:auto!important;
+  overscroll-behavior:contain!important;
+  scrollbar-gutter:stable!important;
+}
+
+.quick-detection-status-card .quick-detection-runtime[data-run-status="running"] .runtime-current,
+.quick-detection-status-card .quick-detection-runtime[data-run-status="error"] .runtime-current{
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  grid-template-columns:minmax(0,1fr)!important;
+}
+
+.quick-detection-status-card .quick-detection-runtime[data-run-status="running"] .runtime-log-list,
+.quick-detection-status-card .quick-detection-runtime[data-run-status="error"] .runtime-log-list{
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  max-block-size:72px!important;
+}
+
+.quick-detection-action-rail .helper-copy:not(.quick-detection-setup-copy){
+  position:absolute!important;
+  inline-size:1px!important;
+  block-size:1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+  border:0!important;
+  padding:0!important;
+  margin:0!important;
+}
+
+.quick-detection-action-rail .quick-detection-setup-copy{
+  max-block-size:54px!important;
+  margin:0 0 5px!important;
+  overflow:hidden!important;
+  color:#475569!important;
+}
+
+.quick-detection-status-card .quick-detection-runtime{
+  max-block-size:clamp(58px,8vh,74px)!important;
+  overflow:auto!important;
+  overscroll-behavior:contain!important;
+  scrollbar-gutter:stable!important;
+}
+
+.quick-detection-status-card .runtime-log-list{
+  max-block-size:46px!important;
+  overflow:auto!important;
+}
+
+.quick-detection-status-card h3{
+  margin-block-end:5px!important;
+}
+
+.quick-detection-status-card .status-line{
+  border:0!important;
+  background:transparent!important;
+  padding:0!important;
+  margin:0!important;
+  font-size:var(--fs-2xs)!important;
+  line-height:1.25!important;
+  color:#475569!important;
+}
+
+.quick-detector-active-page{
+  position:absolute!important;
+  inline-size:1px!important;
+  block-size:1px!important;
+  overflow:hidden!important;
+  clip-path:inset(50%)!important;
+  white-space:nowrap!important;
+  border:0!important;
+  padding:0!important;
+  margin:0!important;
+}

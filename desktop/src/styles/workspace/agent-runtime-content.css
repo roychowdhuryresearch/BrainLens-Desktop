@@ -1,0 +1,160 @@
+/* Agent runtime content owner. Owns current-operation, action list, artifact groups, and compact runtime cards inside the panel. */
+/* Agent panel production content: actions, command history, and artifacts are
+   real runtime surfaces, not placeholder copy. */
+.agent-current-operation{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:8px!important;
+  align-items:center!important;
+  padding:10px!important;
+  margin-bottom:10px!important;
+}
+
+.agent-current-operation strong{
+  min-width:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+.agent-current-operation progress{
+  grid-column:1/-1!important;
+  width:100%!important;
+  height:4px!important;
+  border:0!important;
+  border-radius:999px!important;
+  overflow:hidden!important;
+  background:#dce7eb!important;
+  accent-color:var(--lab-cobalt)!important;
+  appearance:none!important;
+}
+
+.agent-current-operation progress::-webkit-progress-bar{
+  border:0!important;
+  border-radius:999px!important;
+  background:#dce7eb!important;
+}
+
+.agent-current-operation progress::-webkit-progress-value{
+  border-radius:999px!important;
+  background:var(--lab-teal)!important;
+}
+
+.agent-current-operation progress::-moz-progress-bar{
+  border-radius:999px!important;
+  background:var(--lab-teal)!important;
+}
+
+.agent-current-operation .runtime-idle+progress{
+  height:2px!important;
+  background:#e8eef2!important;
+}
+
+.agent-current-operation .runtime-idle+progress::-webkit-progress-bar{
+  background:#e8eef2!important;
+}
+
+.agent-current-operation .runtime-idle+progress::-webkit-progress-value{
+  background:transparent!important;
+}
+
+.agent-current-operation .runtime-idle+progress::-moz-progress-bar{
+  background:transparent!important;
+}
+
+.agent-action-list,
+.agent-artifact-list{
+  display:grid!important;
+  gap:8px!important;
+  margin:0!important;
+  padding:0!important;
+  list-style:none!important;
+}
+
+.agent-action-entry{
+  display:grid!important;
+  grid-template-columns:72px minmax(0,1fr)!important;
+  gap:8px!important;
+  padding:8px!important;
+  font-size:var(--fs-sm)!important;
+}
+
+.agent-action-entry time{
+  color:#5d7084!important;
+}
+
+.agent-action-entry span{
+  overflow-wrap:anywhere!important;
+  color:#1f2a37!important;
+}
+
+/* The shared runtime-feedback theme tints log levels for a DARK surface
+   (pale #bbf7d0 / #fde68a / #fecaca); on the agent panel's LIGHT background those
+   are nearly invisible. Re-color them dark for readable contrast. */
+.agent-action-entry.runtime-log-success span{ color:#15803d!important; }
+.agent-action-entry.runtime-log-warning span{ color:#92600a!important; }
+.agent-action-entry.runtime-log-error span{ color:#b91c1c!important; }
+
+.agent-artifact-group{
+  display:grid!important;
+  gap:7px!important;
+  padding:8px!important;
+}
+
+.agent-artifact-group[data-collapsed="true"]{
+  gap:0!important;
+}
+
+.agent-artifact-group-header{
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:8px!important;
+  border:0!important;
+  background:transparent!important;
+  padding:0!important;
+  text-align:left!important;
+}
+
+.agent-artifact-group-header:hover{
+  background:transparent!important;
+}
+
+.agent-artifact-group ul{
+  display:grid!important;
+  gap:7px!important;
+  margin:0!important;
+  padding:0!important;
+  list-style:none!important;
+}
+
+.agent-artifact-card{
+  display:grid!important;
+  gap:7px!important;
+  padding:10px!important;
+}
+
+.agent-artifact-header{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:8px!important;
+}
+
+.agent-artifact-card p{
+  margin:0!important;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;
+  font-size:var(--fs-xs)!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+.agent-artifact-card small{
+  color:#5d7084!important;
+}
+
+.agent-empty-row{
+  padding:10px!important;
+}

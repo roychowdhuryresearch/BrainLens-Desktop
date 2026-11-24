@@ -1,0 +1,39 @@
+/* Prepare analysis responsive owner. Narrow panel stacking belongs here so
+   analysis, spectral, and ROI base owners stay size-stable. */
+@media(max-width:1320px){
+  .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel,
+  .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+
+  .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.recording-analysis-grid,
+  .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.roi-exclusion-editor,
+  .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.roi-channel-review,
+  .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.button-row,
+  .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.recording-analysis-grid,
+  .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.roi-exclusion-editor,
+  .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.roi-channel-review,
+  .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.button-row{
+    grid-column:1!important;
+    grid-row:auto!important;
+  }
+}
+
+@container (max-width:760px){
+  .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel,
+  .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+
+  .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.recording-analysis-grid,
+  .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.roi-exclusion-editor,
+  .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.roi-channel-review,
+  .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.button-row,
+  .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.recording-analysis-grid,
+  .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.roi-exclusion-editor,
+  .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.roi-channel-review,
+  .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.button-row{
+    grid-column:1!important;
+    grid-row:auto!important;
+  }
+}

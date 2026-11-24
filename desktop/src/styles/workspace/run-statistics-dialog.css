@@ -1,0 +1,168 @@
+/* Run Statistics dialog owner. Run management modal geometry,
+   action-row sizing, comparison-table density, and runtime-tail containment live
+   here instead of foundation, normalization, and generic clearance layers. */
+.modal-backdrop:has(.run-statistics-dialog){
+  align-items:center!important;
+  justify-content:center!important;
+  padding:24px!important;
+  overflow:hidden!important;
+}
+
+.run-statistics-dialog{
+  width:min(980px,calc(100vw - 48px));
+  height:min(760px,calc(100vh - 48px));
+  min-inline-size:0!important;
+  overflow:hidden!important;
+  grid-template-rows:auto auto minmax(0,1fr);
+  box-shadow:0 22px 52px rgba(15,23,42,.3)!important;
+}
+
+.run-statistics-dialog>*,
+.run-statistics-body>*{
+  min-inline-size:0;
+  min-block-size:0;
+}
+
+/* Card interior padding. These .panel-cards (summary, channel ranking, comparison
+   table, runtime tail) are bare sections with 0 padding, so their tables/grids and
+   the runtime-tail's nested bordered box sat flush on the card's 1px border. */
+.run-statistics-dialog .panel-card{
+  padding:10px 12px;
+}
+
+.run-statistics-dialog .event-review-header .modal-window-close-button{
+  position:static!important;
+  inset:auto!important;
+  inline-size:auto!important;
+  min-inline-size:64px!important;
+  block-size:auto!important;
+  min-block-size:var(--window-control-h)!important;
+  margin:0!important;
+}
+
+.run-statistics-dialog .event-review-header .helper-copy{
+  display:none!important;
+}
+
+.run-statistics-dialog .button-row[data-testid="pyqt-run_stats_action_row"]{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(142px,max-content))!important;
+  align-items:center!important;
+  gap:8px!important;
+}
+
+.run-statistics-dialog .button-row[data-testid="pyqt-run_stats_action_row"]>button,
+.run-statistics-dialog .button-row[data-testid="pyqt-run_stats_action_row"]>.inline-field,
+.run-statistics-dialog .button-row[data-testid="pyqt-run_stats_action_row"] select{
+  min-block-size:var(--window-control-h)!important;
+  block-size:var(--window-control-h)!important;
+}
+
+.run-statistics-dialog .button-row[data-testid="pyqt-run_stats_action_row"]>.inline-field{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:stretch!important;
+  font-size:0!important;
+  margin:0!important;
+}
+
+.run-statistics-dialog .button-row[data-testid="pyqt-run_stats_action_row"] select{
+  flex:1 1 auto!important;
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  padding-block:0!important;
+  font-size:var(--fs-sm)!important;
+}
+
+.run-statistics-body{
+  min-height:0;
+  display:grid;
+  grid-template-columns:minmax(0,1.25fr) minmax(260px,.8fr);
+  grid-auto-rows:min-content;
+  gap:10px;
+  overflow:auto;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+}
+
+.run-statistics-management{
+  grid-column:1/-1;
+}
+
+.run-statistics-dialog [data-testid="pyqt-run_stats_summary"]{
+  align-content:start;
+}
+
+.run-progress-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:5px 18px;
+  margin:0 0 10px;
+}
+
+.run-progress-grid>div{
+  min-width:0;
+  display:grid;
+  grid-template-columns:minmax(82px,max-content) minmax(0,1fr);
+  align-items:baseline;
+  column-gap:8px;
+  padding-block:2px;
+  border-bottom:1px solid #edf2f7;
+}
+
+.run-progress-grid dt{
+  color:#5f6f82;
+  font-size:var(--fs-sm);
+  font-weight:400;
+}
+
+.run-progress-grid dd{
+  margin:0;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#16212a;
+  font-size:var(--fs-base);
+}
+
+.run-statistics-dialog [data-testid="pyqt-run_stats_summary"] h3+dl,
+.run-statistics-dialog [data-testid="pyqt-run_stats_summary"] h3+p{
+  margin-top:4px;
+}
+
+.run-statistics-dialog [data-testid="pyqt-run_stats_summary"] .recording-info-grid dt{
+  font-weight:400!important;
+  color:#5f6f82;
+}
+
+.run-statistics-dialog [data-testid="pyqt-run_stats_summary"] .recording-info-grid dd{
+  margin:0;
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+
+.run-artifacts-empty{
+  margin:4px 0 0;
+  color:#5f6f82;
+  font-size:var(--fs-base);
+}
+
+.run-statistics-dialog .data-table input[type="radio"]{
+  accent-color:var(--lab-cobalt);
+}
+
+.run-statistics-dialog .runtime-log-list{
+  max-height:132px;
+}
+
+.run-statistics-dialog .comparison-table th,
+.run-statistics-dialog .comparison-table td{
+  padding:5px 6px;
+}
+
+@media(max-width:900px){
+  .run-statistics-body{
+    grid-template-columns:1fr;
+  }
+}

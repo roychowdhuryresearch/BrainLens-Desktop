@@ -1,0 +1,392 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ieeg-agent.invalid/contracts/agent/ieeg-wire-v1.schema.json",
+  "title": "XLP-IEEG-WIRE-V1",
+  "description": "Fail-closed Agent, UI-command, and user-input envelopes for the iEEG research copilot.",
+  "x-ieeg-contract-id": "XLP-IEEG-WIRE-V1",
+  "x-ieeg-contract-version": "ieeg-agent.v1",
+  "x-ieeg-unknown-field-policy": "reject",
+  "oneOf": [
+    { "$ref": "#/$defs/AgentChatRequest" },
+    { "$ref": "#/$defs/AgentChatResponse" },
+    { "$ref": "#/$defs/UICommandEnvelope" },
+    { "$ref": "#/$defs/UIStateSnapshot" },
+    { "$ref": "#/$defs/UserInputSubmission" }
+  ],
+  "x-ieeg-examples": [
+    {
+      "definition": "AgentChatRequest",
+      "value": {
+        "contract_version": "ieeg-agent.v1",
+        "request_id": "req-20260715-001",
+        "conversation_id": "conv-42",
+        "message": "Run QC on the active recording.",
+        "response_language": "en-US",
+        "actor": {
+          "user_id": "researcher-7",
+          "role": "researcher",
+          "session_id": "session-9"
+        },
+        "resource_scope": {
+          "recording_id": "recording-1",
+          "recording_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "state_revision": "rev-12"
+        },
+        "permissions": ["recording:read", "analysis:run"]
+      }
+    },
+    {
+      "definition": "UICommandEnvelope",
+      "value": {
+        "contract_version": "ieeg-agent.v1",
+        "request_id": "req-20260715-001",
+        "message_id": "msg-17",
+        "conversation_id": "conv-42",
+        "session_id": "session-9",
+        "state_revision": "rev-12",
+        "command_id": "cmd-4c9f",
+        "type": "analysis.run_qc",
+        "reason": "Assess channel quality before detector configuration.",
+        "payload": {},
+        "requires_confirmation": false,
+        "source": "mcp",
+        "resource_scope": {
+          "recording_id": "recording-1",
+          "recording_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "state_revision": "rev-12"
+        },
+        "contract": {
+          "version": "ui-command-receipt-v1",
+          "profile": "analysis",
+          "owner": "analysis-runtime"
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "ContractVersion": {
+      "const": "ieeg-agent.v1"
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "ResponseLanguage": {
+      "type": "string",
+      "enum": ["en-US", "zh-CN"]
+    },
+    "ActorContext": {
+      "type": "object",
+      "required": ["user_id", "role", "session_id"],
+      "properties": {
+        "user_id": { "$ref": "#/$defs/Identifier" },
+        "role": {
+          "type": "string",
+          "enum": ["researcher", "clinician", "reviewer", "administrator", "service"]
+        },
+        "session_id": { "$ref": "#/$defs/Identifier" },
+        "tenant_id": { "$ref": "#/$defs/Identifier" }
+      },
+      "additionalProperties": false
+    },
+    "ResourceScope": {
+      "type": "object",
+      "required": ["state_revision"],
+      "properties": {
+        "recording_id": { "$ref": "#/$defs/Identifier" },
+        "recording_sha256": {
+          "type": "string",
+          "pattern": "^[A-Fa-f0-9]{64}$"
+        },
+        "run_id": { "$ref": "#/$defs/Identifier" },
+        "event_id": { "$ref": "#/$defs/Identifier" },
+        "project_id": { "$ref": "#/$defs/Identifier" },
+        "state_revision": { "$ref": "#/$defs/Identifier" }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "required": ["run_id"] },
+          "then": { "required": ["recording_id"] }
+        },
+        {
+          "if": { "required": ["event_id"] },
+          "then": { "required": ["run_id", "recording_id"] }
+        }
+      ]
+    },
+    "AttachmentInput": {
+      "type": "object",
+      "required": ["attachment_id", "filename", "content_type", "sha256", "size_bytes"],
+      "properties": {
+        "attachment_id": { "$ref": "#/$defs/Identifier" },
+        "filename": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "content_type": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "size_bytes": { "type": "integer", "minimum": 0 },
+        "storage_ref": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "AgentChatRequest": {
+      "type": "object",
+      "required": [
+        "contract_version",
+        "request_id",
+        "conversation_id",
+        "message",
+        "response_language",
+        "actor",
+        "resource_scope",
+        "permissions"
+      ],
+      "properties": {
+        "contract_version": { "$ref": "#/$defs/ContractVersion" },
+        "request_id": { "$ref": "#/$defs/Identifier" },
+        "conversation_id": { "$ref": "#/$defs/Identifier" },
+        "state_revision": { "$ref": "#/$defs/Identifier" },
+        "message": { "type": "string", "minLength": 1, "pattern": "\\S" },
+        "response_language": { "$ref": "#/$defs/ResponseLanguage" },
+        "actor": { "$ref": "#/$defs/ActorContext" },
+        "resource_scope": { "$ref": "#/$defs/ResourceScope" },
+        "permissions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "allowed_skills": {
+          "description": "null means the service policy applies; [] means no skills are allowed.",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/Identifier" }
+            }
+          ]
+        },
+        "allowed_mcp_servers": {
+          "description": "null means the service policy applies; [] explicitly disables MCP servers.",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/Identifier" }
+            }
+          ]
+        },
+        "attachments": {
+          "type": "array",
+          "maxItems": 16,
+          "items": { "$ref": "#/$defs/AttachmentInput" }
+        },
+        "idempotency_key": { "type": "string", "minLength": 8, "maxLength": 256 }
+      },
+      "additionalProperties": false
+    },
+    "AgentChatResponse": {
+      "type": "object",
+      "required": [
+        "contract_version",
+        "request_id",
+        "conversation_id",
+        "message_id",
+        "outcome",
+        "content",
+        "response_language",
+        "action_receipts"
+      ],
+      "properties": {
+        "contract_version": { "$ref": "#/$defs/ContractVersion" },
+        "request_id": { "$ref": "#/$defs/Identifier" },
+        "conversation_id": { "$ref": "#/$defs/Identifier" },
+        "message_id": { "$ref": "#/$defs/Identifier" },
+        "outcome": { "type": "string", "enum": ["completed", "cancelled", "failed"] },
+        "content": { "type": "string" },
+        "response_language": { "$ref": "#/$defs/ResponseLanguage" },
+        "research_output": { "$ref": "research-output-v1.schema.json#/$defs/ResearchOutput" },
+        "action_receipts": {
+          "type": "array",
+          "items": { "$ref": "action-receipt-v1.schema.json#/$defs/ActionReceipt" }
+        },
+        "ui_commands": {
+          "description": "Compatibility commands emitted during the turn; command presence is not execution proof.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/UICommandEnvelope" }
+        },
+        "error": { "$ref": "#/$defs/PublicError" }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "outcome": { "const": "completed" } }, "required": ["outcome"] },
+          "then": { "not": { "required": ["error"] } },
+          "else": { "required": ["error"] }
+        }
+      ]
+    },
+    "UICommandType": {
+      "type": "string",
+      "enum": [
+        "workspace.open_panel",
+        "workspace.show_toast",
+        "workspace.reset_waveform_view",
+        "agent.show_trace_step",
+        "recording.open",
+        "recording.inspect_metadata",
+        "recording.infer_roi",
+        "recording.select_channel",
+        "recording.set_channel_visibility",
+        "analysis.run_qc",
+        "analysis.compute_spectral_profile",
+        "analysis.prepare_recording",
+        "detection.plan",
+        "detection.set_parameters",
+        "detection.run",
+        "detection.rank_candidates",
+        "severity.run",
+        "detection.select_run",
+        "detection.show_candidate_ranking",
+        "detection.focus_top_candidate_channel",
+        "classification.set_parameters",
+        "classification.run",
+        "waveform.set_viewport",
+        "waveform.focus_channel",
+        "waveform.center_event",
+        "waveform.set_amplitude_scale",
+        "waveform.set_display",
+        "waveform.focus_hotspot_channels",
+        "events.select_event",
+        "events.move_cursor",
+        "events.stage_annotation",
+        "events.clear_staged_annotation",
+        "review.focus_event",
+        "review.open_event",
+        "review.open_comparison",
+        "review.accept_run",
+        "artifacts.open_report",
+        "export.session",
+        "export.workbook",
+        "export.report",
+        "batch.create",
+        "batch.run",
+        "detection.create_consensus_run",
+        "review.group_overlaps",
+        "project.save",
+        "project.open"
+      ]
+    },
+    "UICommandEnvelope": {
+      "type": "object",
+      "required": [
+        "contract_version",
+        "request_id",
+        "conversation_id",
+        "command_id",
+        "type",
+        "reason",
+        "payload",
+        "requires_confirmation",
+        "source"
+      ],
+      "properties": {
+        "contract_version": { "$ref": "#/$defs/ContractVersion" },
+        "request_id": { "$ref": "#/$defs/Identifier" },
+        "message_id": { "$ref": "#/$defs/Identifier" },
+        "conversation_id": { "$ref": "#/$defs/Identifier" },
+        "session_id": { "$ref": "#/$defs/Identifier" },
+        "state_revision": { "$ref": "#/$defs/Identifier" },
+        "command_id": { "$ref": "#/$defs/Identifier" },
+        "type": { "$ref": "#/$defs/UICommandType" },
+        "reason": { "type": "string", "minLength": 1, "pattern": "\\S" },
+        "payload": { "type": "object" },
+        "requires_confirmation": { "type": "boolean" },
+        "source": { "type": "string", "enum": ["mcp", "agent"] },
+        "contract": {
+          "description": "Resolved broker policy accompanying current v1 commands.",
+          "type": "object",
+          "additionalProperties": true
+        },
+        "deduplicated": { "type": "boolean" },
+        "recovered_after_restart": { "type": "boolean" },
+        "idempotency_key_sha256": {
+          "type": "string",
+          "pattern": "^[A-Fa-f0-9]{64}$"
+        },
+        "idempotency_key": { "type": "string", "minLength": 8, "maxLength": 256 },
+        "actor": { "$ref": "#/$defs/ActorContext" },
+        "resource_scope": { "$ref": "#/$defs/ResourceScope" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "UIStateSnapshot": {
+      "type": "object",
+      "required": ["contract_version", "session_id", "state_revision", "active_surface", "available_command_types"],
+      "properties": {
+        "contract_version": { "$ref": "#/$defs/ContractVersion" },
+        "session_id": { "$ref": "#/$defs/Identifier" },
+        "state_revision": { "$ref": "#/$defs/Identifier" },
+        "active_surface": {
+          "type": "string",
+          "enum": ["workspace", "prepare", "detect", "classify", "review", "agent", "artifact"]
+        },
+        "resource_scope": { "$ref": "#/$defs/ResourceScope" },
+        "channels": { "type": "array", "items": { "type": "string" } },
+        "run_ids": { "type": "array", "items": { "$ref": "#/$defs/Identifier" } },
+        "event_ids": { "type": "array", "items": { "$ref": "#/$defs/Identifier" } },
+        "available_command_types": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/UICommandType" }
+        },
+        "reported_at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "UserInputSubmission": {
+      "type": "object",
+      "required": ["contract_version", "conversation_id", "input_id", "actor", "decision"],
+      "properties": {
+        "contract_version": { "$ref": "#/$defs/ContractVersion" },
+        "conversation_id": { "$ref": "#/$defs/Identifier" },
+        "input_id": { "$ref": "#/$defs/Identifier" },
+        "actor": { "$ref": "#/$defs/ActorContext" },
+        "decision": { "type": "string", "enum": ["approved", "rejected", "cancelled", "submitted"] },
+        "value": true,
+        "command_id": { "$ref": "#/$defs/Identifier" },
+        "state_revision": { "$ref": "#/$defs/Identifier" }
+      },
+      "additionalProperties": false
+    },
+    "PublicError": {
+      "type": "object",
+      "required": ["code", "message", "retryable"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "invalid_request",
+            "contract_version_mismatch",
+            "scope_missing",
+            "scope_conflict",
+            "permission_denied",
+            "approval_required",
+            "cancelled",
+            "timeout",
+            "execution_failed",
+            "terminal_event_missing",
+            "internal_error"
+          ]
+        },
+        "message": { "type": "string", "minLength": 1 },
+        "retryable": { "type": "boolean" },
+        "correlation_id": { "$ref": "#/$defs/Identifier" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

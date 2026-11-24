@@ -1,0 +1,461 @@
+/* Event Review detail owner. This file owns the modal
+   shell, plot column, and base detail-card structure; side-stack ordering,
+   view controls, compact controls, and right-rail flow live in adjacent Event
+   Review owners. */
+/* Event Review main layout owner: migrated out of the historical
+   modern-subwindow layer so the review modal has one owner. */
+.modal-backdrop:has(.event-review-dialog){
+  align-items:center!important;
+  justify-content:center!important;
+  padding:8px!important;
+  overflow:hidden!important;
+}
+
+.event-review-dialog{
+  inline-size:calc(100vw - 16px)!important;
+  block-size:calc(100vh - 16px)!important;
+  max-inline-size:none!important;
+  max-block-size:none!important;
+  display:grid!important;
+  grid-template-rows:40px minmax(0,1fr)!important;
+  gap:8px!important;
+  padding:10px!important;
+  overflow:hidden!important;
+  background:#f6f9fc!important;
+  box-shadow:0 22px 52px rgba(15,23,42,.3)!important;
+}
+
+.event-review-header{
+  grid-row:1!important;
+  position:static!important;
+  inset:auto!important;
+  inline-size:auto!important;
+  block-size:auto!important;
+  min-block-size:0!important;
+  max-inline-size:none!important;
+  max-block-size:none!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  padding:0!important;
+  margin:0!important;
+  overflow:visible!important;
+  clip:auto!important;
+  clip-path:none!important;
+  pointer-events:auto!important;
+  background:transparent!important;
+  border:0!important;
+}
+
+.event-review-header>div:first-child{
+  min-inline-size:0!important;
+  display:flex!important;
+  align-items:center!important;
+}
+
+.event-review-header h2{
+  position:static!important;
+  inline-size:auto!important;
+  block-size:auto!important;
+  margin:0!important;
+  overflow:hidden!important;
+  clip:auto!important;
+  clip-path:none!important;
+  white-space:nowrap!important;
+  text-overflow:ellipsis!important;
+  visibility:visible!important;
+  font-size:var(--fs-md)!important;
+  line-height:1.1!important;
+}
+
+.event-review-header .annotation-menu-actions{
+  position:static!important;
+  inset:auto!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:6px!important;
+  flex-wrap:nowrap!important;
+}
+
+.event-review-header .annotation-menu-actions button{
+  min-block-size:var(--window-control-h-sm)!important;
+  padding-inline:10px!important;
+}
+
+.event-review-header .modal-window-close-button,
+.event-review-header [data-testid="pyqt-annotation_close_button"]{
+  position:fixed!important;
+  inset-block-start:8px!important;
+  inset-inline-end:12px!important;
+  inline-size:auto!important;
+  block-size:28px!important;
+  overflow:visible!important;
+  clip:auto!important;
+  clip-path:none!important;
+  color:#172033!important;
+  background:#f8fafc!important;
+  border:1px solid #9fb0c1!important;
+}
+
+.event-review-header [data-testid="pyqt-actionStart_Over"]{
+  position:fixed!important;
+  inset-block-start:-100px!important;
+  inset-inline-start:-100px!important;
+  inline-size:1px!important;
+  block-size:1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  clip-path:inset(50%)!important;
+  white-space:nowrap!important;
+  pointer-events:none!important;
+}
+
+.event-review-summary{
+  display:none!important;
+}
+
+.event-review-body{
+  grid-row:2!important;
+  min-block-size:0!important;
+  block-size:100%!important;
+  max-block-size:100%!important;
+  display:grid!important;
+  grid-template-columns:minmax(640px,1.25fr) minmax(390px,.75fr)!important;
+  gap:10px!important;
+  overflow:hidden!important;
+}
+
+.event-review-left-panel{
+  min-inline-size:0!important;
+  min-block-size:0!important;
+  block-size:100%!important;
+  max-block-size:100%!important;
+  display:grid!important;
+  grid-template-rows:minmax(110px,1fr) minmax(110px,1fr) minmax(150px,1.3fr) minmax(150px,1.3fr) 20px minmax(38px,auto)!important;
+  gap:8px!important;
+  overflow:hidden!important;
+  contain:layout paint!important;
+}
+
+.event-review-left-panel .event-table{
+  display:none!important;
+}
+
+.event-review-left-panel .event-table{
+  border-color:var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+}
+
+.annotation-side-stack .annotation-progress-card,
+.annotation-side-stack .prediction-scope-card,
+.annotation-side-stack .annotation-info-card{
+  border-color:var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  box-shadow:var(--lab-card-shadow)!important;
+}
+
+.event-review-dialog .annotation-select-row,
+.annotation-side-stack .prediction-scope-card label,
+.annotation-side-stack .frequency-controls label{
+  color:var(--lab-muted)!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:400!important;
+  letter-spacing:.01em!important;
+}
+
+.event-review-dialog .review-svg{
+  display:block!important;
+  inline-size:100%!important;
+  block-size:100%!important;
+  min-block-size:0!important;
+  shape-rendering:geometricPrecision!important;
+}
+
+/* Event metadata grids were missing display:grid, so dt/dd fell back to a
+   stacked default <dl> (label on its own line, value below, big margins) -
+   hugely sparse. Make them compact two-column: muted label | value, tight rows. */
+/* Two-column Event Information: a real row-paired grid of stacked label/value
+   fields, so the two columns line up by row (no ragged column-fill imbalance).
+   Each .info-field stacks its muted label over the value. */
+.event-review-dialog .recording-info-grid{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  column-gap:16px!important;
+  row-gap:7px!important;
+  align-items:start!important;
+  margin:0!important;
+}
+.event-review-dialog .recording-info-grid .info-field{
+  display:flex!important;
+  flex-direction:column!important;
+  min-inline-size:0!important;
+}
+.event-review-dialog .recording-info-grid dt{
+  margin:0!important;
+  white-space:nowrap!important;
+  color:#7587a0!important;
+  font-weight:400!important;
+  font-size:var(--fs-xs)!important;
+  letter-spacing:.01em!important;
+  line-height:1.25!important;
+}
+.event-review-dialog .recording-info-grid dd{
+  margin:0!important;
+  min-inline-size:0!important;
+  line-height:1.2!important;
+  overflow-wrap:anywhere!important;
+  font-size:var(--fs-sm)!important;
+  color:var(--lab-ink)!important;
+}
+
+/* Event-id heading: de-emphasized to a small muted caption (was a bare event-id
+   string styled as a prominent h3). */
+.event-review-dialog .event-detail-card>h3{
+  margin:0!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:400!important;
+  color:#8493a8!important;
+  letter-spacing:.03em!important;
+  line-height:1.2!important;
+}
+
+/* Notes: label stacked above a normal-height field (was "Notes" inline beside a
+   cramped 2-line box). */
+.event-review-dialog .event-detail-card>label:not(.annotation-select-row){
+  display:flex!important;
+  flex-direction:column!important;
+  gap:4px!important;
+  color:var(--lab-muted)!important;
+  font-size:var(--fs-xs)!important;
+}
+
+/* Event Information sits near the top (order:2, just under Progress) per the
+   workflow reorder — "what event am I looking at" before the label/commit
+   controls. Order owner is event-review-right-column-flow.css; kept in sync
+   here. */
+.event-review-dialog .event-detail-card>[data-testid="pyqt-groupBox"]{
+  order:2!important;
+}
+
+.event-review-left-panel [data-testid="pyqt-AnnotationPlot"],
+.event-review-left-panel [data-testid="pyqt-FilteredTracingPlot"],
+.event-review-left-panel [data-testid="pyqt-TimeFrequencyPlot"],
+.event-review-left-panel [data-testid="pyqt-FFT_layout"]{
+  min-block-size:0!important;
+  block-size:100%!important;
+  max-block-size:none!important;
+  display:grid!important;
+  grid-template-rows:20px minmax(0,1fr)!important;
+  padding:8px!important;
+  overflow:hidden!important;
+}
+
+.event-review-left-panel [data-testid="pyqt-AnnotationPlot"]{order:1!important}
+.event-review-left-panel [data-testid="pyqt-FilteredTracingPlot"]{order:2!important}
+.event-review-left-panel [data-testid="pyqt-TimeFrequencyPlot"]{order:3!important}
+.event-review-left-panel [data-testid="pyqt-FFT_layout"]{order:5!important}
+
+/* Plot titles sit in a fixed 20px grid row inside an overflow-hidden card.
+   Without a sizing rule the default h3 metrics overflow the row, so the card
+   shaved the title tops. Pin font-size + a 20px line-height so the title is
+   centered in its row. */
+.event-review-left-panel .annotation-plot-card>h3,
+.event-review-left-panel .annotation-plot-card .fft-heading,
+.event-review-left-panel .annotation-plot-card .fft-heading h3{
+  margin:0!important;
+  font-size:var(--fs-sm)!important;
+  line-height:20px!important;
+  font-weight:600!important;
+}
+.event-review-left-panel .annotation-plot-card>h3,
+.event-review-left-panel .annotation-plot-card .fft-heading h3{
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.event-review-left-panel .annotation-plot-card .fft-heading{
+  display:flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  overflow:hidden!important;
+}
+
+.event-review-left-panel .annotation-hover-readout{
+  order:6!important;
+  min-block-size:20px!important;
+  margin:0!important;
+  overflow:hidden!important;
+}
+
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"]{
+  order:7!important;
+  min-block-size:38px!important;
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  gap:4px 6px!important;
+  padding:3px!important;
+  overflow:visible!important;
+  position:static!important;
+}
+
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] button{
+  min-block-size:28px!important;
+  block-size:28px!important;
+  padding-inline:7px!important;
+  font-size:var(--fs-sm)!important;
+}
+
+.event-detail-card{
+  min-inline-size:0!important;
+  min-block-size:0!important;
+  block-size:100%!important;
+  max-block-size:100%!important;
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr)!important;
+  gap:8px!important;
+  padding:10px!important;
+  overflow:hidden!important;
+}
+
+.event-detail-card>h3{
+  margin:0!important;
+  min-inline-size:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:var(--fs-md)!important;
+}
+
+.annotation-bottom-help-footer{
+  display:none!important;
+}
+
+@media(max-width:760px){
+  .event-review-dialog{
+    inline-size:calc(100vw - 12px)!important;
+    block-size:calc(100vh - 12px)!important;
+    grid-template-rows:38px minmax(0,1fr)!important;
+    gap:6px!important;
+    padding:8px!important;
+  }
+
+  .event-review-header .annotation-menu-actions [data-testid="pyqt-actionStart_Over"]{
+    display:none!important;
+  }
+
+  .event-review-body{
+    grid-template-columns:1fr!important;
+    grid-template-rows:auto minmax(0,1fr)!important;
+    overflow:auto!important;
+    scrollbar-gutter:stable!important;
+  }
+
+  .event-detail-card{
+    order:1!important;
+    block-size:auto!important;
+    max-block-size:none!important;
+    overflow:visible!important;
+  }
+
+  .event-detail-card>h3,
+  .event-review-dialog .annotation-side-stack .frequency-controls,
+  .event-review-dialog .annotation-side-stack .annotation-info-card,
+  .event-review-dialog .event-detail-card textarea,
+  .event-review-dialog .event-detail-card .status-line{
+    display:none!important;
+  }
+
+  .annotation-side-stack{
+    grid-template-columns:1fr!important;
+    overflow:visible!important;
+    max-block-size:none!important;
+  }
+
+  .annotation-side-stack .annotation-navigation-row{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+
+  .event-review-left-panel{
+    order:2!important;
+    block-size:auto!important;
+    max-block-size:none!important;
+    grid-template-rows:180px 180px 240px 180px 20px 40px!important;
+    overflow:visible!important;
+    contain:none!important;
+  }
+
+  .event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"]{
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    block-size:auto!important;
+    max-block-size:none!important;
+  }
+
+  .event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] .select-toggle{
+    grid-column:1 / -1!important;
+    justify-content:start!important;
+  }
+}
+
+/* --- Right-column type scale + card-surface unification (consistency pass) ---
+   The detail column had ~9 distinct font sizes and four different "card"
+   surfaces (soft gradient cards, flat-white cards, and a heavy-floating action
+   bar). Collapse type into a 3-tier scale — section title .82rem/600, value
+   .82rem/400, muted label .72rem — and give every grouping surface ONE soft
+   card so they sit at the same elevation (the Save bar matches in its own owner
+   file, event-review-detail-actions.css). */
+
+/* Tier 1 — section titles. The h4s ("Event Information", "Event Feature
+   Summary") were unstyled, inheriting the ~14px body size with no weight, so
+   they dwarfed every neighbour; pin them to one title size + weight. */
+.event-review-dialog .event-detail-card h4{
+  margin:0!important;
+  font-size:var(--fs-sm)!important;
+  font-weight:600!important;
+  color:var(--lab-graphite)!important;
+  letter-spacing:0!important;
+  line-height:1.2!important;
+}
+
+/* Tier 2 — values + interactive controls all read at .82rem (selects were
+   .88rem, the feature table .86rem, the info value column inherited ~14px). */
+.event-review-dialog .event-detail-card select,
+.event-review-dialog .event-detail-card input:not([type="checkbox"]):not([type="radio"]),
+.event-review-dialog .event-detail-card textarea,
+.event-review-dialog .event-detail-card button,
+.event-review-dialog .event-detail-card .data-table td{
+  font-size:var(--fs-sm)!important;
+}
+
+/* Tier 3 — captions/labels share .72rem muted (the feature table header, the
+   status line, and the match-count helper were all larger + louder than the
+   field labels they sit beside). */
+.event-review-dialog .event-detail-card .data-table th{
+  font-size:var(--fs-xs)!important;
+}
+.event-review-dialog .event-detail-card>.status-line,
+.event-review-dialog .event-detail-card .helper-copy{
+  font-size:var(--fs-xs)!important;
+  color:var(--lab-muted)!important;
+}
+
+/* One soft card for every grouping surface in the column. Event Information
+   ([data-testid="pyqt-groupBox"]) and Feature Summary sit OUTSIDE
+   .annotation-side-stack, so the side-stack card rule earlier in this file never
+   reached them and workflow-card-visuals.css left them flat white; this 3-class
+   rule wins over both and unifies all four to the same border + gradient +
+   gentle shadow. */
+.event-review-dialog .event-detail-card .annotation-progress-card,
+.event-review-dialog .event-detail-card [data-testid="pyqt-groupBox"],
+.event-review-dialog .event-detail-card .prediction-scope-card,
+.event-review-dialog .event-detail-card .event-feature-summary-card{
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  box-shadow:var(--lab-card-shadow)!important;
+  padding:8px!important;
+}

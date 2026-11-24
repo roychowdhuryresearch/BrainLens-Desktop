@@ -1,0 +1,127 @@
+/* Classify source card owner.
+   Owns Local and Hub model source cards, model path/card rows, and hosted-model
+   banner presentation. */
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-source-card{
+  grid-area:local!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  box-shadow:var(--lab-card-shadow)!important;
+  padding:6px!important;
+  display:grid!important;
+  gap:6px!important;
+  overflow:visible!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-source-card[data-testid="pyqt-groupBox_2"]{
+  grid-area:hub!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-source-card h3{
+  margin:0!important;
+  color:var(--lab-ink)!important;
+  font-size:var(--fs-md)!important;
+  font-weight:400!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-hub-banner{
+  min-block-size:44px!important;
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  gap:5px!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#f6faf9!important;
+  color:#233646!important;
+  padding:6px 8px!important;
+  text-align:left!important;
+  box-shadow:none!important;
+  overflow:hidden!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-hub-banner strong{
+  flex:0 0 auto!important;
+  color:#172331!important;
+  font-size:var(--fs-base)!important;
+  font-weight:400!important;
+  line-height:1.2!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-hub-banner span{
+  min-block-size:24px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  border:1px solid #c5d6dc!important;
+  border-radius:999px!important;
+  background:#fff!important;
+  color:#2f5963!important;
+  padding:0 8px!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:400!important;
+  line-height:1!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-hub-banner em{
+  flex:1 1 200px!important;
+  min-inline-size:180px!important;
+  color:#657789!important;
+  font-size:var(--fs-xs)!important;
+  font-style:normal!important;
+  font-weight:400!important;
+  line-height:1.2!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-source-list{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  justify-content:start!important;
+  gap:6px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-source-list .model-source-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 104px!important;
+  justify-content:start!important;
+  align-items:end!important;
+  gap:6px!important;
+  max-inline-size:470px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-source-card label{
+  display:grid!important;
+  gap:4px!important;
+  min-inline-size:0!important;
+  max-inline-size:470px!important;
+  color:var(--lab-muted)!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:400!important;
+  letter-spacing:0!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-source-list .model-source-row label{
+  max-inline-size:none!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-source-list .model-source-row button{
+  inline-size:104px!important;
+  min-inline-size:104px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-source-card input{
+  inline-size:100%!important;
+  width:100%!important;
+  min-inline-size:0!important;
+  block-size:var(--ui-density-control-h)!important;
+  min-block-size:var(--ui-density-control-h)!important;
+  max-block-size:var(--ui-density-control-h)!important;
+  border-color:var(--lab-line-strong)!important;
+  border-radius:var(--ui-control-radius)!important;
+  background:#fff!important;
+  color:var(--lab-ink)!important;
+  box-shadow:none!important;
+  padding-inline:8px!important;
+}

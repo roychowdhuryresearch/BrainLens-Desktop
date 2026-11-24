@@ -1,0 +1,75 @@
+/* Classify workbench layout owner.
+   Owns only the Classify tab canvas, grid scaffold, and section heading.
+   Execution card, source cards, parameters, stack summary, and responsive
+   folding live in adjacent Classify owner files. */
+.workspace-tab-panel[data-active-tab="Classify"] .classify-layout{
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-auto-rows:min-content!important;
+  gap:6px!important;
+  padding:6px!important;
+  background:#f4f7f8!important;
+  overflow:auto!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-workbench-grid{
+  --classify-stack-column-max:min(480px,calc(100vw - var(--agent-rail-width,48px) - 390px));
+  min-inline-size:0!important;
+  max-inline-size:100%!important;
+  inline-size:100%!important;
+  display:grid!important;
+  /* Single-column workflow: setup, stack, then the Custom-only source cards
+     stack vertically in one centered, width-capped column (was setup|stack). */
+  grid-template-columns:minmax(0,400px)!important;
+  grid-template-areas:
+    "setup"
+    "stack"
+    "local"
+    "hub"!important;
+  justify-content:start!important;
+  align-content:start!important;
+  align-items:start!important;
+  gap:8px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classify-panel-heading{
+  min-block-size:28px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  justify-self:start!important;
+  inline-size:max-content!important;
+  max-inline-size:100%!important;
+  gap:6px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  padding:0 2px!important;
+  box-shadow:none!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classify-panel-heading h3{
+  margin:0!important;
+  color:var(--lab-ink)!important;
+  font-size:var(--fs-md)!important;
+  font-weight:400!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classify-panel-heading .helper-copy{
+  display:none!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classify-panel-heading .status-pill{
+  min-block-size:20px!important;
+  padding:0 7px!important;
+  border-color:#c5d6dc!important;
+  background:#f6faf9!important;
+  color:#294d58!important;
+  font-weight:400!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classify-layout>.classify-panel-heading,
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-workbench-grid>*{
+  grid-column:auto!important;
+  min-inline-size:0!important;
+  min-block-size:0!important;
+}

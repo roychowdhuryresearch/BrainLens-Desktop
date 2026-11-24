@@ -1,0 +1,100 @@
+{
+  "version": "1.0.0",
+  "production_roots": [
+    "runtime/",
+    "ui_mcp/",
+    "desktop/src/",
+    "desktop/electron/",
+    "pyhfo/src/",
+    "contracts/"
+  ],
+  "capabilities": {
+    "IC-RUNTIME": {
+      "document": "runtime/docs/contracts/runtime-orchestration.md",
+      "proofs": ["tests/test_agent_orchestrator.py", "tests/test_agent_process_response.py", "tests/test_completion_contract.py", "tests/test_stream_contract.py", "desktop/tests/agent-semantic-stream-contract.test.js"]
+    },
+    "IC-ACTION": {
+      "document": "runtime/docs/contracts/action-hitl.md",
+      "proofs": ["tests/test_agent_orchestrator.py", "tests/test_ui_action_contract.py", "tests/test_ui_mcp_server_contract.py", "tests/test_operation_safety_contract.py", "desktop/tests/agent-ui-command-contract.test.js", "desktop/tests/python-backend-runtime.test.js"]
+    },
+    "IC-EVIDENCE": {
+      "document": "runtime/docs/contracts/clinical-evidence.md",
+      "proofs": ["tests/test_clinical_evidence_contract.py", "tests/test_pyhfo_authority_guard.py"]
+    },
+    "IC-SESSION": {
+      "document": "runtime/docs/contracts/recording-session.md",
+      "proofs": ["tests/test_ui_command_context.py"]
+    },
+    "IC-ANALYSIS": {
+      "document": "runtime/docs/contracts/analysis-detection.md",
+      "proofs": ["tests/test_pyhfo_tools.py", "tests/test_pyhfo_authority_guard.py", "desktop/tests/prepare-controls-nyquist.test.js"]
+    },
+    "IC-ARTIFACT": {
+      "document": "runtime/docs/contracts/artifact-provenance.md",
+      "proofs": ["tests/test_ui_action_contract.py", "tests/test_clinical_evidence_contract.py"]
+    },
+    "IC-HISTORY": {
+      "document": "runtime/docs/contracts/history-observability.md",
+      "proofs": ["tests/test_runtime_finalization.py", "tests/test_history_atomic_completion.py", "tests/test_history_redaction_contract.py", "tests/test_ui_action_contract.py"]
+    },
+    "IC-CONTROL": {
+      "document": "runtime/docs/contracts/control-evaluation.md",
+      "proofs": ["tests/test_operation_safety_contract.py", "tests/test_product_agent_eval.py"]
+    }
+  },
+  "rules": [
+    {"glob": "docs/implementation-notes/2026-11-24-public-release.md", "owners": ["IC-RUNTIME", "IC-CONTROL"]},
+    {"glob": "desktop/scripts/lib/qa-paths.mjs", "owners": ["IC-SESSION", "IC-CONTROL"]},
+    {"glob": "tests/test_runtime_robustness.py", "owners": ["IC-RUNTIME"]},
+    {"glob": "runtime/docs/contracts/runtime-orchestration.md", "owners": ["IC-RUNTIME"]},
+    {"glob": "runtime/docs/contracts/action-hitl.md", "owners": ["IC-ACTION"]},
+    {"glob": "runtime/docs/contracts/clinical-evidence.md", "owners": ["IC-EVIDENCE"]},
+    {"glob": "runtime/docs/contracts/recording-session.md", "owners": ["IC-SESSION"]},
+    {"glob": "runtime/docs/contracts/analysis-detection.md", "owners": ["IC-ANALYSIS"]},
+    {"glob": "runtime/docs/contracts/artifact-provenance.md", "owners": ["IC-ARTIFACT"]},
+    {"glob": "runtime/docs/contracts/history-observability.md", "owners": ["IC-HISTORY"]},
+    {"glob": "runtime/docs/contracts/control-evaluation.md", "owners": ["IC-CONTROL"]},
+    {"glob": "runtime/docs/contracts/README.md", "owners": ["IC-RUNTIME", "IC-ACTION", "IC-EVIDENCE", "IC-SESSION", "IC-ANALYSIS", "IC-ARTIFACT", "IC-HISTORY", "IC-CONTROL"]},
+    {"glob": "runtime/docs/contracts/ownership-map.json", "owners": ["IC-RUNTIME", "IC-ACTION", "IC-EVIDENCE", "IC-SESSION", "IC-ANALYSIS", "IC-ARTIFACT", "IC-HISTORY", "IC-CONTROL"]},
+    {"glob": "runtime/api/**", "owners": ["IC-RUNTIME", "IC-CONTROL"]},
+    {"glob": "runtime/pyhfo_env.py", "owners": ["IC-RUNTIME", "IC-ANALYSIS"]},
+    {"glob": "runtime/agent_runtime/**", "owners": ["IC-RUNTIME", "IC-ACTION", "IC-EVIDENCE", "IC-ANALYSIS"]},
+    {"glob": "runtime/services/agent_service.py", "owners": ["IC-RUNTIME", "IC-HISTORY"]},
+    {"glob": "runtime/services/operation_safety_service.py", "owners": ["IC-ACTION", "IC-CONTROL"]},
+    {"glob": "runtime/services/**", "owners": ["IC-RUNTIME", "IC-HISTORY"]},
+    {"glob": "runtime/agent_history/**", "owners": ["IC-HISTORY"]},
+    {"glob": "runtime/context/**", "owners": ["IC-RUNTIME", "IC-HISTORY"]},
+    {"glob": "runtime/core/**", "owners": ["IC-RUNTIME", "IC-ACTION"]},
+    {"glob": "runtime/prompts/**", "owners": ["IC-RUNTIME", "IC-EVIDENCE"]},
+    {"glob": "runtime/skills/**", "owners": ["IC-RUNTIME", "IC-ACTION"]},
+    {"glob": "runtime/models/**", "owners": ["IC-RUNTIME", "IC-HISTORY"]},
+    {"glob": "runtime/**", "owners": ["IC-RUNTIME"]},
+    {"glob": "ui_mcp/**", "owners": ["IC-ACTION", "IC-HISTORY"]},
+    {"glob": "desktop/src/**", "owners": ["IC-ACTION", "IC-SESSION", "IC-ANALYSIS", "IC-ARTIFACT"]},
+    {"glob": "desktop/electron/**", "owners": ["IC-ACTION", "IC-ARTIFACT"]},
+    {"glob": "pyhfo/pyproject.toml", "owners": ["IC-RUNTIME", "IC-ANALYSIS"]},
+    {"glob": "pyhfo/MANIFEST.in", "owners": ["IC-ARTIFACT"]},
+    {"glob": "pyhfo/scripts/publish_severity_model.py", "owners": ["IC-ANALYSIS", "IC-ARTIFACT"]},
+    {"glob": "pyhfo/MODEL_CARD_severity.md", "owners": ["IC-EVIDENCE"]},
+    {"glob": "pyhfo/src/pyhfo/agent_api/**", "owners": ["IC-ACTION", "IC-SESSION", "IC-ANALYSIS", "IC-EVIDENCE"]},
+    {"glob": "pyhfo/src/pyhfo/agent_mcp/**", "owners": ["IC-ACTION", "IC-ANALYSIS", "IC-EVIDENCE"]},
+    {"glob": "pyhfo/src/pyhfo/resources/ui-command-catalog.json", "owners": ["IC-ACTION", "IC-CONTROL"]},
+    {"glob": "pyhfo/src/pyhfo/paths.py", "owners": ["IC-SESSION", "IC-ARTIFACT"]},
+    {"glob": "pyhfo/src/pyhfo/utils/*models.py", "owners": ["IC-ANALYSIS", "IC-EVIDENCE"]},
+    {"glob": "pyhfo/src/pyhfo/utils/model_registry.py", "owners": ["IC-ANALYSIS", "IC-EVIDENCE"]},
+    {"glob": "pyhfo/src/pyhfo/utils/legacy_checkpoint.py", "owners": ["IC-ANALYSIS", "IC-EVIDENCE"]},
+    {"glob": "pyhfo/src/pyhfo/_version.py", "owners": ["IC-EVIDENCE"]},
+    {"glob": "pyhfo/src/**", "owners": ["IC-ANALYSIS", "IC-EVIDENCE"]},
+    {"glob": "contracts/ui-command-catalog.json", "owners": ["IC-ACTION", "IC-CONTROL"]},
+    {"glob": "contracts/agent/**", "owners": ["IC-RUNTIME", "IC-ACTION", "IC-EVIDENCE", "IC-ARTIFACT"]},
+    {"glob": "contracts/**", "owners": ["IC-ACTION"]}
+  ],
+  "modules": [
+    {"name": "runtime", "glob": "runtime/**"},
+    {"name": "ui_mcp", "glob": "ui_mcp/**"},
+    {"name": "desktop", "glob": "desktop/src/**"},
+    {"name": "electron", "glob": "desktop/electron/**"},
+    {"name": "pyhfo", "glob": "pyhfo/src/**"},
+    {"name": "contracts", "glob": "contracts/**"}
+  ]
+}

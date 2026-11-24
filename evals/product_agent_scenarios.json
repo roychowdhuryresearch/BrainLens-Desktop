@@ -1,0 +1,319 @@
+{
+  "schema_version": "product-agent-evals.v1",
+  "description": "Product-level agent scenarios for desktop co-pilot and headless behavior. These scenarios score tool order, payloads, callback discipline, and final-answer claims.",
+  "default_recording_path": "/tmp/product_eval_case.edf",
+  "scenarios": [
+    {
+      "id": "desktop-ambiguous-hfo-asks",
+      "surface": "desktop_copilot",
+      "run_real_model": true,
+      "user": "detect HFOs in this loaded recording",
+      "ui_state": {"recording": {"loaded": true}},
+      "expect": {
+        "forbidden_tools": ["pyhfo_detect_events"],
+        "forbidden_ui_commands": ["detection.run"],
+        "final_answer": {
+          "must_include_all": ["detector"],
+          "must_include_any": ["filter band", "parameters", "preset", "defaults", "channel scope"],
+          "must_not_include_any": ["staged", "running", "complete", "event(s)"]
+        }
+      },
+      "fixture_trace": {
+        "tool_calls": [],
+        "tool_events": [],
+        "final_answer": "Which HFO detector/protocol and result-shaping settings should I use: filter band, detector parameters or preset/defaults, and channel scope?"
+      }
+    },
+    {
+      "id": "desktop-ambiguous-hfo-and-spindle-asks",
+      "surface": "desktop_copilot",
+      "run_real_model": true,
+      "user": "detect all STE hfos and spindles",
+      "ui_state": {"recording": {"loaded": true}},
+      "expect": {
+        "forbidden_tools": ["pyhfo_detect_events"],
+        "forbidden_ui_commands": ["detection.run"],
+        "final_answer": {
+          "must_include_any": ["spindle detector", "spindle protocol", "MOLLE", "A7", "YASA"],
+          "must_include_all": ["STE", "HFO"],
+          "must_not_include_any": ["Spindle + STE", "staged two", "run complete"]
+        }
+      },
+      "fixture_trace": {
+        "tool_calls": [],
+        "tool_events": [],
+        "final_answer": "STE is an HFO detector, so I need the spindle detector/protocol and the result-shaping settings before I stage anything."
+      }
+    },
+    {
+      "id": "desktop-confirmed-detection-waits-for-staged-callback",
+      "surface": "desktop_copilot",
+      "run_real_model": true,
+      "user": "Use confirmed defaults: run STE HFO detection, 80-500 Hz, all channels, and export csv/session/summary.",
+      "ui_state": {"recording": {"loaded": true}},
+      "expect": {
+        "required_tools": ["emit_ui_command", "wait_for_ui_command"],
+        "required_order": ["emit_ui_command", "wait_for_ui_command"],
+        "required_ui_commands": ["detection.run"],
+        "wait_after_ui_commands": ["detection.run"],
+        "payload_assertions": [
+          {"tool": "emit_ui_command", "ui_type": "detection.run", "path": "args.payload.biomarker", "op": "eq", "value": "HFO"},
+          {"tool": "emit_ui_command", "ui_type": "detection.run", "path": "args.payload.detector", "op": "eq", "value": "STE"},
+          {"tool": "emit_ui_command", "ui_type": "detection.run", "path": "args.payload.all_channels", "op": "eq", "value": true},
+          {"tool": "emit_ui_command", "ui_type": "detection.run", "path": "args.payload.filter.fp", "op": "eq", "value": 80}
+        ],
+        "result_assertions": [
+          {"tool": "wait_for_ui_command", "path": "result.ack.status", "op": "eq", "value": "staged"}
+        ],
+        "final_answer": {
+          "must_include_any": ["waiting for Apply", "waiting for apply", "staged"],
+          "must_not_include_any": ["complete: 583", "run complete", "event(s),"]
+        }
+      },
+      "fixture_trace": {
+        "tool_calls": [
+          {
+            "name": "emit_ui_command",
+            "args": {
+              "type": "detection.run",
+              "payload": {
+                "biomarker": "HFO",
+                "detector": "STE",
+                "filter": {"fp": 80, "fs": 500},
+                "all_channels": true,
+                "scope": "all",
+                "confirmed_defaults": true,
+                "exports": ["csv", "session", "summary_json"]
+              },
+              "reason": "confirmed STE HFO detection"
+            }
+          },
+          {"name": "wait_for_ui_command", "args": {"command_id": "mcp-1"}}
+        ],
+        "tool_events": [
+          {
+            "name": "emit_ui_command",
+            "result": {
+              "success": true,
+              "requires_completion_callback": true,
+              "command": {"command_id": "mcp-1", "type": "detection.run"}
+            }
+          },
+          {
+            "name": "wait_for_ui_command",
+            "result": {
+              "success": true,
+              "terminal": false,
+              "ack": {"status": "staged", "command_type": "detection.run"}
+            }
+          }
+        ],
+        "final_answer": "I staged the confirmed STE HFO run and it is waiting for Apply."
+      }
+    },
+    {
+      "id": "desktop-confirmed-detection-complete-can-report-counts",
+      "surface": "desktop_copilot",
+      "run_real_model": false,
+      "user": "Run the confirmed STE HFO protocol and tell me when it finishes.",
+      "ui_state": {"recording": {"loaded": true}},
+      "expect": {
+        "required_tools": ["emit_ui_command", "wait_for_ui_command"],
+        "required_ui_commands": ["detection.run"],
+        "wait_after_ui_commands": ["detection.run"],
+        "result_assertions": [
+          {"tool": "wait_for_ui_command", "path": "result.ack.status", "op": "eq", "value": "complete"}
+        ],
+        "final_answer": {
+          "must_include_any": ["complete", "finished"],
+          "must_include_all": ["583"],
+          "must_not_include_any": ["waiting for Apply"]
+        }
+      },
+      "fixture_trace": {
+        "tool_calls": [
+          {
+            "name": "emit_ui_command",
+            "args": {
+              "type": "detection.run",
+              "payload": {"biomarker": "HFO", "detector": "STE", "confirmed_defaults": true, "scope": "all", "all_channels": true},
+              "reason": "confirmed STE HFO detection"
+            }
+          },
+          {"name": "wait_for_ui_command", "args": {"command_id": "mcp-2"}}
+        ],
+        "tool_events": [
+          {"name": "emit_ui_command", "result": {"success": true, "requires_completion_callback": true, "command": {"command_id": "mcp-2", "type": "detection.run"}}},
+          {"name": "wait_for_ui_command", "result": {"success": true, "terminal": true, "ack": {"status": "complete", "command_type": "detection.run", "detail": "STE run complete: 583 event(s), 40 channel(s)."}}}
+        ],
+        "final_answer": "The STE HFO run is complete: 583 event candidates across 40 channels."
+      }
+    },
+    {
+      "id": "desktop-direct-bad-detection-payload-blocked",
+      "surface": "tool_boundary",
+      "run_real_model": false,
+      "user": "scripted bad direct MCP detection.run payload",
+      "expect": {
+        "required_tools": ["emit_ui_command"],
+        "result_assertions": [
+          {"tool": "emit_ui_command", "path": "result.success", "op": "eq", "value": false},
+          {"tool": "emit_ui_command", "path": "result.clarification_required", "op": "eq", "value": true},
+          {"tool": "emit_ui_command", "path": "result.blocked_by_policy", "op": "eq", "value": "detection_run_payload_validation"}
+        ],
+        "final_answer": {
+          "must_include_any": ["filter band", "channel scope", "detector parameters"],
+          "must_not_include_any": ["staged", "waiting for Apply", "complete"]
+        }
+      },
+      "fixture_trace": {
+        "tool_calls": [
+          {"name": "emit_ui_command", "args": {"type": "detection.run", "payload": {"biomarker": "HFO", "detector": "STE"}, "reason": "bad direct MCP call"}}
+        ],
+        "tool_events": [
+          {"name": "emit_ui_command", "result": {"success": false, "clarification_required": true, "blocked_by_policy": "detection_run_payload_validation", "error": "detection.run was not staged because the payload did not specify detector parameters, a preset, or confirmed defaults, filter band, channel scope."}}
+        ],
+        "final_answer": "I cannot stage that yet. I need detector parameters or confirmed defaults, filter band, and channel scope."
+      }
+    },
+    {
+      "id": "desktop-existing-run-classify-no-redetect",
+      "surface": "desktop_copilot",
+      "run_real_model": true,
+      "user": "I've already got a detection run saved. Classify it to strip out artifacts without re-running detection.",
+      "ui_state": {"recording": {"loaded": true}, "runs": ["run-001"], "selected_run": "run-001", "review": {"event_count": 42}},
+      "expect": {
+        "required_tools": ["emit_ui_command", "wait_for_ui_command"],
+        "forbidden_tools": ["pyhfo_detect_events"],
+        "forbidden_ui_commands": ["detection.run"],
+        "required_ui_commands": ["classification.run"],
+        "wait_after_ui_commands": ["classification.run"],
+        "final_answer": {
+          "must_include_any": ["classification", "classify", "waiting for Apply", "staged", "complete"],
+          "must_not_include_any": ["re-ran detection", "new detection run"]
+        }
+      },
+      "fixture_trace": {
+        "tool_calls": [
+          {"name": "get_ui_state", "args": {}},
+          {"name": "emit_ui_command", "args": {"type": "classification.run", "payload": {"biomarker": "HFO"}, "reason": "classify active run"}},
+          {"name": "wait_for_ui_command", "args": {"command_id": "mcp-3"}}
+        ],
+        "tool_events": [
+          {"name": "get_ui_state", "result": {"recording": {"loaded": true}, "selected_run": "run-001"}},
+          {"name": "emit_ui_command", "result": {"success": true, "requires_completion_callback": true, "command": {"command_id": "mcp-3", "type": "classification.run"}}},
+          {"name": "wait_for_ui_command", "result": {"success": true, "terminal": false, "ack": {"status": "staged", "command_type": "classification.run"}}}
+        ],
+        "final_answer": "I staged classification for the existing run. It is waiting for Apply; I did not re-run detection."
+      }
+    },
+    {
+      "id": "desktop-view-top-hfo-no-redetect",
+      "surface": "desktop_copilot",
+      "run_real_model": true,
+      "user": "Show me the channel with the most HFOs.",
+      "ui_state": {"recording": {"loaded": true}, "runs": ["run-001"], "selected_run": "run-001", "review": {"event_count": 42}},
+      "expect": {
+        "required_tools": ["get_ui_state", "emit_ui_command"],
+        "forbidden_tools": ["pyhfo_detect_events"],
+        "forbidden_ui_commands": ["detection.run"],
+        "required_ui_commands_any": ["detection.focus_top_candidate_channel", "waveform.focus_hotspot_channels"],
+        "final_answer": {
+          "must_include_any": ["showing", "opened", "focused", "top"],
+          "must_not_include_any": ["running detection", "new detection"]
+        }
+      },
+      "fixture_trace": {
+        "tool_calls": [
+          {"name": "get_ui_state", "args": {}},
+          {"name": "emit_ui_command", "args": {"type": "detection.focus_top_candidate_channel", "payload": {"biomarker": "HFO", "duration_seconds": 2}, "reason": "show most active HFO channel"}}
+        ],
+        "tool_events": [
+          {"name": "get_ui_state", "result": {"review": {"event_count": 42}, "selected_run": "run-001"}},
+          {"name": "emit_ui_command", "result": {"success": true, "requires_completion_callback": false, "command": {"command_id": "mcp-4", "type": "detection.focus_top_candidate_channel"}}}
+        ],
+        "final_answer": "I focused the workspace on the top HFO candidate channel from the loaded run."
+      }
+    },
+    {
+      "id": "desktop-set-parameters-does-not-run",
+      "surface": "desktop_copilot",
+      "run_real_model": true,
+      "user": "Set the HFO band to fp 80 fs 250 and notch 60 Hz, but don't run anything yet.",
+      "ui_state": {"recording": {"loaded": true}},
+      "expect": {
+        "required_tools": ["emit_ui_command"],
+        "forbidden_tools": ["pyhfo_prepare_recording", "pyhfo_detect_events"],
+        "forbidden_ui_commands": ["analysis.prepare_recording", "detection.run"],
+        "required_ui_commands": ["detection.set_parameters"],
+        "payload_assertions": [
+          {"tool": "emit_ui_command", "ui_type": "detection.set_parameters", "path": "args.payload.filter.fp", "op": "eq", "value": 80},
+          {"tool": "emit_ui_command", "ui_type": "detection.set_parameters", "path": "args.payload.filter.fs", "op": "eq", "value": 250},
+          {"tool": "emit_ui_command", "ui_type": "detection.set_parameters", "path": "args.payload.line_noise_notch_hz", "op": "eq", "value": 60}
+        ],
+        "final_answer": {
+          "must_include_any": ["set", "updated"],
+          "must_include_all": ["not run"],
+          "must_not_include_any": ["staged detection", "running", "prepared copy"]
+        }
+      },
+      "fixture_trace": {
+        "tool_calls": [
+          {"name": "emit_ui_command", "args": {"type": "detection.set_parameters", "payload": {"filter": {"fp": 80, "fs": 250}, "line_noise_notch_hz": 60}, "reason": "set detector controls without running"}}
+        ],
+        "tool_events": [
+          {"name": "emit_ui_command", "result": {"success": true, "requires_completion_callback": false, "command": {"command_id": "mcp-5", "type": "detection.set_parameters"}}}
+        ],
+        "final_answer": "I updated the detection parameters and did not run anything."
+      }
+    },
+    {
+      "id": "headless-metadata-first-no-detect",
+      "surface": "headless_backend",
+      "run_real_model": true,
+      "user": "Quick gut check before HFO analysis: is this recording worth running, or is sampling rate/duration a blocker?",
+      "expect": {
+        "required_tools": ["pyhfo_get_recording_info"],
+        "forbidden_tools": ["pyhfo_detect_events", "pyhfo_prepare_recording"],
+        "final_answer": {
+          "must_include_any": ["sampling", "duration", "metadata"],
+          "must_not_include_any": ["run complete", "event candidates"]
+        }
+      },
+      "fixture_trace": {
+        "tool_calls": [
+          {"name": "pyhfo_get_recording_info", "args": {"input_path": "/tmp/product_eval_case.edf"}}
+        ],
+        "tool_events": [
+          {"name": "pyhfo_get_recording_info", "result": {"success": true, "sampling_frequency_hz": 2000, "duration_seconds": 120}}
+        ],
+        "final_answer": "The metadata looks usable for HFO planning: sampling is 2000 Hz and duration is 120 seconds."
+      }
+    },
+    {
+      "id": "desktop-broker-disconnected-no-staged-claim",
+      "surface": "tool_boundary",
+      "run_real_model": false,
+      "user": "scripted broker disconnected result",
+      "expect": {
+        "required_tools": ["emit_ui_command"],
+        "result_assertions": [
+          {"tool": "emit_ui_command", "path": "result.success", "op": "eq", "value": false}
+        ],
+        "final_answer": {
+          "must_include_any": ["not delivered", "could not be sent", "desktop", "nothing was staged"],
+          "must_not_include_any": ["waiting for Apply", "click Apply"]
+        }
+      },
+      "fixture_trace": {
+        "tool_calls": [
+          {"name": "emit_ui_command", "args": {"type": "workspace.open_panel", "payload": {"panel": "Detect"}, "reason": "open detect"}}
+        ],
+        "tool_events": [
+          {"name": "emit_ui_command", "result": {"success": false, "staged": false, "error": "The command was NOT delivered to the desktop UI."}}
+        ],
+        "final_answer": "I could not send the command to the desktop UI, so nothing was staged."
+      }
+    }
+  ]
+}

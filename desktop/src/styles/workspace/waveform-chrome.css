@@ -1,0 +1,70 @@
+/* Waveform chrome owner.
+   Non-toolbar waveform canvas, pane, scrollbars, splitter, status strip, and
+   empty-waveform surfaces live here. Toolbar controls remain in the
+   waveform-toolbar-* owner files. */
+.waveform-canvas{
+  border-color:#314253!important;
+  border-radius:7px!important;
+  background:#07111d!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.04),0 12px 28px rgba(17,24,39,.12);
+}
+
+.waveform-pane{
+  border-color:var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  box-shadow:var(--lab-inset);
+}
+
+.channel-scrollbar,
+.time-scrollbar{
+  border-color:var(--lab-line)!important;
+  background:#dce6e9!important;
+}
+
+.loaded-workspace-splitter-handle{
+  border-color:#aebec7!important;
+  background:linear-gradient(90deg,#edf2f1,#d9e3e5)!important;
+}
+
+.loaded-workspace-splitter-handle::after{
+  background:#7890a0!important;
+}
+
+.status-strip{
+  border-color:var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:linear-gradient(180deg,#f2f5f8,#e6ecf0)!important;
+  color:#2a3744!important;
+  font-weight:400;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+
+.status-strip button{
+  border-color:#b8c6d0!important;
+  background:var(--lab-canvas)!important;
+  color:#1f2a36!important;
+}
+
+.empty-waveform-placeholder,
+.waveform-pane[data-empty="true"]{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.88),rgba(255,255,255,.58)),
+    repeating-linear-gradient(90deg,rgba(28,62,74,.05) 0,rgba(28,62,74,.05) 1px,transparent 1px,transparent 26px),
+    #eef3f4!important;
+}
+
+.empty-state-card{
+  border-color:var(--lab-line)!important;
+  background:#fbfcfb!important;
+  box-shadow:var(--lab-shadow)!important;
+}
+
+.empty-state-card h2{
+  color:#172331!important;
+  font-weight:400;
+}
+
+.empty-steps section{
+  border-color:var(--lab-line)!important;
+  background:#f6f9f8!important;
+}

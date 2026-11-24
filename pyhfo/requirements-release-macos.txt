@@ -1,0 +1,4 @@
+-r requirements.txt
+
+# Headless backend build tooling (pyhfo_backend_macos.spec).
+pyinstaller

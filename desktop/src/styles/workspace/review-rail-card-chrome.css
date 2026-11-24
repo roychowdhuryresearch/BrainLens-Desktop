@@ -1,0 +1,65 @@
+/* Review rail card chrome owner. Sidebar card borders, headers, and title
+   truncation live here; row controls and loaded density have separate owners. */
+.pyqt-sidebar-card{
+  border-color:var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  box-shadow:var(--lab-inset);
+}
+
+.pyqt-sidebar-card header{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:8px!important;
+}
+
+.pyqt-sidebar-card header h3{
+  min-inline-size:0;
+  margin:0!important;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.sidebar-header-actions{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(54px,max-content));
+  gap:6px;
+  align-items:center;
+}
+
+@media(max-width:760px){
+  .sidebar-header-actions{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+/* --- Visual hierarchy pass -------------------------------------------------
+   Each sidebar card floats as a white surface over the rail canvas so the five
+   sections read as distinct panels instead of one flat form. The section title
+   is demoted to a quiet uppercase overline and divided from its controls by a
+   hairline, giving the rail a clear top-to-bottom rhythm. */
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar>.pyqt-sidebar-card{
+  background:#ffffff!important;
+  border:1px solid var(--lab-line)!important;
+  box-shadow:var(--lab-card-shadow)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar>.pyqt-sidebar-card>header{
+  justify-content:space-between!important;
+  gap:8px!important;
+  /* Keep the divider but no extra vertical cost: the rail is top-anchored at
+     73px and bottom-anchored above the status strip, so every px of header
+     padding pushes the Classification card past the fold at 1440x900. */
+  padding-block-end:0!important;
+  border-block-end:1px solid var(--lab-line)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar>.pyqt-sidebar-card>header>h3{
+  flex:1 1 auto!important;
+  font-size:var(--fs-2xs)!important;
+  font-weight:600!important;
+  letter-spacing:.07em!important;
+  text-transform:uppercase!important;
+  color:var(--lab-faint)!important;
+}

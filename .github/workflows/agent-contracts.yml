@@ -1,0 +1,56 @@
+name: Agent contracts
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  contract-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -r requirements.txt -e "./pyhfo[spindle]" pytest pytest-asyncio "jsonschema[format]>=4.18"
+      - run: npm ci
+        working-directory: desktop
+      - name: Contract implementation tests
+        run: >-
+          python -m pytest -q
+          tests/test_contract_gate.py
+          tests/test_ieeg_cross_layer_contracts.py
+          tests/test_agent_process_response.py
+          tests/test_agent_orchestrator.py
+          tests/test_completion_contract.py
+          tests/test_operation_safety_contract.py
+          tests/test_ui_action_contract.py
+          tests/test_ui_mcp_server_contract.py
+          tests/test_clinical_evidence_contract.py
+          tests/test_history_atomic_completion.py
+          tests/test_history_redaction_contract.py
+          tests/test_pyhfo_authority_guard.py
+          tests/test_stream_contract.py
+      - name: Desktop contract tests
+        run: >-
+          node --test
+          tests/agent-semantic-stream-contract.test.js
+          tests/agent-ui-command-contract.test.js
+          tests/python-backend-runtime.test.js
+        working-directory: desktop
+      - name: Desktop typecheck
+        run: npm run typecheck
+        working-directory: desktop
+      - name: Changed contract gate
+        if: github.event_name == 'pull_request'
+        run: python -m contract_gate --base "origin/${{ github.base_ref }}" --run-proofs

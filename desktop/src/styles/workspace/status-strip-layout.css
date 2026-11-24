@@ -1,0 +1,56 @@
+/* Status strip layout owner. The visual colors live in waveform-chrome.css;
+   this file owns row sizing, activity summary, and status-log action geometry. */
+.status-strip,
+.pyqt-workspace-shell>.status-strip,
+.pyqt-workspace-shell[data-loaded="true"]>.status-strip{
+  min-block-size:36px!important;
+  block-size:36px!important;
+  max-block-size:36px!important;
+  display:grid!important;
+  grid-template-columns:10px minmax(0,1fr) auto!important;
+  grid-template-rows:1fr!important;
+  grid-auto-flow:column!important;
+  align-items:center!important;
+  justify-items:start!important;
+  column-gap:8px!important;
+  overflow:hidden!important;
+  line-height:1!important;
+  padding:0 8px!important;
+}
+
+.status-strip .activity-level-dot{
+  grid-column:1!important;
+  justify-self:center!important;
+  align-self:center!important;
+  margin:0!important;
+}
+
+.status-strip>span[data-testid="pyqt-activity_summary_label"]{
+  grid-column:2!important;
+  min-inline-size:0!important;
+  inline-size:100%!important;
+  align-self:center!important;
+  line-height:1.2!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+.status-strip button,
+.status-strip [data-testid="pyqt-status_log_open_button"]{
+  block-size:32px!important;
+  max-block-size:32px!important;
+}
+
+.status-strip [data-testid="pyqt-status_log_open_button"]{
+  grid-column:3!important;
+  justify-self:end!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  inline-size:auto!important;
+  min-inline-size:96px!important;
+  margin:0!important;
+  padding:0 12px!important;
+  line-height:1!important;
+}

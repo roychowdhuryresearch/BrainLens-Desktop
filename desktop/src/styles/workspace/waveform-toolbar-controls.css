@@ -1,0 +1,292 @@
+/* Waveform toolbar controls owner.
+   Owns labels, buttons, icon glyphs, selector triggers, badges, and fixed
+   control widths inside the loaded waveform command strip. */
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group-label,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector-trigger>span,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-view-summary-label{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  block-size:var(--waveform-toolbar-control-h)!important;
+  min-block-size:var(--waveform-toolbar-control-h)!important;
+  margin:0!important;
+  padding:0 5px!important;
+  color:var(--waveform-toolbar-muted)!important;
+  font-size:var(--fs-2xs)!important;
+  font-weight:400!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  text-transform:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group-channel>.waveform-tool-group-label,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group-window>.waveform-tool-group-label,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group-nav>.waveform-tool-group-label,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group-events>.waveform-tool-group-label,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group-inspect>.waveform-tool-group-label,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group-output>.waveform-tool-group-label{
+  display:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group button,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector-trigger,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-badge{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+  block-size:var(--waveform-toolbar-control-h)!important;
+  min-block-size:var(--waveform-toolbar-control-h)!important;
+  max-block-size:var(--waveform-toolbar-control-h)!important;
+  margin:0!important;
+  border:1px solid var(--waveform-toolbar-control-border)!important;
+  border-radius:5px!important;
+  background:var(--waveform-toolbar-control)!important;
+  color:var(--waveform-toolbar-text)!important;
+  box-shadow:none!important;
+  font-family:inherit!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:400!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  text-align:center!important;
+  text-shadow:none!important;
+  vertical-align:middle!important;
+  white-space:nowrap!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group button{
+  min-inline-size:38px!important;
+  padding:0 8px!important;
+  cursor:pointer!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group button[data-pyqt-toolbutton-style="text-beside-icon"]{
+  gap:0!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group button[data-pyqt-toolbutton-style="text-beside-icon"]::before{
+  content:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console button[data-pyqt-toolbutton-style="icon-only"]{
+  inline-size:36px!important;
+  min-inline-size:36px!important;
+  max-inline-size:36px!important;
+  padding:0!important;
+  overflow:hidden!important;
+  border-color:transparent!important;
+  background:transparent!important;
+  color:#2f4d5a!important;
+  font-size:0!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console button[data-pyqt-toolbutton-style="icon-only"]::before{
+  content:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-toolbar-svg-icon{
+  display:block!important;
+  flex:0 0 21px!important;
+  inline-size:21px!important;
+  block-size:21px!important;
+  color:currentColor!important;
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:2.3!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+  opacity:1!important;
+  transform:none!important;
+  pointer-events:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group-review-primary button[data-pyqt-toolbutton-style="icon-only"]{
+  border-color:var(--lab-line)!important;
+  background:#f8fbfc!important;
+  color:#254958!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group-review-primary button[data-pyqt-toolbutton-style="icon-only"]:disabled{
+  border-color:transparent!important;
+  background:transparent!important;
+  color:#8798a1!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group-setup-secondary button{
+  border-color:var(--lab-line)!important;
+  background:#f8fafb!important;
+  color:#3f5864!important;
+  font-weight:400!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group button:hover,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector-trigger:hover{
+  border-color:var(--lab-line)!important;
+  background:#fff!important;
+  color:#102a35!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group button.active,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector-trigger[aria-expanded="true"],
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-output-more-trigger[aria-expanded="true"]{
+  border-color:var(--waveform-toolbar-active-border)!important;
+  background:var(--waveform-toolbar-active)!important;
+  color:var(--waveform-toolbar-active-text)!important;
+  box-shadow:inset 0 0 0 1px rgba(20,117,111,.08)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group button:disabled{
+  color:#7a8d98!important;
+  opacity:.88!important;
+  cursor:default!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group-source button{
+  min-inline-size:42px!important;
+  padding-inline:7px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group-source [data-testid="pyqt-filter60_tool_button"]{
+  min-inline-size:48px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console button[data-testid="pyqt-Choose_Channels_Button"],
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console button[data-testid="pyqt-bipolar_button"]{
+  min-inline-size:72px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console button[data-testid="pyqt-event_channels_button"]{
+  min-inline-size:54px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console button[data-testid="pyqt-cursor_tool_button"]{
+  min-inline-size:64px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console button[data-testid="pyqt-measure_tool_button"]{
+  min-inline-size:72px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector{
+  position:relative!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  min-inline-size:0!important;
+  block-size:var(--waveform-toolbar-control-h)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector-trigger{
+  justify-content:flex-start!important;
+  gap:4px!important;
+  min-inline-size:90px!important;
+  padding:0 7px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector-trigger::after{
+  content:""!important;
+  display:inline-block!important;
+  inline-size:0!important;
+  block-size:0!important;
+  margin-inline-start:1px!important;
+  border-inline:4px solid transparent!important;
+  border-block-start:5px solid #697f8a!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector-trigger>span,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-view-summary-label{
+  padding:0!important;
+  color:#526a75!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector-value,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-view-value{
+  display:inline-flex!important;
+  align-items:center!important;
+  block-size:100%!important;
+  color:#102a35!important;
+  font-family:inherit!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:400!important;
+  font-variant-numeric:tabular-nums!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console [data-testid="pyqt-channel_scope_summary_button"],
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console [data-testid="pyqt-montage_summary_button"]{
+  min-inline-size:96px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console [data-testid="pyqt-focus_summary_button"]{
+  min-inline-size:84px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-view-summary{
+  gap:6px!important;
+  min-inline-size:226px!important;
+  padding-inline:8px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-view-token{
+  position:relative!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  block-size:100%!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-view-token:not(:first-of-type){
+  padding-inline-start:8px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-view-token:not(:first-of-type)::before{
+  content:""!important;
+  position:absolute!important;
+  inset-block:7px!important;
+  inset-inline-start:0!important;
+  inline-size:1px!important;
+  background:#d8e3e8!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-badge{
+  min-inline-size:78px!important;
+  padding:0 8px!important;
+  color:#4e6672!important;
+  background:#f6f9fa!important;
+  font-variant-numeric:tabular-nums!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group-events .waveform-badge{
+  min-inline-size:92px!important;
+  border-color:#e5d79f!important;
+  background:#fff9e6!important;
+  color:#654b12!important;
+}
+
+/* "No events" is a normal pre-detection state, not a warning — drop the amber when
+   there's nothing to navigate, keep it only once events exist (review available). */
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-tool-group-events .waveform-badge[data-has-events="false"]{
+  border-color:var(--waveform-toolbar-control-border)!important;
+  background:#f6f9fa!important;
+  color:#4e6672!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-output-more{
+  position:relative!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  block-size:var(--waveform-toolbar-control-h)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console button.clinical-output-more-trigger{
+  min-inline-size:54px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console button[data-pyqt-toolbutton-style="icon-only"] .sr-only{
+  position:absolute!important;
+  inline-size:1px!important;
+  block-size:1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+}

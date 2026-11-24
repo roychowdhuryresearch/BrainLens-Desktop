@@ -1,0 +1,110 @@
+/* Shared control sizing owner. Product task panes, modal content,
+   and agent controls share a 34px action/input baseline; toolbar-specific
+   controls stay in the toolbar lane. */
+:root{
+  --ui-control-h:34px;
+  --ui-action-h:34px;
+  --ui-gap:8px;
+  --ui-field-gap:8px;
+  --ui-control-radius:6px;
+  --ui-control-font:.9rem;
+  --ui-control-font-small:.82rem;
+  --ui-control-border-strong:#94a3b8;
+  --ui-control-surface:#fff;
+  --ui-control-text:#111827;
+  --ui-control-muted:#475569;
+}
+
+.workspace-tabs .tab-bar button,
+.workspace-tab-panel button,
+.panel-card button,
+.modal-card button:not([data-pyqt-toolbutton-style="icon-only"]){
+  min-block-size:var(--ui-action-h)!important;
+  block-size:var(--ui-action-h)!important;
+  border-radius:var(--ui-control-radius)!important;
+  padding:0 12px!important;
+  font-size:var(--ui-control-font)!important;
+  font-weight:400!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  white-space:nowrap!important;
+}
+
+.workspace-tab-panel input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.workspace-tab-panel select,
+.workspace-tab-panel textarea,
+.panel-card input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.panel-card select,
+.panel-card textarea,
+.modal-card input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.modal-card select,
+.modal-card textarea,
+.agent-panel select{
+  min-block-size:var(--ui-control-h)!important;
+  block-size:var(--ui-control-h)!important;
+  border:1px solid var(--ui-control-border-strong)!important;
+  border-radius:var(--ui-control-radius)!important;
+  background:var(--ui-control-surface)!important;
+  color:var(--ui-control-text)!important;
+  padding:0 10px!important;
+  font-size:var(--ui-control-font)!important;
+  line-height:1.2!important;
+}
+
+.workspace-tab-panel textarea,
+.panel-card textarea,
+.modal-card textarea{
+  padding-block:8px!important;
+}
+
+.modal-card input[type="checkbox"],
+.modal-card input[type="radio"],
+.panel-card input[type="checkbox"],
+.panel-card input[type="radio"],
+.workspace-tabs input[type="checkbox"],
+.workspace-tabs input[type="radio"],
+.workspace-tab-panel input[type="checkbox"],
+.workspace-tab-panel input[type="radio"]{
+  inline-size:16px!important;
+  block-size:16px!important;
+  min-inline-size:16px!important;
+  min-block-size:16px!important;
+  max-inline-size:16px!important;
+  max-block-size:16px!important;
+  flex:0 0 16px!important;
+  margin:0!important;
+  padding:0!important;
+  accent-color:var(--lab-cobalt);
+}
+
+.button-row,
+.protocol-preset-actions{
+  gap:var(--ui-gap)!important;
+}
+
+.field-grid,
+.lsm-model-grid{
+  gap:var(--ui-field-gap)!important;
+}
+
+.field-grid label{
+  gap:5px!important;
+}
+
+.inline-field{
+  gap:6px!important;
+}
+
+.field-unit,
+.inline-field>span:not(:first-child){
+  color:var(--ui-control-muted);
+  font-size:var(--ui-control-font-small);
+  font-weight:400;
+  white-space:nowrap;
+}
+
+@media(max-width:760px){
+  button{
+    min-block-size:32px;
+  }
+}

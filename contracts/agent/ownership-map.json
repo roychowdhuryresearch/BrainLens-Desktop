@@ -1,0 +1,268 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "contract_family": "ieeg-agent.v1",
+  "roles": ["producer", "validator", "consumer"],
+  "layers": {
+    "runtime": "Agent API, orchestration, finalization, and claim assembly",
+    "ui_mcp": "Catalog validation, UI broker delivery, and callback polling",
+    "desktop": "Electron transport, renderer state, command execution, and receipt production",
+    "pyhfo": "Signal algorithms, reproducibility metadata, and artifacts"
+  },
+  "protocols": {
+    "XLP-IEEG-WIRE-V1": {
+      "document": "contracts/agent/ieeg-wire-v1.md",
+      "schema": "contracts/agent/schemas/ieeg-wire-v1.schema.json",
+      "producers": [
+        {
+          "layer": "runtime",
+          "path": "runtime/agent_runtime/stream_contract.py",
+          "responsibility": "Projects truthful UI-command compatibility envelopes without inventing actor or resource state."
+        },
+        {
+          "layer": "desktop",
+          "path": "desktop/electron/agentService.ts",
+          "responsibility": "construct Agent chat and stream requests"
+        },
+        {
+          "layer": "runtime",
+          "path": "runtime/api/internal_agent.py",
+          "responsibility": "produce synchronous response and input-action envelopes"
+        },
+        {
+          "layer": "ui_mcp",
+          "path": "ui_mcp/mcp_server.py",
+          "responsibility": "produce catalog-bound UI command envelopes"
+        }
+      ],
+      "validators": [
+        {
+          "layer": "runtime",
+          "path": "runtime/api/internal_agent.py",
+          "responsibility": "validate internal request identity and scope"
+        },
+        {
+          "layer": "desktop",
+          "path": "desktop/src/features/agent/uiCommands.ts",
+          "responsibility": "validate command catalog policy and current UI preconditions"
+        },
+        {
+          "layer": "ui_mcp",
+          "path": "ui_mcp/mcp_server.py",
+          "responsibility": "reject unknown or underspecified commands before broker delivery"
+        }
+      ],
+      "consumers": [
+        {
+          "layer": "runtime",
+          "path": "runtime/services/agent_service.py",
+          "responsibility": "consume scoped requests and assemble responses"
+        },
+        {
+          "layer": "desktop",
+          "path": "desktop/src/app/App.tsx",
+          "responsibility": "consume responses, commands, and state snapshots"
+        }
+      ],
+      "proofs": [
+        "tests/test_ieeg_cross_layer_contracts.py",
+        "tests/test_stream_contract.py",
+        "tests/test_internal_agent_contract_strong.py",
+        "tests/test_ui_mcp_server_contract.py",
+        "desktop/tests/agent-ui-command-contract.test.js",
+        "desktop/tests/agent-semantic-stream-contract.test.js"
+      ]
+    },
+    "XLP-STREAM-EVENT-V1": {
+      "document": "contracts/agent/stream-event-v1.md",
+      "schema": "contracts/agent/schemas/stream-event-v1.schema.json",
+      "producers": [
+        {
+          "layer": "runtime",
+          "path": "runtime/agent_runtime/stream_contract.py",
+          "responsibility": "Produces sequenced public semantic envelopes from private runtime events."
+        },
+        {
+          "layer": "runtime",
+          "path": "runtime/agent_runtime/orchestrator.py",
+          "responsibility": "produce ordered runtime and terminal events"
+        },
+        {
+          "layer": "runtime",
+          "path": "runtime/agent_runtime/final_output.py",
+          "responsibility": "produce visible content and final output events"
+        }
+      ],
+      "validators": [
+        {
+          "layer": "runtime",
+          "path": "runtime/agent_runtime/stream_contract.py",
+          "responsibility": "Drops internal and unknown events and enforces terminal projection semantics."
+        },
+        {
+          "layer": "runtime",
+          "path": "runtime/services/agent_service.py",
+          "responsibility": "enforce public event projection and synchronous collection"
+        },
+        {
+          "layer": "desktop",
+          "path": "desktop/src/app/agentStreamRouter.ts",
+          "responsibility": "scope frames to the current stream"
+        },
+        {
+          "layer": "desktop",
+          "path": "desktop/electron/agentService.ts",
+          "responsibility": "validate and bridge SSE frames to renderer IPC"
+        }
+      ],
+      "consumers": [
+        {
+          "layer": "desktop",
+          "path": "desktop/src/app/App.tsx",
+          "responsibility": "render public events and stop only on terminal done"
+        },
+        {
+          "layer": "runtime",
+          "path": "runtime/services/agent_service.py",
+          "responsibility": "collect stream events into synchronous output"
+        }
+      ],
+      "proofs": [
+        "tests/test_ieeg_cross_layer_contracts.py",
+        "tests/test_stream_contract.py",
+        "tests/test_sse_event_types.py",
+        "tests/test_runtime_robustness.py",
+        "desktop/tests/agent-stream-router.test.js",
+        "desktop/tests/agent-semantic-stream-contract.test.js"
+      ]
+    },
+    "XLP-RESEARCH-OUTPUT-V1": {
+      "document": "contracts/agent/research-output-v1.md",
+      "schema": "contracts/agent/schemas/research-output-v1.schema.json",
+      "producers": [
+        {
+          "layer": "runtime",
+          "path": "runtime/agent_runtime/final_output.py",
+          "responsibility": "assemble final research-facing output"
+        },
+        {
+          "layer": "pyhfo",
+          "path": "pyhfo/src/pyhfo/agent_mcp/tools.py",
+          "responsibility": "produce signal evidence, run metadata, and artifact provenance"
+        },
+        {
+          "layer": "pyhfo",
+          "path": "pyhfo/src/pyhfo/utils/reporting.py",
+          "responsibility": "produce report and workbook artifact metadata"
+        }
+      ],
+      "validators": [
+        {
+          "layer": "runtime",
+          "path": "runtime/agent_runtime/clinical_evidence.py",
+          "responsibility": "fail closed on unsupported claims, missing provenance, stale run binding, or unverified review receipts before durable success"
+        },
+        {
+          "layer": "runtime",
+          "path": "runtime/agent_runtime/pyhfo_tools.py",
+          "responsibility": "validate PyHFO tool results before claim assembly"
+        }
+      ],
+      "consumers": [
+        {
+          "layer": "desktop",
+          "path": "desktop/src/features/agent/AgentPanel.tsx",
+          "responsibility": "present research output, limitations, and artifacts"
+        },
+        {
+          "layer": "desktop",
+          "path": "desktop/src/app/App.tsx",
+          "responsibility": "bind research output to active recording and runs"
+        }
+      ],
+      "proofs": [
+        "tests/test_ieeg_cross_layer_contracts.py",
+        "tests/test_clinical_evidence_contract.py",
+        "tests/test_pyhfo_tools.py",
+        "tests/test_pyhfo_authority_guard.py",
+        "tests/test_clinical_eval_selftest.py",
+        "desktop/tests/agent-detection-payload-contract.test.js"
+      ]
+    },
+    "XLP-ACTION-RECEIPT-V1": {
+      "document": "contracts/agent/action-receipt-v1.md",
+      "schema": "contracts/agent/schemas/action-receipt-v1.schema.json",
+      "producers": [
+        {
+          "layer": "desktop",
+          "path": "desktop/src/app/App.tsx",
+          "responsibility": "produce immediate apply/noop and asynchronous completion receipts"
+        },
+        {
+          "layer": "ui_mcp",
+          "path": "ui_mcp/broker.py",
+          "responsibility": "validate ACK state transitions, preserve supplied scope, and durably persist the bounded transport receipt ledger"
+        },
+        {
+          "layer": "runtime",
+          "path": "runtime/agent_runtime/orchestrator.py",
+          "responsibility": "promote trusted terminal review ACKs into exact recording- and turn-bound canonical receipts"
+        },
+        {
+          "layer": "pyhfo",
+          "path": "pyhfo/src/pyhfo/agent_mcp/server.py",
+          "responsibility": "produce typed tool success/error results for receipt adaptation"
+        }
+      ],
+      "validators": [
+        {
+          "layer": "ui_mcp",
+          "path": "ui_mcp/broker.py",
+          "responsibility": "reject unknown commands, actor/session/conversation mismatches, illegal transitions, and terminal success without observed proof"
+        },
+        {
+          "layer": "ui_mcp",
+          "path": "ui_mcp/mcp_server.py",
+          "responsibility": "classify terminal versus non-terminal callbacks by catalog risk"
+        },
+        {
+          "layer": "desktop",
+          "path": "desktop/src/features/agent/uiCommands.ts",
+          "responsibility": "validate action policy before execution"
+        },
+        {
+          "layer": "runtime",
+          "path": "runtime/agent_runtime/action_receipts.py",
+          "responsibility": "require and verify the terminal review scope digest and exact expected active-turn fields"
+        },
+        {
+          "layer": "runtime",
+          "path": "runtime/agent_runtime/ui_command_context.py",
+          "responsibility": "register only freshly issued review commands and reject cross-turn deduplication rebinding"
+        }
+      ],
+      "consumers": [
+        {
+          "layer": "runtime",
+          "path": "runtime/agent_runtime/tool_executor.py",
+          "responsibility": "consume command results without converting no-op/failure into success"
+        },
+        {
+          "layer": "ui_mcp",
+          "path": "ui_mcp/mcp_server.py",
+          "responsibility": "return terminal callback evidence to the Agent"
+        }
+      ],
+      "proofs": [
+        "tests/test_ieeg_cross_layer_contracts.py",
+        "tests/test_agent_orchestrator.py",
+        "tests/test_clinical_evidence_contract.py",
+        "tests/test_ui_action_contract.py",
+        "tests/test_ui_mcp_server_contract.py",
+        "tests/test_ui_drain_integration.py",
+        "desktop/tests/agent-ui-command-contract.test.js",
+        "desktop/tests/python-backend-runtime.test.js"
+      ]
+    }
+  }
+}

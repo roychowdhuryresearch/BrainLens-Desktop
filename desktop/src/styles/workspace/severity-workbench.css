@@ -1,0 +1,328 @@
+/* Severity workbench layout owner.
+   Owns the Severity tab canvas, grid scaffold, run card, and summary stats.
+   The score-over-time plot lives in severity-histogram.css. */
+.workspace-tab-panel[data-active-tab="Severity"] .severity-layout{
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-auto-rows:min-content!important;
+  gap:6px!important;
+  padding:6px!important;
+  background:#f4f7f8!important;
+  overflow:auto!important;
+}
+
+.workspace-tab-panel[data-active-tab="Severity"] .severity-workbench-grid{
+  min-inline-size:0!important;
+  inline-size:100%!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,720px)!important;
+  justify-content:start!important;
+  align-content:start!important;
+  align-items:start!important;
+  gap:8px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Severity"] .severity-panel-heading{
+  min-block-size:28px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  justify-self:start!important;
+  inline-size:max-content!important;
+}
+
+.severity-run-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.severity-run-copy h4{
+  margin:0 0 2px;
+  font-size:var(--fs-base);
+}
+
+.severity-run-copy .helper-copy{
+  margin:0;
+  max-inline-size:52ch;
+}
+
+.severity-warning{
+  color:var(--lab-amber);
+}
+
+/* Summary stats ------------------------------------------------------- */
+.severity-stat-row{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:8px;
+  margin-block:6px;
+}
+
+.severity-stat{
+  border:1px solid var(--lab-line);
+  border-radius:var(--lab-radius);
+  background:var(--lab-panel-2);
+  padding:8px 10px;
+}
+
+.severity-stat h5{
+  margin:0;
+  font-size:var(--fs-2xs);
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  color:var(--lab-muted);
+}
+
+/* The hero number: value carries ink colour, never the ramp colour -- the
+   swatch beside the bucket label is what carries severity identity. */
+.severity-stat-value{
+  margin:2px 0 0;
+  font-size:var(--fs-lg,1.125rem);
+  font-weight:650;
+  font-variant-numeric:tabular-nums;
+  color:var(--lab-ink);
+}
+
+.severity-stat-bucket{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  margin-block-start:3px;
+  font-size:var(--fs-xs);
+  color:var(--lab-muted);
+}
+
+.severity-swatch{
+  inline-size:10px;
+  block-size:10px;
+  border-radius:2px;
+  flex:0 0 auto;
+  /* 2px surface ring so adjacent ramp steps never bleed into one another. */
+  box-shadow:0 0 0 1px var(--lab-panel);
+}
+
+.severity-legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-block-start:6px;
+  padding-block-start:6px;
+  border-block-start:1px solid var(--lab-line);
+}
+
+.severity-legend-item{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  font-size:var(--fs-xs);
+  color:var(--lab-muted);
+}
+
+/* Severity in the pipeline rail.
+ *
+ * The component was written for the centre panel, and its layout rules are scoped to
+ * .workspace-tab-panel[data-active-tab="Severity"] -- none of which match here, so the grid loses
+ * its columns and severity-run-row stays a side-by-side flex row that squeezes the copy into a
+ * one-word-per-line sliver. Restate the layout for the ~250px rail: everything stacks, the button
+ * spans the card, and the per-segment table gives way to the timeline (as the PyQt inspector's
+ * equally narrow severity page does). */
+/* SeverityTab's root carries .tab-content, and workspace-tabs-chrome.css gives every .tab-content
+   overflow:auto + overscroll-behavior:contain. That was right for a full-page tab; inside the rail
+   it makes the card a scroll container with NOTHING to scroll (measured dY:0) whose `contain` then
+   refuses to chain -- so the wheel died on every part of the severity card and the rail would not
+   move. The rail owns scrolling here. */
+.sidebar-severity-card .tab-content,
+.sidebar-severity-card .severity-layout {
+  overflow: visible !important;
+  overscroll-behavior: auto !important;
+  max-block-size: none !important;
+  padding: 0 !important;
+}
+
+.sidebar-severity-card .severity-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+}
+
+.sidebar-severity-card .severity-workbench-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+
+.sidebar-severity-card .severity-run-row {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.sidebar-severity-card .severity-run-copy .helper-copy {
+  max-inline-size: none;
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
+.sidebar-severity-card .severity-run-copy h4 {
+  font-size: 0.8rem;
+}
+
+.sidebar-severity-card .severity-run-card .primary-action {
+  inline-size: 100%;
+}
+
+.sidebar-severity-card .severity-panel-heading h3 {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sidebar-severity-card .severity-summary-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.sidebar-severity-card .severity-stat-value {
+  font-size: 1.05rem;
+}
+
+.sidebar-severity-card .panel-card {
+  padding: 8px;
+}
+
+/* Segment-by-segment table is centre-panel detail; the rail keeps the timeline + legend. */
+.sidebar-severity-card [data-testid="severity-score-table"],
+.sidebar-severity-card .severity-table-card {
+  display: none;
+}
+
+.sidebar-severity-card .severity-histogram-plot {
+  block-size: 96px;
+}
+
+/* Rail segmented control: Pipeline | Severity.
+   Mirrors the PyQt inspector, which segments the same rail into Analysis and Severity and hides
+   the Severity segment unless the recording is scalp EEG. Sits where the "Pipeline" zone label was,
+   so the rail keeps its rhythm. */
+.waveform-right-sidebar .sidebar-segmented{
+  /* Explicit height, because the rail is a grid whose rows size to min-content and `overflow:hidden`
+     below drives this element's min-content contribution to zero: without it the bar collapses to
+     its 2px borders and the Severity tab is invisible even though both buttons lay out at 26px.
+     28px = the 26px buttons plus the 1px border on each edge. */
+  block-size:28px!important;
+  min-block-size:28px!important;
+  align-self:start!important;
+  display:grid!important;
+  grid-auto-flow:column!important;
+  grid-auto-columns:1fr!important;
+  gap:0!important;
+  margin-block-end:2px!important;
+  border:1px solid var(--lab-line,#cbd5e1)!important;
+  border-radius:6px!important;
+  overflow:hidden!important;
+  background:#fff!important;
+}
+
+.waveform-right-sidebar .sidebar-segmented button{
+  min-block-size:26px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:#35495d!important;
+  font-size:var(--fs-xs)!important;
+  letter-spacing:.03em!important;
+  text-transform:uppercase!important;
+  cursor:pointer!important;
+}
+
+.waveform-right-sidebar .sidebar-segmented button + button{
+  border-inline-start:1px solid var(--lab-line,#cbd5e1)!important;
+}
+
+.waveform-right-sidebar .sidebar-segmented button.active{
+  background:#e8f0fb!important;
+  color:#12395f!important;
+  font-weight:600!important;
+}
+
+/* On its own tab the severity card carries the panel, so it should not look like a nested box. */
+.waveform-right-sidebar[data-rail-tab="severity"] .sidebar-severity-card{
+  border:0!important;
+  background:transparent!important;
+  padding:0!important;
+}
+
+/* Severity navigation: most-severe jump, prev/next through the ranking, and a k-th picker.
+   Two rows so the rail can hold it at ~200px without the buttons shrinking below a hit target. */
+.severity-nav-card .severity-nav-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) max-content max-content;
+  align-items:center;
+  gap:4px;
+  margin-block-start:4px;
+}
+
+.severity-nav-card .severity-nav-select{
+  display:grid;
+  grid-template-columns:max-content minmax(0,1fr);
+  align-items:center;
+  gap:6px;
+  margin-block-start:6px;
+}
+
+.severity-nav-card .severity-nav-select select{
+  inline-size:100%;
+  min-inline-size:0;
+}
+
+.severity-nav-card [data-testid="severity-nav-status"]{
+  margin-block-start:6px;
+}
+
+/* "Peak at" doubles as the jump control. The card itself lights up on hover rather than the number
+   wearing a hyperlink: these stat cards read as pills, and an underline inside one looks like a
+   stray anchor. Colour stays on the ink tokens -- the tint is background and border only. */
+.severity-stat[data-jump="true"]{
+  cursor:pointer;
+  border-color:var(--lab-line);
+  transition:background-color .14s ease,border-color .14s ease,box-shadow .14s ease,transform .14s ease;
+}
+
+.severity-stat[data-jump="true"]:hover,
+.severity-stat[data-jump="true"]:focus-visible{
+  border-color:#9cc0ea;
+  background:#eef4fd;
+  box-shadow:0 1px 3px rgba(15,23,42,.10);
+  transform:translateY(-1px);
+}
+
+.severity-stat[data-jump="true"]:focus-visible{
+  outline:2px solid var(--lab-cobalt,#1d4ed8);
+  outline-offset:1px;
+}
+
+.severity-stat[data-jump="true"]:active{
+  transform:translateY(0);
+  box-shadow:none;
+}
+
+/* A quiet hint that the card does something, revealed on hover so the resting state stays clean. */
+.severity-stat[data-jump="true"] h5::after{
+  content:" \2192";
+  opacity:0;
+  transition:opacity .14s ease;
+}
+
+.severity-stat[data-jump="true"]:hover h5::after,
+.severity-stat[data-jump="true"]:focus-visible h5::after{
+  opacity:.75;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .severity-stat[data-jump="true"]{ transition:none; }
+  .severity-stat[data-jump="true"]:hover,
+  .severity-stat[data-jump="true"]:focus-visible{ transform:none; }
+}

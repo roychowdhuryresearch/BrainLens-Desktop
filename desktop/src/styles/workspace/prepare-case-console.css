@@ -1,0 +1,117 @@
+/* Prepare case console owner. Owns the Prepare case-console shell, inner
+   two-column workspace, and configure/review column behavior. */
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .case-console,
+.workspace-tab-panel[data-active-tab="Prepare"] .case-console{
+  display:grid!important;
+  grid-template-rows:auto auto auto!important;
+  align-content:start!important;
+  align-items:start!important;
+  /* Compact, left-aligned card so Prepare reads as one tidy column instead of a
+     full-page spread (matches the single-column Classify/Detect tabs). */
+  justify-self:start!important;
+  inline-size:100%!important;
+  max-inline-size:560px!important;
+  block-size:auto!important;
+  max-block-size:none!important;
+  overflow:visible!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .case-console-workspace,
+.workspace-tab-panel[data-active-tab="Prepare"] .case-console-workspace{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-auto-rows:min-content!important;
+  align-content:start!important;
+  align-items:start!important;
+  gap:10px!important;
+  block-size:auto!important;
+  min-block-size:0!important;
+  max-block-size:none!important;
+  overflow:visible!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .case-console-column{
+  min-block-size:0!important;
+  overflow:auto!important;
+  overscroll-behavior:contain!important;
+  scrollbar-gutter:stable both-edges!important;
+  border-color:var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:rgba(247,250,248,.78)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .configure-column,
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .review-settings-column,
+.workspace-tab-panel[data-active-tab="Prepare"] .configure-column,
+.workspace-tab-panel[data-active-tab="Prepare"] .review-settings-column{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  align-content:start!important;
+  align-items:start!important;
+  align-self:start!important;
+  inline-size:auto!important;
+  min-inline-size:0!important;
+  block-size:auto!important;
+  max-block-size:none!important;
+  overflow:visible!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .configure-column,
+.workspace-tab-panel[data-active-tab="Prepare"] .configure-column{
+  order:1!important;
+  grid-column:1!important;
+  /* The filter form is compact; cap it so the single-column layout reads as a
+     tidy form card instead of stretching sparse across the full width. The
+     dense ROI/QC/Spectral panel below keeps the full width it needs. */
+  max-inline-size:760px!important;
+  justify-self:start!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .review-settings-column,
+.workspace-tab-panel[data-active-tab="Prepare"] .review-settings-column{
+  order:2!important;
+  grid-column:1!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:10px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .review-settings-column>h4,
+.workspace-tab-panel[data-active-tab="Prepare"] .review-settings-column>h4{
+  display:flex!important;
+  order:0!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .case-console-column>h4,
+.workspace-tab-panel[data-active-tab="Prepare"] .case-console-column>h4{
+  color:#475569!important;
+}
+
+@container (max-width:1080px){
+  .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .case-console-workspace,
+  .workspace-tab-panel[data-active-tab="Prepare"] .case-console-workspace{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+
+  .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .configure-column,
+  .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .review-settings-column,
+  .workspace-tab-panel[data-active-tab="Prepare"] .configure-column,
+  .workspace-tab-panel[data-active-tab="Prepare"] .review-settings-column{
+    grid-column:1!important;
+  }
+}
+
+@media(max-height:820px){
+  .workspace-tab-panel[data-active-tab="Prepare"] .case-console-workspace{
+    gap:8px!important;
+    padding:10px!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Prepare"] .case-console-column{
+    gap:8px!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Prepare"] .configure-column>h4,
+  .workspace-tab-panel[data-active-tab="Prepare"] .review-settings-column>h4{
+    display:none!important;
+  }
+}

@@ -1,0 +1,828 @@
+/* Agent panel shell/dock owner. Owns main-window agent sizing tokens, base panel structure, chat composer layout, resize handle, and the docked right-side layout. Toolbar styling remains in toolbar owner files. */
+.pyqt-main-window{
+  --agent-rail-width:48px;
+  --agent-panel-width:336px;
+  --agent-effective-panel-width:var(--agent-panel-width);
+  inline-size:100vw!important;
+  block-size:100vh!important;
+  max-block-size:100vh!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,calc(100vw - var(--agent-rail-width))) var(--agent-rail-width)!important;
+  overflow:hidden!important;
+}
+
+.agent-panel{
+  display:grid!important;
+  /* header · conversation tabs · content. The strip is a THIRD child: with only two rows declared it
+     landed in an implicit row that any resize collapsed to nothing, so the tabs vanished. */
+  grid-template-rows:44px max-content minmax(0,1fr)!important;
+  height:100vh!important;
+  max-height:100vh!important;
+  overflow:hidden!important;
+}
+
+.agent-panel-header{
+  min-width:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:8px!important;
+  block-size:44px!important;
+  min-block-size:44px!important;
+  max-block-size:44px!important;
+  padding:0 10px!important;
+  overflow:hidden!important;
+}
+
+.agent-panel-header strong{
+  min-width:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+.agent-panel-header-status{
+  margin-left:auto!important;
+  padding:.12rem .45rem!important;
+  font-size:var(--fs-xs)!important;
+}
+
+.agent-panel>.agent-tab-content{
+  min-height:0!important;
+  overflow:auto!important;
+}
+
+.agent-panel button{
+  min-block-size:34px!important;
+  border-radius:6px!important;
+  padding:0 12px!important;
+  font-size:var(--fs-base)!important;
+  font-weight:400!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+
+.agent-panel input:not([type="checkbox"]):not([type="radio"]),
+.agent-panel select,
+.agent-panel textarea{
+  min-block-size:34px!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:6px!important;
+  background:#fff!important;
+  color:#172331!important;
+  padding:0 10px!important;
+  font-size:var(--fs-base)!important;
+  line-height:1.2!important;
+}
+
+.agent-panel textarea{
+  padding-block:8px!important;
+}
+
+.agent-panel input[type="checkbox"],
+.agent-panel input[type="radio"]{
+  inline-size:16px!important;
+  block-size:16px!important;
+  min-inline-size:16px!important;
+  min-block-size:16px!important;
+  padding:0!important;
+  flex:0 0 16px!important;
+}
+
+.agent-chat-tab{
+  display:grid!important;
+  grid-template-rows:minmax(0,1fr) auto!important;
+  gap:10px!important;
+  padding:10px!important;
+  overflow:hidden!important;
+}
+
+.agent-chat-transcript{
+  min-height:0!important;
+  display:grid!important;
+  /* Pin the column. A grid track sizes to its content by default, so one long file path or a wide
+     markdown table stretched the column past the panel and clipped every message in it. */
+  grid-template-columns:minmax(0,1fr)!important;
+  align-content:start!important;
+  gap:9px!important;
+  overflow:auto!important;
+  overscroll-behavior:contain!important;
+  scrollbar-gutter:stable both-edges!important;
+  padding-right:2px!important;
+}
+
+.agent-message-card{
+  padding:9px 10px!important;
+  /* min-inline-size defaults to auto in a grid item, which refuses to shrink below its longest
+     unbreakable run -- a Windows path like C:\Users\...\0.edf is one such run. Both lines are needed:
+     the first lets the bubble shrink, the second lets the text inside it break. */
+  min-inline-size:0!important;
+  overflow-wrap:anywhere!important;
+}
+
+.agent-message-card p{
+  margin:.35rem 0 0!important;
+}
+
+/* Conversation prose reads as chat, not as a stack of form cards: the user's turn is a
+   right-aligned bubble, the agent's turn is plain text on the panel surface. Status
+   objects (run cards, staged approvals) keep the full card treatment so they stand out. */
+.agent-message-card-user{
+  justify-self:end!important;
+  max-inline-size:88%!important;
+  padding:8px 12px!important;
+}
+
+.agent-message-card-user p{
+  margin:0!important;
+}
+
+.agent-message-card-reply{
+  padding:2px 2px 4px!important;
+}
+
+.agent-message-card-streaming{
+  padding-inline-start:10px!important;
+}
+
+.agent-message-markdown{
+  margin-top:.35rem!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:.45rem!important;
+  color:#34485c!important;
+  line-height:1.35!important;
+}
+
+/* A markdown table is the one thing in a reply that genuinely cannot wrap -- the agent answers with
+   Statistic/Value tables constantly. display:block makes it its own scroll area, so a wide table
+   scrolls sideways inside the bubble instead of pushing the whole conversation out of view. */
+.agent-message-markdown table{
+  display:block!important;
+  max-inline-size:100%!important;
+  overflow-x:auto!important;
+  border-collapse:collapse!important;
+  /* Rounded like every other surface in the panel, so a table that has to scroll still reads as a
+     contained object rather than as content sliced off at the edge. */
+  border-radius:var(--lab-radius,6px)!important;
+  outline:1px solid var(--lab-line,#d1dbe2)!important;
+  outline-offset:-1px!important;
+}
+
+.agent-message-markdown th,
+.agent-message-markdown td{
+  padding:3px 8px!important;
+  border:1px solid var(--lab-line,#d1dbe2)!important;
+  text-align:start!important;
+  white-space:nowrap!important;
+}
+
+/* Same for fenced code: scroll it rather than let it set the panel's width. */
+.agent-message-markdown pre{
+  max-inline-size:100%!important;
+  overflow-x:auto!important;
+  margin:0!important;
+}
+
+.agent-message-markdown p,
+.agent-message-markdown li{
+  overflow-wrap:anywhere!important;
+}
+
+.agent-message-markdown h3,
+.agent-message-markdown h4,
+.agent-message-markdown p,
+.agent-message-markdown ul,
+.agent-message-markdown ol{
+  margin:0!important;
+}
+
+.agent-message-markdown h3{
+  font-size:var(--fs-md)!important;
+}
+
+.agent-message-markdown h4{
+  font-size:var(--fs-base)!important;
+}
+
+.agent-message-markdown ul,
+.agent-message-markdown ol{
+  padding-left:1.05rem!important;
+}
+
+.agent-message-markdown li{
+  margin:.15rem 0!important;
+}
+
+.agent-message-markdown strong{
+  font-weight:600!important;
+  color:#172331!important;
+}
+
+.agent-message-markdown em{
+  font-style:italic!important;
+}
+
+.agent-message-markdown code{
+  border:1px solid var(--lab-line)!important;
+  border-radius:4px!important;
+  background:#f3f6f8!important;
+  padding:.05rem .25rem!important;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;
+  font-size:var(--fs-sm)!important;
+}
+
+.agent-markdown-table-wrap{
+  overflow:auto!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:6px!important;
+}
+
+.agent-markdown-table-wrap table{
+  width:100%!important;
+  border-collapse:collapse!important;
+  font-size:var(--fs-xs)!important;
+}
+
+.agent-markdown-table-wrap th,
+.agent-markdown-table-wrap td{
+  border-bottom:1px solid var(--lab-line)!important;
+  padding:.32rem .45rem!important;
+  text-align:left!important;
+  vertical-align:top!important;
+}
+
+.agent-markdown-table-wrap th{
+  background:#f3f6f8!important;
+  color:#172331!important;
+  font-weight:600!important;
+}
+
+.agent-markdown-table-wrap tr:last-child td{
+  border-bottom:0!important;
+}
+
+.agent-message-role{
+  display:block!important;
+  font-weight:600!important;
+  font-size:var(--fs-xs)!important;
+  letter-spacing:.04em!important;
+  text-transform:uppercase!important;
+}
+
+/* Empty-chat welcome: replaces the old permanent system/intent/context boilerplate cards.
+   The transcript centers a glyph + heading + one-liner + three suggested prompts instead
+   of leaving a void above the composer. */
+.agent-chat-transcript[data-empty="true"]{
+  align-content:center!important;
+  justify-items:center!important;
+}
+
+.agent-chat-empty{
+  display:grid!important;
+  justify-items:center!important;
+  gap:8px!important;
+  max-inline-size:248px!important;
+  margin:0!important;
+  text-align:center!important;
+  font-size:var(--fs-sm)!important;
+  line-height:1.45!important;
+}
+
+.agent-chat-empty h3,
+.agent-chat-empty p{
+  margin:0!important;
+}
+
+.agent-chat-empty h3{
+  font-size:var(--fs-md)!important;
+}
+
+.agent-chat-suggestions{
+  display:grid!important;
+  gap:6px!important;
+  margin-top:8px!important;
+  inline-size:100%!important;
+}
+
+.agent-chat-suggestions button{
+  min-block-size:34px!important;
+  white-space:normal!important;
+  line-height:1.3!important;
+  padding:7px 10px!important;
+  text-align:left!important;
+}
+
+.agent-chat-staged{
+  display:grid!important;
+  gap:7px!important;
+  padding:8px!important;
+  border:1px solid #e0b25e!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fdf6e9!important;
+}
+
+/* The cards scroll *inside* their own list, not the panel. The panel itself has
+   no max-height/overflow so the grid can't squeeze it below one card (which was
+   clipping the Apply button); the inner cap keeps a multi-step plan from pushing
+   the composer or the first Apply button out of view. */
+.agent-chat-staged-list{
+  display:grid!important;
+  gap:7px!important;
+  max-height:340px!important;
+  overflow-y:auto!important;
+}
+
+.agent-chat-staged-title{
+  margin:0!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:600!important;
+  letter-spacing:.02em!important;
+  color:#8a5a12!important;
+}
+
+.agent-chat-staged-card{
+  border:1px solid #e7c987!important;
+  background:#fff!important;
+}
+
+.agent-chat-staged-type{
+  margin:.3rem 0 0!important;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;
+  font-size:var(--fs-xs)!important;
+}
+
+.agent-chat-staged-reason{
+  margin:.25rem 0 0!important;
+  font-size:var(--fs-xs)!important;
+  color:#475569!important;
+  display:-webkit-box!important;
+  -webkit-box-orient:vertical!important;
+  -webkit-line-clamp:3!important;
+  overflow:hidden!important;
+}
+
+.agent-chat-staged .button-row{
+  display:flex!important;
+  gap:6px!important;
+  margin-top:6px!important;
+}
+
+/* Bleed through the tab's 10px padding so the dock reaches all three edges. Inset, its tint would
+   read as a floating band with white gutters rather than as the bottom of the panel. */
+.agent-chat-composer{
+  position:sticky!important;
+  bottom:0!important;
+  z-index:1!important;
+  display:grid!important;
+  gap:7px!important;
+  margin:0 -10px -10px!important;
+  padding:8px 10px 10px!important;
+}
+
+.agent-chat-composer textarea{
+  width:100%!important;
+  min-height:82px!important;
+  max-height:138px!important;
+  margin:0!important;
+  resize:vertical!important;
+  padding:8px!important;
+}
+
+/* Placeholder ink, not body ink: at #64748b the hint read like text the user had already typed.
+   The browser clears it on the first keystroke by itself -- what was missing was the contrast gap
+   that tells you it is a prompt rather than content. */
+.agent-chat-composer textarea::placeholder{
+  color:#9aa8b8!important;
+  opacity:1!important;
+}
+
+/* The Enter/Shift+Enter hint belongs beside the Send button, where it survives typing. */
+.agent-composer-footer{
+  grid-template-columns:minmax(0,1fr) max-content max-content!important;
+}
+
+.agent-composer-hint{
+  color:#9aa8b8!important;
+  font-size:var(--fs-2xs)!important;
+  white-space:nowrap!important;
+}
+
+.agent-composer-footer{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:8px!important;
+  align-items:center!important;
+}
+
+/* Workspace-context chip: one ellipsized pill showing the loaded recording (full path on
+   hover) where the old multi-sentence helper copy sat. */
+.agent-context-chip{
+  min-width:0!important;
+  justify-self:start!important;
+  display:block!important;
+  max-inline-size:100%!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+  padding:3px 10px!important;
+  border-radius:999px!important;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;
+  font-size:var(--fs-xs)!important;
+}
+
+.agent-composer-footer button{
+  min-width:64px!important;
+}
+
+/* VS Code-like Agent panel resizing: the activity bar stays fixed and the
+   right panel can be dragged wider/narrower. */
+.agent-panel-resize-handle{
+  position:fixed!important;
+  top:0!important;
+  bottom:0!important;
+  right:var(--agent-effective-panel-width)!important;
+  width:7px!important;
+  z-index:150!important;
+  cursor:col-resize!important;
+  background:transparent!important;
+  border-left:1px solid transparent!important;
+  border-right:1px solid transparent!important;
+}
+
+.agent-panel-resize-handle:hover,
+.agent-panel-resize-handle:focus-visible,
+.agent-panel-resizing .agent-panel-resize-handle{
+  background:rgba(32,90,155,.16)!important;
+  border-left-color:var(--lab-cobalt)!important;
+  border-right-color:var(--lab-cobalt)!important;
+}
+
+.agent-panel-resizing{
+  cursor:col-resize!important;
+  user-select:none!important;
+}
+
+.agent-panel-resizing *{
+  cursor:col-resize!important;
+  user-select:none!important;
+}
+
+/* ...but never where text lives. Excluding those elements from the rule above is NOT enough:
+   user-select inherits, so a composer whose parent is gagged is gagged too. They have to assert
+   their own value to win. This is what keeps a stranded drag from making the app unselectable. */
+.agent-panel-resizing input,
+.agent-panel-resizing textarea,
+.agent-panel-resizing .agent-chat-transcript,
+.agent-panel-resizing .agent-chat-transcript *{
+  cursor:auto!important;
+  user-select:text!important;
+}
+
+/* Docked agent layout: opening the panel RESHAPES the Prepare/Detect/Classify
+   workspace instead of covering it -- the workspace column shrinks, the rail sits
+   between the workspace and the panel, and nothing is occluded (the right Pipeline
+   rail stays visible while the agent writes to it). The panel still paints ABOVE
+   workspace chrome that could bleed right -- waveform toolbar popovers (z-120) and
+   the top-toolbar menu (z-80) -- and BELOW modal backdrops (z-200), which must dim
+   and cover the agent too. */
+.pyqt-main-window[data-agent-open="true"]{
+  grid-template-columns:minmax(0,1fr) var(--agent-rail-width) var(--agent-effective-panel-width)!important;
+}
+
+.pyqt-main-window[data-agent-open="true"] .agent-panel{
+  position:relative!important;
+  min-inline-size:0!important;
+  z-index:150!important;
+}
+
+.pyqt-main-window[data-agent-open="true"] .agent-panel-resize-handle{
+  right:var(--agent-effective-panel-width)!important;
+  z-index:152!important;
+}
+
+/* Live agent reply: three pulsing dots before the first token, then the streaming
+   reply renders in-bubble with a blinking typing caret. */
+.agent-streaming-body{
+  position:relative!important;
+}
+
+.agent-thinking{
+  display:flex!important;
+  align-items:center!important;
+  gap:5px!important;
+  margin:.4rem 0 .15rem!important;
+}
+
+.agent-thinking-dot{
+  inline-size:6px!important;
+  block-size:6px!important;
+  border-radius:999px!important;
+  animation:agent-thinking-pulse 1.2s ease-in-out infinite!important;
+}
+
+.agent-thinking-dot:nth-child(2){animation-delay:.18s!important;}
+.agent-thinking-dot:nth-child(3){animation-delay:.36s!important;}
+
+.agent-streaming-caret{
+  display:inline-block!important;
+  inline-size:2px!important;
+  block-size:1em!important;
+  margin-left:3px!important;
+  vertical-align:text-bottom!important;
+  animation:agent-caret-blink 1s step-end infinite!important;
+}
+
+@keyframes agent-thinking-pulse{
+  0%,80%,100%{opacity:.25;transform:translateY(0);}
+  40%{opacity:1;transform:translateY(-2px);}
+}
+
+@keyframes agent-caret-blink{
+  0%,100%{opacity:1;}
+  50%{opacity:0;}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .agent-thinking-dot,
+  .agent-streaming-caret{animation:none!important;}
+}
+
+/* Detection run lifecycle card in the transcript (agent-staged run: running → complete/failed). */
+.agent-run-card-label{
+  margin:.35rem 0 0!important;
+  font-weight:600!important;
+}
+
+.agent-run-card-status{
+  display:flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  margin:.2rem 0 0!important;
+  font-size:var(--fs-sm)!important;
+}
+
+.agent-run-card-status .agent-thinking{
+  margin:0!important;
+}
+
+.agent-run-card[data-status="complete"] .agent-run-card-status::before{content:"\2713"!important;font-weight:700!important;}
+.agent-run-card[data-status="failed"] .agent-run-card-status::before{content:"\2715"!important;font-weight:700!important;}
+
+/* Agent autonomy control (Safety tab): how much of the HITL Apply gate the agent may skip. */
+.agent-autonomy{
+  display:grid!important;
+  gap:6px!important;
+  margin-top:14px!important;
+}
+
+.agent-autonomy-field{
+  display:grid!important;
+  gap:4px!important;
+  font-size:var(--fs-sm)!important;
+}
+
+.agent-autonomy-detail{
+  margin:0!important;
+  font-size:var(--fs-xs)!important;
+  line-height:1.4!important;
+}
+
+.agent-autonomy-warning{
+  margin:0!important;
+  border-radius:var(--lab-radius)!important;
+  padding:6px 8px!important;
+  font-size:var(--fs-xs)!important;
+  line-height:1.4!important;
+}
+
+/* Approval bubble: the action in words, its parameters, and the button that runs it. */
+.agent-chat-staged-params{
+  display:grid!important;
+  gap:2px!important;
+  margin:6px 0 8px!important;
+  padding:6px 8px!important;
+  border-radius:6px!important;
+  background:rgba(15,23,42,.04)!important;
+}
+
+.agent-chat-staged-params>div{
+  display:grid!important;
+  grid-template-columns:max-content minmax(0,1fr)!important;
+  gap:8px!important;
+  align-items:baseline!important;
+}
+
+.agent-chat-staged-params dt{
+  color:#7c8b9b!important;
+  font-size:var(--fs-2xs)!important;
+  text-transform:uppercase!important;
+  letter-spacing:.03em!important;
+}
+
+.agent-chat-staged-params dd{
+  margin:0!important;
+  overflow:hidden!important;
+  color:var(--lab-ink,#172331)!important;
+  font-size:var(--fs-xs)!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+.agent-chat-staged-run{
+  border-color:#126b66!important;
+  background:#126b66!important;
+  color:#fff!important;
+  font-weight:600!important;
+}
+
+/* Activity rows: the agent's working notes and tool results, one collapsed line each.
+   The convention every mature agent UI lands on -- reasoning and tool calls grouped into a quiet,
+   expandable strip so the conversation stays readable but nothing is hidden from a user who asks. */
+.agent-activity-row{
+  margin:2px 0!important;
+  padding:2px 6px!important;
+  border-left:2px solid var(--lab-line,#d0d4dd)!important;
+  color:#7c8b9b!important;
+  font-size:var(--fs-xs)!important;
+}
+
+.agent-activity-row>summary{
+  display:flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  cursor:pointer!important;
+  list-style:none!important;
+}
+
+.agent-activity-row>summary::-webkit-details-marker{ display:none!important; }
+
+.agent-activity-icon{ color:#9aa8b8!important; font-size:11px!important; }
+
+.agent-activity-summary{
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+.agent-activity-detail{
+  margin:4px 0 2px!important;
+  padding:6px 8px!important;
+  max-block-size:180px!important;
+  overflow:auto!important;
+  border-radius:6px!important;
+  background:rgba(15,23,42,.04)!important;
+  color:#53667a!important;
+  font-size:var(--fs-2xs)!important;
+  white-space:pre-wrap!important;
+}
+
+/* Working state: a status line, not an empty speech bubble. */
+.agent-working{
+  display:flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  margin:6px 2px!important;
+  color:#7c8b9b!important;
+  font-size:var(--fs-xs)!important;
+}
+
+.agent-working-label{ margin-inline-start:4px!important; }
+
+/* A tool the agent could not run, and a request that has been waiting. Both are states the user has
+   to be able to see -- silence on either one reads as "it worked". */
+.agent-chat-failure-card{
+  border-color:#e6b4b0!important;
+  background:#fdf3f2!important;
+}
+
+.agent-chat-failure-card .agent-message-role{ color:#b3261e!important; }
+
+.agent-chat-failure-reason{
+  margin:2px 0 0!important;
+  color:#8c2f28!important;
+  font-size:var(--fs-xs)!important;
+}
+
+.agent-chat-staged-waiting{
+  margin:4px 0 0!important;
+  color:#8a6d3b!important;
+  font-size:var(--fs-xs)!important;
+}
+
+/* Conversation threads: a tab per thread and a + to start one, the way editors and chat clients do
+   it. The strip scrolls rather than wrapping, so a long list never steals height from the chat. */
+.agent-conversation-tabs{
+  /* A strip, not a row that grows: the panel is a flex column, so without a fixed height this took
+     a share of the free space and pushed the transcript down a third of the panel. */
+  flex:0 0 auto!important;
+  block-size:34px!important;
+  min-block-size:34px!important;
+  max-block-size:34px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:4px!important;
+  padding:0 8px!important;
+  /* Many threads scroll sideways rather than wrapping into a second row. */
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  scrollbar-width:thin!important;
+  white-space:nowrap!important;
+  border-block-end:1px solid var(--lab-line,#d0d4dd)!important;
+  background:#f7f9fb!important;
+}
+
+.agent-conversation-tabs::-webkit-scrollbar{ block-size:6px!important; }
+
+.agent-conversation-tabs::-webkit-scrollbar-thumb{
+  border-radius:3px!important;
+  background:rgba(100,116,139,.35)!important;
+}
+
+.agent-conversation-tabs button{
+  block-size:24px!important;
+  min-block-size:24px!important;
+  max-inline-size:140px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+
+.agent-conversation-tabs button{
+  flex:0 0 auto!important;
+  min-block-size:24px!important;
+  padding:2px 10px!important;
+  border:1px solid transparent!important;
+  border-radius:999px!important;
+  background:transparent!important;
+  color:#53667a!important;
+  font-size:var(--fs-xs)!important;
+  cursor:pointer!important;
+}
+
+.agent-conversation-tabs button:hover{ background:#eef2f7!important; }
+
+.agent-conversation-tabs button.active{
+  border-color:#9cc0ea!important;
+  background:#fff!important;
+  color:#12395f!important;
+  font-weight:600!important;
+}
+
+.agent-conversation-new{
+  margin-inline-start:2px!important;
+  font-size:var(--fs-sm)!important;
+  line-height:1!important;
+}
+
+/* The model answering this conversation, beside the title. */
+.agent-panel-model{
+  max-inline-size:150px!important;
+  overflow:hidden!important;
+  padding:1px 7px!important;
+  border:1px solid var(--lab-line,#d0d4dd)!important;
+  border-radius:999px!important;
+  background:#eef4fd!important;
+  color:#35495d!important;
+  font-size:var(--fs-2xs)!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+/* Tab close: quiet until the tab is hovered or current, so a strip of threads is not a row of ×. */
+.agent-conversation-tabs button{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:6px!important;
+}
+
+.agent-conversation-title{
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+.agent-conversation-close{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  inline-size:14px!important;
+  block-size:14px!important;
+  border-radius:50%!important;
+  color:#7c8b9b!important;
+  font-size:12px!important;
+  line-height:1!important;
+  opacity:0!important;
+  cursor:pointer!important;
+  transition:opacity .12s ease,background-color .12s ease!important;
+}
+
+.agent-conversation-tabs button:hover .agent-conversation-close,
+.agent-conversation-tabs button.active .agent-conversation-close,
+.agent-conversation-close:focus-visible{
+  opacity:1!important;
+}
+
+.agent-conversation-close:hover{
+  background:rgba(148,163,184,.28)!important;
+  color:#35495d!important;
+}

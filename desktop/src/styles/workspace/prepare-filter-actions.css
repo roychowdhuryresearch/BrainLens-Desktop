@@ -1,0 +1,199 @@
+/* Prepare filter action owner. Checkbox choices and the OK/jobs/Save runtime
+   controls stay in one stable cluster at the Electron minimum width. */
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-toggle-grid,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-toggle-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,max-content)!important;
+  inline-size:max-content!important;
+  max-inline-size:100%!important;
+  justify-content:start!important;
+  align-items:start!important;
+  gap:4px 10px!important;
+  padding:4px 6px!important;
+  margin:0!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-toggle-option,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-toggle-option{
+  min-block-size:22px!important;
+  display:grid!important;
+  grid-template-columns:16px max-content!important;
+  align-items:center!important;
+  gap:6px!important;
+  font-size:var(--fs-2xs)!important;
+  line-height:1.1!important;
+  white-space:nowrap!important;
+  min-inline-size:0!important;
+  max-inline-size:max-content!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-toggle-option span,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-toggle-option span{
+  min-inline-size:0!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  white-space:nowrap!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-toggle-grid input[type="checkbox"],
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-toggle-grid input[type="checkbox"]{
+  inline-size:16px!important;
+  block-size:16px!important;
+  min-inline-size:16px!important;
+  min-block-size:16px!important;
+  margin:0!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .runtime-control-row,
+.workspace-tab-panel[data-active-tab="Prepare"] .runtime-control-row{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,var(--ui-density-field-short)))!important;
+  gap:var(--ui-density-gap-y) 11px!important;
+  justify-content:start!important;
+  align-items:center!important;
+  margin:0!important;
+  transform:none!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel .runtime-control-row label{
+  grid-template-columns:39px minmax(0,1fr)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel .prepare-runtime-jobs,
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-runtime-jobs,
+.workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel .prepare-runtime-jobs,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-runtime-jobs{
+  display:grid!important;
+  grid-template-columns:56px max-content!important;
+  inline-size:100%!important;
+  max-inline-size:100%!important;
+  block-size:32px!important;
+  max-block-size:32px!important;
+  align-items:center!important;
+  column-gap:5px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-runtime-jobs span,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-runtime-jobs span{
+  grid-column:2!important;
+  grid-row:1!important;
+  white-space:nowrap!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-runtime-action,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-runtime-action{
+  block-size:32px!important;
+  min-block-size:32px!important;
+  max-block-size:32px!important;
+  padding-block:0!important;
+  line-height:1!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .runtime-control-row input:not([type="checkbox"]):not([type="radio"]),
+.workspace-tab-panel[data-active-tab="Prepare"] .runtime-control-row input:not([type="checkbox"]):not([type="radio"]){
+  block-size:32px!important;
+  min-block-size:32px!important;
+  max-block-size:32px!important;
+  padding-block:0!important;
+  line-height:1!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-runtime-jobs input:not([type="checkbox"]):not([type="radio"]),
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-runtime-jobs input:not([type="checkbox"]):not([type="radio"]){
+  grid-column:1!important;
+  grid-row:1!important;
+  inline-size:56px!important;
+  width:56px!important;
+  min-inline-size:0!important;
+  max-inline-size:56px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .runtime-control-row [data-testid="pyqt-overview_filter_button"]{
+  grid-column:1!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .runtime-control-row label:has([data-testid="pyqt-n_jobs_spinbox"]){
+  grid-column:2!important;
+  grid-template-columns:56px max-content!important;
+  align-self:center!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .runtime-control-row [data-testid="pyqt-n_jobs_ok_button"]{
+  grid-column:3!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-filter-action-strip,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-filter-action-strip{
+  display:grid!important;
+  grid-template-columns:max-content!important;
+  justify-content:start!important;
+  align-items:start!important;
+  gap:6px 12px!important;
+  max-inline-size:100%!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-filter-action-strip .prepare-toggle-grid,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-filter-action-strip .prepare-toggle-grid{
+  grid-template-columns:repeat(2,max-content)!important;
+  inline-size:max-content!important;
+  max-inline-size:100%!important;
+  align-items:center!important;
+  gap:4px 10px!important;
+  padding:4px 6px!important;
+  transform:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-filter-action-strip .prepare-toggle-option,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-filter-action-strip .prepare-toggle-option{
+  min-block-size:22px!important;
+  align-items:center!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-filter-action-strip .runtime-control-row,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-filter-action-strip .runtime-control-row{
+  display:grid!important;
+  /* njobs (Workers) moved out — it is a global runtime setting and already lives
+     in the review rail's Workers control; this row now just applies the filter. */
+  grid-template-columns:max-content!important;
+  inline-size:max-content!important;
+  max-inline-size:100%!important;
+  justify-content:start!important;
+  align-items:center!important;
+  gap:6px!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  background:transparent!important;
+  transform:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-filter-action-strip .runtime-control-row .prepare-runtime-action,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-filter-action-strip .runtime-control-row .prepare-runtime-action{
+  inline-size:64px!important;
+  min-inline-size:64px!important;
+  max-inline-size:64px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-filter-action-strip .prepare-runtime-jobs,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-filter-action-strip .prepare-runtime-jobs{
+  grid-template-columns:56px max-content!important;
+  inline-size:max-content!important;
+  width:max-content!important;
+  max-inline-size:max-content!important;
+  column-gap:5px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-filter-action-strip .prepare-runtime-jobs input:not([type="checkbox"]):not([type="radio"]),
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-filter-action-strip .prepare-runtime-jobs input:not([type="checkbox"]):not([type="radio"]){
+  inline-size:56px!important;
+  width:56px!important;
+  min-inline-size:56px!important;
+  max-inline-size:56px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-filter-action-strip .prepare-runtime-jobs span,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-filter-action-strip .prepare-runtime-jobs span{
+  display:inline!important;
+  grid-column:2!important;
+  grid-row:1!important;
+}

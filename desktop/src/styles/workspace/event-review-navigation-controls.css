@@ -1,0 +1,42 @@
+/* Event Review annotation navigation owner. Navigation row button sizing and
+   wrap behavior live here instead of in generic Event Review controls. */
+.event-review-dialog .annotation-side-stack .annotation-navigation-row,
+.annotation-side-stack .annotation-navigation-row{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  justify-content:start!important;
+  gap:4px!important;
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  overflow:visible!important;
+}
+
+.event-review-dialog .annotation-side-stack .annotation-navigation-row button,
+.annotation-side-stack .annotation-navigation-row button{
+  inline-size:auto!important;
+  min-inline-size:76px!important;
+  max-inline-size:none!important;
+  flex:1 1 76px!important;
+  block-size:var(--ui-action-h)!important;
+  min-block-size:var(--ui-action-h)!important;
+  font-size:var(--fs-sm)!important;
+  padding-inline:4px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+
+@media(max-width:760px){
+  .event-review-dialog .annotation-side-stack .annotation-navigation-row,
+  .annotation-side-stack .annotation-navigation-row{
+    gap:6px!important;
+  }
+
+  .event-review-dialog .annotation-side-stack .annotation-navigation-row button,
+  .annotation-side-stack .annotation-navigation-row button{
+    inline-size:100%!important;
+    min-inline-size:0!important;
+    max-inline-size:none!important;
+    flex:1 1 calc(50% - 6px)!important;
+  }
+}

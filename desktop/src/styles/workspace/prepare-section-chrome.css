@@ -1,0 +1,49 @@
+/* Prepare section chrome owner. Owns reusable Prepare-only section surfaces,
+   headings, and section padding without reaching into other workflow tabs. */
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-section{
+  border-color:var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:linear-gradient(180deg,#fff,#f7faf8)!important;
+  box-shadow:var(--lab-inset),0 1px 2px rgba(17,24,39,.04)!important;
+  padding:9px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .case-console-column>h4,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-section-heading h3,
+.workspace-tab-panel[data-active-tab="Prepare"] .review-settings-column>h4,
+.workspace-tab-panel[data-active-tab="Prepare"] .panel-heading-row h3{
+  margin:0!important;
+  color:#1b2a38!important;
+  font-weight:400!important;
+  line-height:1.15!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .case-console-column>h4,
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-info-grid dt{
+  color:var(--lab-muted)!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:400!important;
+  letter-spacing:.01em!important;
+}
+
+/* The Prepare column eyebrows (Preprocess / Analysis & outputs) adopt the rail's
+   uppercase letterspaced eyebrow voice (PIPELINE / SIGNAL / DETECTION) so the same
+   structural role reads the same across the rail and the workflow tabs. */
+.workspace-tab-panel[data-active-tab="Prepare"] .case-console-column>h4,
+.workspace-tab-panel[data-active-tab="Prepare"] .review-settings-column>h4{
+  text-transform:uppercase!important;
+  letter-spacing:.06em!important;
+  font-size:var(--fs-xs)!important;
+  color:var(--lab-faint)!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-section h3{
+  margin-block-end:6px!important;
+  font-size:var(--fs-md)!important;
+}
+
+@media(max-height:820px){
+  .workspace-tab-panel[data-active-tab="Prepare"] .prepare-section-heading{
+    min-block-size:20px!important;
+  }
+}

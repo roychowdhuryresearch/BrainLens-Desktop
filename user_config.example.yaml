@@ -1,0 +1,50 @@
+# User-editable configuration example.
+# Copy to user_config.yaml and provide real API keys through environment variables.
+
+active_model: qwen3.5-plus
+
+ai_models:
+  - provider: qianwen
+    model: qwen3.5-plus
+    api_key: "${DASHSCOPE_API_KEY:}"
+    api_base: https://dashscope.aliyuncs.com/compatible-mode/v1
+    temperature: 0.7
+    max_tokens: 20000
+  - provider: qianwen
+    model: qwen-turbo
+    api_key: "${DASHSCOPE_API_KEY:}"
+    api_base: https://dashscope.aliyuncs.com/compatible-mode/v1
+    temperature: 0.3
+    max_tokens: 10000
+
+router_model:
+  provider: qianwen
+  model: qwen3.5-flash
+  api_key: "${DASHSCOPE_API_KEY:}"
+  api_base: https://dashscope.aliyuncs.com/compatible-mode/v1
+  temperature: 0.3
+  max_tokens: 1000
+
+compress_model:
+  provider: qianwen
+  model: qwen-turbo
+  api_key: "${DASHSCOPE_API_KEY:}"
+  api_base: https://dashscope.aliyuncs.com/compatible-mode/v1
+  temperature: 0.3
+  max_tokens: 100
+
+summarizer_model:
+  provider: qianwen
+  model: qwen3.5-flash
+  api_key: "${DASHSCOPE_API_KEY:}"
+  api_base: https://dashscope.aliyuncs.com/compatible-mode/v1
+  temperature: 0.3
+  max_tokens: 2048
+
+vlm_config:
+  provider: qianwen
+  model: qwen3-vl-flash
+  api_key: "${DASHSCOPE_API_KEY:}"
+  api_base: https://dashscope.aliyuncs.com/compatible-mode/v1
+  max_tokens: 4096
+  enabled: false

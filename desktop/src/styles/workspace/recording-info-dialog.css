@@ -1,0 +1,144 @@
+/* Recording Information dialog owner. Recording metadata containment,
+   channel-list density, raw metadata clipping, and the header entry button live
+   here instead of legacy workflow/dialog layers. */
+.recording-info-dialog{
+  width:min(860px,calc(100vw - 48px));
+  height:min(720px,calc(100vh - 48px));
+  grid-template-rows:auto max-content minmax(150px,180px) minmax(0,1fr);
+}
+
+/* Channels usually holds a short list (~10 montage rows); the base track above
+   reserves 150-180px and starves the long Raw Metadata table below (it clipped).
+   Shrink Channels to fit its content (min 96px, cap 180px + scroll for big
+   montages) and hand the reclaimed height to Raw Metadata. Higher specificity
+   so the pinned base row-template string stays intact. */
+.modal-backdrop .recording-info-dialog{
+  grid-template-rows:auto max-content minmax(96px,180px) minmax(0,1fr)!important;
+}
+
+.recording-info-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid #e2e8f0;
+  padding-bottom:10px;
+}
+
+.recording-info-channel-card,
+.recording-info-raw-card{
+  min-height:0;
+  overflow:hidden;
+}
+
+/* Card interior padding. These .panel-cards are bare sections with 0 padding, so
+   the File Summary grid, the Channels inner list box (its own border+bg), and the
+   Raw Metadata table sat flush on the card's 1px rounded border (= overlapping
+   ring). Inset all card content. Raw card's !important bottom scroll-clearance
+   (below) still wins for padding-bottom. */
+.recording-info-dialog .panel-card{
+  padding:10px 12px;
+}
+
+.recording-info-dialog [data-testid="pyqt-recording_info_summary_card"]{
+  align-content:start!important;
+}
+
+.recording-info-dialog .recording-info-grid{
+  display:grid!important;
+  grid-template-columns:minmax(132px,max-content) minmax(0,1fr)!important;
+  align-items:start!important;
+  gap:5px 14px!important;
+  margin:0!important;
+}
+
+.recording-info-dialog .recording-info-grid dt{
+  color:var(--lab-muted);
+  font-weight:400!important;
+}
+
+.recording-info-dialog .recording-info-grid dd{
+  min-width:0;
+  margin:0;
+  overflow-wrap:anywhere;
+}
+
+.recording-info-channel-card{
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr)!important;
+  gap:8px!important;
+}
+
+.recording-info-channel-list{
+  min-height:0;
+  block-size:100%!important;
+  max-height:none!important;
+  overflow:auto;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-auto-rows:min-content;
+  align-content:start;
+  gap:6px;
+  border:1px solid var(--lab-line);
+  border-radius:var(--lab-radius);
+  background:#f8fafc;
+  padding:10px;
+  scrollbar-gutter:stable;
+}
+
+.recording-info-channel-list span{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.recording-info-raw-card{
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr)!important;
+  gap:8px!important;
+  overflow:auto!important;
+  padding-block-end:var(--ui-modal-bottom-clearance)!important;
+  scroll-padding-block-end:var(--ui-modal-bottom-clearance)!important;
+}
+
+.recording-info-raw-card .data-table{
+  margin:0;
+  table-layout:fixed;
+  min-block-size:0!important;
+}
+
+.recording-info-raw-card .data-table td{
+  overflow:visible;
+  overflow-wrap:anywhere;
+  text-overflow:clip;
+  white-space:normal;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-header-actions [data-testid="pyqt-recording_info_button"]{
+  display:inline-flex!important;
+  position:static!important;
+  inline-size:auto!important;
+  min-inline-size:48px!important;
+  max-inline-size:none!important;
+  block-size:34px!important;
+  min-block-size:34px!important;
+  max-block-size:34px!important;
+  padding-inline:10px!important;
+  margin:0!important;
+  border-width:1px!important;
+  overflow:visible!important;
+  clip:auto!important;
+  white-space:nowrap!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+  flex:0 0 auto!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+
+@media(max-width:760px){
+  .recording-info-channel-list{
+    grid-template-columns:1fr;
+  }
+}

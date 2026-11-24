@@ -1,0 +1,161 @@
+/* Severity score-distribution plot owner.
+   Owns the histogram of per-segment scores, its axis/scale chrome, hover tooltip, and the
+   per-segment table disclosure. Where those scores fall in TIME is the recording overview strip
+   (the mini plot), not this card. Tab scaffold and stats live in severity-workbench.css. */
+/* min-inline-size:0 all the way down. Flex and grid items default to min-width:auto, which
+   refuses to shrink below content size -- with a few hundred bars inside, that let the plot
+   push itself to ~6000px and burst out of the card instead of the bars getting thinner. */
+.severity-histogram-card{
+  min-inline-size:0;
+}
+
+.severity-histogram{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  margin-block-start:6px;
+  min-inline-size:0;
+}
+
+.severity-histogram-plot{
+  display:flex;
+  gap:6px;
+  block-size:132px;
+  min-inline-size:0;
+}
+
+/* Recessive axis: the marks carry the data, the scale just orients it. */
+.severity-histogram-axis{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  inline-size:14px;
+  flex:0 0 auto;
+  font-size:var(--fs-2xs);
+  font-variant-numeric:tabular-nums;
+  color:var(--lab-faint);
+  text-align:end;
+}
+
+.severity-histogram-bars{
+  position:relative;
+  flex:1 1 auto;
+  min-inline-size:0;
+  /* Explicit height so each bar's percentage height has a definite parent to resolve against.
+     Relying on flex stretch alone leaves the percentage indefinite, it falls back to auto, and
+     the shared control-height rule then paints every bar the same size. */
+  block-size:100%;
+  /* Grid, not flex. With a few hundred columns, flex items refuse to shrink below their content
+     size even at flex:1 1 0 with min-inline-size:0 -- the bars stayed ~24px each and overflowed
+     the card. `grid-auto-columns:1fr` divides the track exactly, however many columns there are. */
+  display:grid;
+  grid-auto-flow:column;
+  /* minmax(0,1fr), not 1fr: a bare 1fr means minmax(auto,1fr), whose auto floor is the
+     item's min-content size -- the same refusal-to-shrink that broke the flex version. */
+  grid-auto-columns:minmax(0,1fr);
+  align-items:end;
+  /* 2px surface gap between adjacent fills. */
+  gap:2px;
+  padding-block-end:1px;
+  border-block-end:1px solid var(--lab-line-strong);
+  border-inline-start:1px solid var(--lab-line);
+  padding-inline-start:3px;
+}
+
+/* Thin marks, anchored to the baseline, with 4px rounded data-ends.
+   Each bar is a <button>, so shared-control-sizing.css's
+   `.workspace-tab-panel button, .panel-card button { border-radius:var(--ui-control-radius)!important;
+   min-block-size:var(--ui-action-h)!important; block-size:var(--ui-action-h) }`
+   matches it. That rule is meant for real controls, and left alone it floors every bar at control
+   height (34px) -- which silently FLATTENS the chart: a 0.4 and a 4.6 segment paint identically,
+   making the timeline meaningless while still looking plausible.
+   Those selectors are (0,1,1); this one is (0,2,1) so it wins, and the !importants are required
+   to beat theirs. Keep the compound selector -- a bare `.severity-histogram-bar` loses. */
+.severity-histogram-bars .severity-histogram-bar{
+  /* Let grid's default justify-self:stretch size the bar to its column. An explicit
+     inline-size:100% made the button overflow its own 2.4px cell at high column counts. */
+  min-inline-size:0;
+  inline-size:auto;
+  /* No max width: the scale beneath spans the whole track (0:00 -> end of recording), so the
+     bars have to as well. Capping bar width left short recordings drawn in the left third of a
+     full-width time axis -- the axis and the data disagreed, which reads as a broken chart. */
+  border:0;
+  padding:0;
+  border-radius:4px 4px 0 0!important;
+  min-block-size:0!important;
+  /* The per-bar score height arrives as the inline custom property --severity-bar-h and is
+     applied here with !important. A plain inline `height` does NOT work: the shared rule sets
+     the logical `block-size`, which cascades independently of physical `height`, so the 34px
+     control height wins and every bar paints identically. Owning the declaration ourselves is
+     the only way to outrank it while keeping per-bar values. */
+  block-size:var(--severity-bar-h,2%)!important;
+  cursor:pointer;
+  transition:filter .12s ease;
+}
+
+.severity-histogram-bars .severity-histogram-bar:hover,
+.severity-histogram-bars .severity-histogram-bar:focus-visible{
+  filter:brightness(1.12);
+  outline:2px solid var(--lab-cobalt);
+  outline-offset:1px;
+}
+
+.severity-histogram-scale{
+  display:flex;
+  justify-content:space-between;
+  padding-inline-start:20px;
+  font-size:var(--fs-2xs);
+  font-variant-numeric:tabular-nums;
+  color:var(--lab-faint);
+}
+
+.severity-histogram-tooltip{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-block-size:22px;
+  padding:3px 8px;
+  border:1px solid var(--lab-line);
+  border-radius:var(--lab-radius);
+  background:var(--lab-panel-2);
+  font-size:var(--fs-xs);
+  color:var(--lab-muted);
+}
+
+.severity-histogram-tooltip strong{
+  font-size:var(--fs-base);
+  font-variant-numeric:tabular-nums;
+  color:var(--lab-ink);
+}
+
+.severity-histogram-tooltip[data-visible="false"]{
+  color:var(--lab-faint);
+}
+
+/* Table view: the non-visual path to the same numbers. */
+.severity-score-table{
+  margin-block-start:8px;
+  font-size:var(--fs-xs);
+}
+
+.severity-score-table summary{
+  cursor:pointer;
+  color:var(--lab-muted);
+  padding-block:3px;
+}
+
+.severity-score-table table{
+  margin-block-start:4px;
+  inline-size:100%;
+}
+
+.severity-score-table td{
+  font-variant-numeric:tabular-nums;
+}
+
+/* Says a bar is a peak-of-N window, so an aggregated column is never misread as one segment. */
+.severity-histogram-note{
+  margin:2px 0 0;
+  font-size:var(--fs-2xs);
+  color:var(--lab-faint);
+}

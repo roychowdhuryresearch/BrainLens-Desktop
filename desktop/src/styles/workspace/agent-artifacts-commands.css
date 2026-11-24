@@ -1,0 +1,135 @@
+/* Agent artifacts and command history owner. Owns artifact filters/search/actions plus command queue inspection surfaces. */
+/* Persistent Agent artifacts controls. */
+.agent-artifacts-toolbar{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:8px!important;
+}
+
+.agent-artifacts-toolbar h3{
+  margin:0!important;
+}
+
+.agent-artifacts-toolbar button:disabled{
+  opacity:.5!important;
+  cursor:not-allowed!important;
+}
+
+.agent-artifact-filter-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:8px!important;
+  align-items:center!important;
+  margin:8px 0!important;
+}
+
+.agent-artifact-filter-row label{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+}
+
+.agent-artifact-filter-row select{
+  min-width:0!important;
+  width:100%!important;
+  padding:.32rem .45rem!important;
+}
+
+.agent-artifact-search{
+  display:grid!important;
+  gap:5px!important;
+  margin:8px 0!important;
+}
+
+.agent-artifact-search input{
+  min-width:0!important;
+  padding:.38rem .5rem!important;
+}
+
+.agent-artifact-search input::placeholder{
+  color:#64748b!important;
+}
+
+.agent-artifact-actions{
+  display:flex!important;
+  gap:6px!important;
+  flex-wrap:wrap!important;
+}
+
+.agent-artifact-actions button{
+  padding:.25rem .45rem!important;
+  font-size:var(--fs-xs)!important;
+}
+
+.agent-artifacts-persistence{
+  margin:8px 0 10px!important;
+}
+
+/* Agent Actions command history: inspectable command queue with source/status
+   filters and staged apply/dismiss controls. */
+.agent-command-toolbar{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(118px,1fr))!important;
+  gap:8px!important;
+  align-items:end!important;
+  margin:10px 0!important;
+}
+
+.agent-command-toolbar label{
+  display:grid!important;
+  gap:4px!important;
+  min-inline-size:118px!important;
+  font-size:var(--fs-sm)!important;
+}
+
+.agent-command-toolbar select{
+  inline-size:100%!important;
+  min-inline-size:96px!important;
+  padding:.32rem .45rem!important;
+}
+
+.agent-command-toolbar .status-pill{
+  justify-self:start!important;
+}
+
+.agent-command-history{
+  display:grid!important;
+  gap:8px!important;
+  max-height:280px!important;
+  overflow:auto!important;
+  scrollbar-gutter:stable both-edges!important;
+}
+
+.agent-command-card{
+  display:grid!important;
+  gap:7px!important;
+  padding:9px!important;
+}
+
+.agent-command-card header{
+  display:flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  flex-wrap:wrap!important;
+}
+
+.agent-command-card p{
+  margin:0!important;
+}
+
+.agent-command-card details{
+  padding:6px!important;
+}
+
+.agent-command-card summary{
+  cursor:pointer!important;
+}
+
+.agent-command-card pre{
+  max-height:160px!important;
+  overflow:auto!important;
+  margin:6px 0 0!important;
+  font-size:var(--fs-xs)!important;
+  white-space:pre-wrap!important;
+}

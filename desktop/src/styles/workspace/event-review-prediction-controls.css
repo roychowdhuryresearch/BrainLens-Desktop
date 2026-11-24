@@ -1,0 +1,71 @@
+/* Event Review prediction controls owner. Prediction scope button row and
+   checkbox/select alignment stay with the prediction card surface. */
+
+/* Review Scope card: the scope dropdown and the Prev/Next match buttons share ONE
+   row. The dropdown flex-shrinks (min-inline-size:0) so the compact, content-width
+   buttons always fit beside it instead of wrapping onto their own row. The
+   "Unannotated only" toggle and the match-count summary take the second line. */
+.event-review-dialog [data-testid="pyqt-predictionScopeCard"]{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  gap:8px!important;
+}
+.event-review-dialog [data-testid="pyqt-predictionScopeCard"]>label:first-of-type{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  flex:1 1 120px!important;
+  min-inline-size:0!important;
+  margin:0!important;
+}
+.event-review-dialog [data-testid="pyqt-PredictionScopeBox"]{
+  flex:1 1 auto!important;
+  min-inline-size:0!important;
+  inline-size:100%!important;
+  margin-inline-start:0!important;
+  transform:none!important;
+}
+.event-review-dialog [data-testid="pyqt-predictionScopeCard"]>.button-row{
+  flex:0 0 auto!important;
+  display:flex!important;
+  gap:6px!important;
+  margin:0!important;
+}
+.event-review-dialog [data-testid="pyqt-predictionScopeCard"]>.scope-filter-row{
+  flex:1 0 100%!important;
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:baseline!important;
+  gap:6px 12px!important;
+}
+.event-review-dialog [data-testid="pyqt-predictionScopeCard"]>.scope-filter-row>.select-toggle{
+  flex:0 0 auto!important;
+}
+.event-review-dialog [data-testid="pyqt-predictionScopeCard"]>.scope-filter-row>.helper-copy{
+  flex:1 1 auto!important;
+  margin:0!important;
+  text-align:end!important;
+  /* Drop the shared-surface grey field box so the match count reads as plain
+     right-aligned text, not an empty input. */
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+
+/* Compact match-nav buttons sized to their label so they sit beside the dropdown
+   on one row instead of each taking a fixed-width slot. */
+.annotation-side-stack [data-testid="pyqt-predictionScopeCard"] .button-row{
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  justify-content:flex-start!important;
+  gap:6px!important;
+}
+.annotation-side-stack [data-testid="pyqt-predictionScopeCard"] .button-row button{
+  inline-size:auto!important;
+  min-inline-size:0!important;
+  flex:0 0 auto!important;
+  padding-inline:10px!important;
+  font-size:var(--fs-sm)!important;
+  white-space:nowrap!important;
+}

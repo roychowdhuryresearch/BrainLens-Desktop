@@ -1,0 +1,30 @@
+{
+  "name": "ieeg-workstation-v0.1.2-package",
+  "source_commit": "b67758809853fced798c77531b4167b8e4055074",
+  "release_path": "dist/ieeg-workstation-0.1.2",
+  "sizes": {
+    "app_kib": 891136,
+    "app_logical_bytes": 889840770,
+    "zip_bytes": 373838027,
+    "dmg_bytes": 427017244,
+    "electron_frameworks_kib": 279328,
+    "electron_locales_kib": 48848,
+    "pyhfo_backend_kib": 418644,
+    "agent_runtime_kib": 188932
+  },
+  "cold_start": {
+    "pyhfo_self_test_seconds": 15.25,
+    "first_window_ms": 16239,
+    "main_window_ready_ms": 17091,
+    "isolated_user_data": true,
+    "isolated_matplotlib_cache": true,
+    "hf_offline": true,
+    "agent_runtime_disabled": true
+  },
+  "contracts": {
+    "embedded_classifier_models": 0,
+    "yasa_available": true,
+    "online_hf_models_loaded": 3,
+    "offline_hf_models_loaded": 3
+  }
+}

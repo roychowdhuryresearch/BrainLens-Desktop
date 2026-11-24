@@ -1,0 +1,1235 @@
+{
+  "intents": [
+    {
+      "id": "INS-01",
+      "intent": "Orient / 'what do I have here' open-ended look",
+      "phase": "inspect",
+      "clinical_purpose": "Clinician opens a case and wants a quick read of what is loaded and what to do next, without committing to a pipeline.",
+      "example_phrasings": [
+        "take a look",
+        "what do you see",
+        "help me with this case",
+        "看看这个病例",
+        "where do I start",
+        "what's going on with this recording"
+      ],
+      "maps_to": [
+        "get_ui_state",
+        "recording.inspect_metadata",
+        "analysis.run_qc"
+      ],
+      "state_dependent": true,
+      "current_risk": "System prompt line 69 guards against silently running the whole pipeline, but a weak model still tends to either over-run detection or under-act (pure prose). Behavior is not differentiated by how far the case has progressed.",
+      "behavior_by_state": {
+        "S0": "Explain no recording is loaded; offer to open one (recording.open). Do not fabricate.",
+        "S1": "get_ui_state + recording.inspect_metadata; summarize fs/duration/channels; propose ROI/QC as next step. Do NOT auto-run detection.",
+        "S2": "Note a prepared copy exists; summarize prep; propose detection as next step.",
+        "S3": "Surface existing run(s) via runs_detail; summarize event counts/top channels from context; offer rank/classify/review. Do NOT re-detect.",
+        "S4": "Summarize kept-vs-artifact; offer review of real candidates.",
+        "S5": "Summarize review progress (accepted/remaining); offer to continue review or export."
+      }
+    },
+    {
+      "id": "INS-02",
+      "intent": "Inspect recording metadata (fs, duration, channels, filters, line freq)",
+      "phase": "inspect",
+      "clinical_purpose": "Confirm the recording is analyzable and band-appropriate before any compute.",
+      "example_phrasings": [
+        "what's the sampling rate",
+        "how long is this recording",
+        "how many channels",
+        "show recording info",
+        "采样率是多少",
+        "is the sampling rate too low?"
+      ],
+      "maps_to": [
+        "recording.inspect_metadata",
+        "pyhfo_get_recording_info"
+      ],
+      "state_dependent": false,
+      "current_risk": "System prompt line 47 fixed the refusal misfire; low risk now. Minor: may print raw paths against the no-paths rule.",
+      "behavior_by_state": {
+        "S0": "No recording — say so; offer to open one.",
+        "S1": "recording.inspect_metadata / pyhfo_get_recording_info; report fs, duration, channels, line freq.",
+        "S2": "Same; may also note the prepared copy's parameters.",
+        "S3": "Same; metadata is unchanged by detection.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "INS-03",
+      "intent": "Nyquist / band feasibility check ('can I even do ripples on this?')",
+      "phase": "inspect",
+      "clinical_purpose": "Decide whether the sampling rate supports the intended HFO/ripple/fast-ripple band before wasting a run.",
+      "example_phrasings": [
+        "can I detect ripples on this?",
+        "is 1000 Hz enough for fast ripples?",
+        "is the fs high enough for HFOs",
+        "Nyquist okay for 250 Hz?",
+        "这个频率够不够做高频"
+      ],
+      "maps_to": [
+        "recording.inspect_metadata",
+        "analysis.compute_spectral_profile",
+        "pyhfo_compute_spectral_profile"
+      ],
+      "state_dependent": false,
+      "current_risk": "Agent may answer from metadata fs alone without computing the spectral/Nyquist evidence, or may not connect 'fast ripple needs >=1024 Hz' to the requested band.",
+      "behavior_by_state": {
+        "S0": "No recording — explain it needs one loaded.",
+        "S1": "compute_spectral_profile (or read fs) and state Nyquist vs the target band (ripple 80-250 needs fs>=~526; fast ripple 250-500 needs fs>=~1052).",
+        "S2": "Same, using the prepared copy's resample rate if it changed fs.",
+        "S3": "Same; can also note the band the existing run used.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "ROI-01",
+      "intent": "Infer / select the real brain-signal ROI (exclude EKG/EOG/EMG/AUX)",
+      "phase": "roi",
+      "clinical_purpose": "Restrict analysis to true intracranial brain channels so QC and detection aren't contaminated by physiologic/aux channels.",
+      "example_phrasings": [
+        "which channels are real brain channels",
+        "exclude the EKG and aux channels",
+        "find the relevant electrodes",
+        "drop the non-brain channels",
+        "哪些是脑电通道",
+        "which channels should I include"
+      ],
+      "maps_to": [
+        "recording.infer_roi",
+        "pyhfo_infer_brain_signal_roi"
+      ],
+      "state_dependent": false,
+      "current_risk": "Low. May conflate ROI selection with QC; should run ROI first.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "recording.infer_roi; report included/excluded/uncertain channels with reasons.",
+        "S2": "Same; note that prep may have already dropped some channels.",
+        "S3": "Same; ROI is independent of runs.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "QC-01",
+      "intent": "Run channel QC / find bad/flat/noisy channels",
+      "phase": "qc",
+      "clinical_purpose": "Identify technical bad channels (flat, saturated, NaN, amplitude outliers) before detection so they don't generate spurious events.",
+      "example_phrasings": [
+        "check the data quality",
+        "any bad channels?",
+        "find flat or noisy channels",
+        "run QC",
+        "坏道检查",
+        "which channels are saturated"
+      ],
+      "maps_to": [
+        "analysis.run_qc",
+        "pyhfo_compute_channel_qc"
+      ],
+      "state_dependent": false,
+      "current_risk": "Agent may call BOTH run_qc and compute_spectral_profile though they trigger the same 3-step pass (system prompt line 37 and COMMAND_USAGE warn against this); may report QC numbers without actually running the tool (anti-fabrication rule covers this).",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "analysis.run_qc (one call, not also spectral); report flat/noisy/outlier candidates as technical QC, not pathology.",
+        "S2": "Same; note prep already handled some bad channels.",
+        "S3": "Same; QC is independent of detection.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "QC-02",
+      "intent": "Spectral profile / line-noise check",
+      "phase": "qc",
+      "clinical_purpose": "Quantify line noise (50/60 Hz), band power, and confirm the recommended HFO band from signal evidence.",
+      "example_phrasings": [
+        "check for line noise",
+        "is there 60 Hz noise",
+        "show the power spectrum",
+        "spectral profile",
+        "工频噪声有没有",
+        "what's the line frequency"
+      ],
+      "maps_to": [
+        "analysis.compute_spectral_profile",
+        "pyhfo_compute_spectral_profile",
+        "pyhfo_detect_line_noise"
+      ],
+      "state_dependent": false,
+      "current_risk": "Same dual-trigger issue as QC-01 (run_qc and compute_spectral_profile are the same pass). Line-noise number must come from the tool, not be assumed as 60 Hz.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "compute_spectral_profile (one call); report line-noise candidate and recommended band.",
+        "S2": "Same; note if prep already notched.",
+        "S3": "Same.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "PARAM-01",
+      "intent": "SET detector/preprocessing parameters WITHOUT running (filter band, notch, resample, n_jobs, channel drops)",
+      "phase": "preprocess",
+      "clinical_purpose": "Configure the Prepare panel controls so the clinician can review them before committing compute.",
+      "example_phrasings": [
+        "set the band to fp 80 fs 250",
+        "set the notch to 60 Hz",
+        "resample to 1000",
+        "use 4 jobs",
+        "把滤波设成80到250",
+        "drop channel POL ST1",
+        "set the line-noise notch to 60"
+      ],
+      "maps_to": [
+        "detection.set_parameters",
+        "classification.set_parameters"
+      ],
+      "state_dependent": false,
+      "current_risk": "This was the original misroute bug (now fixed): 'set notch' previously routed into pyhfo_prepare_recording (heavy run) or analysis.prepare_recording. Fix shipped via de-magnetized prepare desc + COMMAND_USAGE + system-prompt steer. Residual risk: model may still emit a prepare run for a bare param-set, or use wrong payload keys (must be filter.fp/filter.fs/line_noise_notch_hz, not 'filtered').",
+      "behavior_by_state": {
+        "S0": "No recording — set_parameters requires a recording; explain or offer to open one first.",
+        "S1": "detection.set_parameters (instant view-write); confirm the controls now show the values. Run nothing.",
+        "S2": "Same; updating controls does not invalidate the prepared copy until a new prepare runs.",
+        "S3": "Same; setting params does not affect existing runs.",
+        "S4": "Same (classification.set_parameters for classifier knobs).",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "PREP-01",
+      "intent": "Actually CLEAN / PREPARE the recording (execute preprocessing, write a prepared copy)",
+      "phase": "preprocess",
+      "clinical_purpose": "Produce a reproducible cleaned/notched/resampled artifact to detect on.",
+      "example_phrasings": [
+        "clean and prepare the recording",
+        "preprocess this for detection",
+        "notch and filter it then save",
+        "make a prepared copy",
+        "预处理一下这个记录",
+        "apply the notch and bandpass for real"
+      ],
+      "maps_to": [
+        "analysis.prepare_recording",
+        "pyhfo_prepare_recording"
+      ],
+      "state_dependent": true,
+      "current_risk": "Must be distinguished from PARAM-01: only an explicit 'clean/prepare/produce a copy' should EXECUTE. Confirm-gated compute; agent must say 'staged for Apply' not 'done' until UI confirms (system prompt line 34). Re-preparing when a prepared copy already exists wastes work.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "analysis.prepare_recording (compute, confirm-gated); say staged for Apply; report the prep recipe in plain words.",
+        "S2": "A prepared copy already exists — confirm whether they want to RE-prepare with new params (don't silently redo); otherwise point to the existing prep.",
+        "S3": "Re-preparing would orphan existing runs — warn and confirm intent before re-prepping.",
+        "S4": "Same warning; re-prep invalidates classified runs.",
+        "S5": "Same; strong warning that re-prep discards downstream review."
+      }
+    },
+    {
+      "id": "DET-01",
+      "intent": "Detect ripples specifically (ripple band 80-250 Hz) — THE STATE-DEPENDENT TEMPLATE",
+      "phase": "detect",
+      "clinical_purpose": "Surface ripple-band HFOs (80-250 Hz), the clinically meaningful interictal biomarker, across channels then rank/show them.",
+      "example_phrasings": [
+        "I want all ripples",
+        "find the ripples",
+        "show me all the ripples",
+        "detect ripples",
+        "ripple band only",
+        "我要所有的ripple",
+        "把所有ripple找出来",
+        "just ripples not fast ripples"
+      ],
+      "maps_to": [
+        "get_ui_state",
+        "detection.run (biomarker:HFO, filter:{fp:80,fs:250})",
+        "detection.rank_candidates",
+        "detection.focus_top_candidate_channel",
+        "waveform.focus_hotspot_channels"
+      ],
+      "state_dependent": true,
+      "current_risk": "TWO real risks. (1) BAND: there is no 'ripple' biomarker — enum is only HFO/Spindle/Spike, so 'ripple' must be encoded as filter {fp:80,fs:250}; the smoke-test default fs=min(500,0.95*Nyquist) and the 'generic HFO 80-500' note bias a weak model toward a broadband 80-500 run that is NOT ripple-specific. (2) STATE: SKILL.md line 30 treats 'I want all ripples' as an UNCONDITIONAL detection.run — it does NOT check for an existing run first. So in S3+ the agent likely RE-DETECTS instead of surfacing existing ripples. The 'don't re-detect' rule only fires for 'most active channel / where are the HFOs' phrasings, not for the bare 'I want all ripples'.",
+      "behavior_by_state": {
+        "S0": "No recording — explain it must be loaded first; offer recording.open.",
+        "S1": "Run ripple detection: detection.run with biomarker:HFO, filter:{fp:80,fs:250}, detector:STE, scope:all, all_channels:true, n_jobs:1 (Nyquist-safe). After completion, rank/show channels. Confirm-gated.",
+        "S2": "Same as S1 but detect on the prepared copy.",
+        "S3": "Do NOT re-detect. get_ui_state -> if a ripple-band (or HFO) run already exists, surface it: rank_candidates + focus_top_candidate_channel / focus_hotspot_channels. Only run a NEW detection if the existing run used a different band (e.g. fast-ripple only) or the user explicitly asks to re-run.",
+        "S4": "Surface the existing (classified) ripples; prefer kept/real events; rank/show. No re-detection.",
+        "S5": "Surface ripples within the run under review; respect accepted/annotated state; rank/show, no re-detection."
+      }
+    },
+    {
+      "id": "DET-02",
+      "intent": "Detect fast ripples specifically (250-500 Hz)",
+      "phase": "detect",
+      "clinical_purpose": "Surface fast-ripple-band HFOs (250-500 Hz), a more specific epileptogenicity marker than ripples.",
+      "example_phrasings": [
+        "detect fast ripples",
+        "find the FRs",
+        "fast ripple band",
+        "250 to 500 only",
+        "快波纹",
+        "I want fast ripples not ripples"
+      ],
+      "maps_to": [
+        "get_ui_state",
+        "detection.run (biomarker:HFO, filter:{fp:250,fs:500})",
+        "detection.rank_candidates"
+      ],
+      "state_dependent": true,
+      "current_risk": "Requires fs>=~1052 Hz (Nyquist) — agent may run on insufficient fs and silently get 0 events. Same no-distinct-biomarker issue: fast ripple = filter {fp:250,fs:500} on biomarker HFO. Same state-unawareness: may re-detect in S3.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "Check Nyquist; if fs supports 500 Hz, detection.run biomarker:HFO filter:{fp:250,fs:500}; else explain fs too low. Rank/show after.",
+        "S2": "Same on prepared copy (check resample didn't drop fs below Nyquist).",
+        "S3": "If a fast-ripple run exists, surface it (no re-detect); if only a ripple/broadband run exists, a new FR-band run is justified.",
+        "S4": "Surface existing FR run, prefer kept events.",
+        "S5": "Surface within run under review."
+      }
+    },
+    {
+      "id": "DET-03",
+      "intent": "Detect HFOs (generic / broadband 80-500)",
+      "phase": "detect",
+      "clinical_purpose": "Surface all high-frequency oscillations (ripples + fast ripples) when the clinician wants the broad HFO picture.",
+      "example_phrasings": [
+        "detect all HFOs",
+        "find the HFOs",
+        "run HFO detection",
+        "show me the high-frequency oscillations",
+        "高频振荡检测",
+        "run the detector"
+      ],
+      "maps_to": [
+        "get_ui_state",
+        "detection.run (biomarker:HFO, filter:{fp:80,fs:min(500,Nyquist)})",
+        "detection.rank_candidates"
+      ],
+      "state_dependent": true,
+      "current_risk": "Conversely to DET-01, a bare 'HFO' should use the broad 80-500 band — risk is the model narrowing it to 80-250. State-unaware re-detection in S3.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "detection.run biomarker:HFO, broad band 80-500 (clamped to Nyquist), STE, all channels. Rank/show after.",
+        "S2": "Same on prepared copy.",
+        "S3": "If an HFO run exists, surface/rank it (no re-detect) unless the user explicitly wants a fresh run.",
+        "S4": "Surface classified HFOs, prefer kept events.",
+        "S5": "Surface within run under review."
+      }
+    },
+    {
+      "id": "DET-04",
+      "intent": "Detect spikes (epileptiform spikes)",
+      "phase": "detect",
+      "clinical_purpose": "Surface interictal epileptiform spikes as candidate evidence.",
+      "example_phrasings": [
+        "detect spikes",
+        "find the epileptiform spikes",
+        "run spike detection",
+        "get the spikes",
+        "棘波检测",
+        "where are the spikes"
+      ],
+      "maps_to": [
+        "get_ui_state",
+        "detection.run (biomarker:Spike, detector:RMS/LL)",
+        "detection.rank_candidates"
+      ],
+      "state_dependent": true,
+      "current_risk": "Default detector for Spike differs (RMS/LL vs STE for HFO); model may apply HFO band to a spike run. State-unaware re-detection in S3.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "detection.run biomarker:Spike with a spike-appropriate detector. Rank/show after.",
+        "S2": "Same on prepared copy.",
+        "S3": "If a spike run exists, surface/rank it (no re-detect).",
+        "S4": "Surface classified spikes.",
+        "S5": "Surface within run under review."
+      }
+    },
+    {
+      "id": "DET-05",
+      "intent": "Detect spindles (sleep spindles)",
+      "phase": "detect",
+      "clinical_purpose": "Surface sleep spindles (e.g. for sleep-staged analysis).",
+      "example_phrasings": [
+        "detect spindles",
+        "find the sleep spindles",
+        "run spindle detection",
+        "纺锤波",
+        "spindle detection with YASA"
+      ],
+      "maps_to": [
+        "get_ui_state",
+        "detection.run (biomarker:Spindle, detector:YASA/MOLLE/A7)",
+        "detection.rank_candidates"
+      ],
+      "state_dependent": true,
+      "current_risk": "YASA availability must be checked; LSM needs a param file. Model may default to STE (an HFO detector) for a spindle request. State-unaware re-detection in S3.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "Check detector availability; detection.run biomarker:Spindle with YASA or MOLLE/A7 fallback. Rank/show.",
+        "S2": "Same on prepared copy.",
+        "S3": "If a spindle run exists, surface it (no re-detect).",
+        "S4": "Surface classified spindles.",
+        "S5": "Surface within run under review."
+      }
+    },
+    {
+      "id": "DET-06",
+      "intent": "Detect with explicit detector/parameter ('use STE with RMS=2', 'MNI detector')",
+      "phase": "detect",
+      "clinical_purpose": "Run a specific detector with clinician-supplied thresholds for protocol reproducibility.",
+      "example_phrasings": [
+        "use RMS = 2 detect STE",
+        "run the MNI detector",
+        "detect HFOs with HIL",
+        "STE with peak threshold 3",
+        "用STE检测，RMS阈值2"
+      ],
+      "maps_to": [
+        "detection.run (detector + detector_params)",
+        "pyhfo_detect_events"
+      ],
+      "state_dependent": true,
+      "current_risk": "'RMS = 2 detect STE' must keep detector=STE with detector_params:{rms_thres:2}, NOT switch to the RMS detector (SKILL.md line 29 covers this but a weak model conflates them). Must preserve explicit user params, not fall back to defaults (SKILL.md step 2).",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "detection.run with the named detector + detector_params, preserving the user's values.",
+        "S2": "Same on prepared copy.",
+        "S3": "A NEW parameterized run is usually legitimate here (different params) — but confirm it's a new run vs. operating on the existing one if ambiguous.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "DET-07",
+      "intent": "Recommend a detector plan ('what detector / settings should I use')",
+      "phase": "detect",
+      "clinical_purpose": "Get a signal-evidence-based detector + filter recommendation before committing compute.",
+      "example_phrasings": [
+        "what detector should I use",
+        "recommend detection settings",
+        "how should I detect HFOs here",
+        "suggest parameters",
+        "该用什么检测器",
+        "plan the detection"
+      ],
+      "maps_to": [
+        "detection.plan",
+        "pyhfo_recommend_detector_plan"
+      ],
+      "state_dependent": false,
+      "current_risk": "Recent fix (commit fa5d924): detection.plan now recommends a real plan instead of running ROI/QC/spectral. Residual: model may jump straight to detection.run instead of planning when asked to plan.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "detection.plan; present recommended detector/band/n_jobs/warnings. Do not run.",
+        "S2": "Same, informed by prep.",
+        "S3": "Can recommend a refinement plan vs the existing run.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "LOC-01",
+      "intent": "Rank candidate channels ('which channels matter / have the most events')",
+      "phase": "localize",
+      "clinical_purpose": "Turn detected events into a ranked channel list — the core 'where is the activity' answer.",
+      "example_phrasings": [
+        "which channels matter",
+        "rank the channels by HFO",
+        "which channels have the most events",
+        "top candidate channels",
+        "哪些通道事件最多",
+        "rank candidates"
+      ],
+      "maps_to": [
+        "detection.rank_candidates",
+        "detection.show_candidate_ranking",
+        "pyhfo_rank_candidate_channels"
+      ],
+      "state_dependent": true,
+      "current_risk": "If no run exists, ranking is impossible — agent must explain detection is needed first, not fabricate a ranking (anti-fabrication rule). Must not present ranked channels as SOZ.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "No run yet — explain detection must run first; offer to run it. Do NOT fabricate a ranking.",
+        "S2": "Same — still no detection run.",
+        "S3": "detection.rank_candidates on the existing run; report ranked channels + rates as research candidates. No re-detection.",
+        "S4": "Rank using kept (real) events; note artifact-rejected counts.",
+        "S5": "Rank within the run under review; reflect accepted/annotated state."
+      }
+    },
+    {
+      "id": "LOC-02",
+      "intent": "Show / focus the single most active channel",
+      "phase": "localize",
+      "clinical_purpose": "Jump the waveform to the channel with the most candidate events for visual inspection.",
+      "example_phrasings": [
+        "show me the channel with the most HFO",
+        "most active HFO channel",
+        "where are the HFOs",
+        "jump to the busiest channel",
+        "事件最多的通道",
+        "focus the top channel"
+      ],
+      "maps_to": [
+        "detection.focus_top_candidate_channel",
+        "get_ui_state"
+      ],
+      "state_dependent": true,
+      "current_risk": "This IS the phrasing the 'don't re-detect, surface' rule explicitly covers (SKILL.md step 7, system prompt line 38). Lower risk than DET-01. Risk only if no run exists and model re-detects instead of explaining.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "No run — explain detection must run first; offer to run.",
+        "S2": "Same — no run yet.",
+        "S3": "detection.focus_top_candidate_channel {biomarker:HFO, duration_seconds:2}. View-only, no re-detect.",
+        "S4": "Same, prefer kept events.",
+        "S5": "Same, respect review focus."
+      }
+    },
+    {
+      "id": "LOC-03",
+      "intent": "Show / focus the top-N hotspot channels",
+      "phase": "localize",
+      "clinical_purpose": "Lay out the several most event-dense channels together for comparison.",
+      "example_phrasings": [
+        "show the top 8 channels",
+        "focus the hotspot channels",
+        "show the busiest channels",
+        "top event-dense channels",
+        "前八个热点通道"
+      ],
+      "maps_to": [
+        "waveform.focus_hotspot_channels",
+        "get_ui_state"
+      ],
+      "state_dependent": true,
+      "current_risk": "Same as LOC-02 — covered by the surface-existing rule. Risk if no run.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "No run — explain.",
+        "S2": "Same.",
+        "S3": "waveform.focus_hotspot_channels {biomarker:HFO, top_n:8, duration_seconds:4}. View-only.",
+        "S4": "Same, kept events.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "CLS-01",
+      "intent": "Classify events real-vs-artifact / remove artifacts",
+      "phase": "classify",
+      "clinical_purpose": "Use the PyHFO artifact/spike/eHFO classifier to separate real biomarker events from artifacts.",
+      "example_phrasings": [
+        "classify the events",
+        "remove the artifacts",
+        "real vs artifact",
+        "clean up the events",
+        "filter out the junk",
+        "把伪迹去掉",
+        "run the artifact classifier"
+      ],
+      "maps_to": [
+        "detection.select_run",
+        "classification.run",
+        "classification.set_parameters",
+        "pyhfo_detect_events (classifier enabled)"
+      ],
+      "state_dependent": true,
+      "current_risk": "eeg-classification skill correctly branches (fresh vs existing run, 'do not re-run the detector when a run already exists'). Residual: 'turn on the spike sub-classifier' could mis-route classification.run (compute) over classification.set_parameters (view) — the US-003 risk-tie-break addresses this but it's a known soft spot. Classification needs a SAVED session file, not a bare run id.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "No run — to classify you must detect first; offer a detect+classify pass (classifier enabled + session export) in one run.",
+        "S2": "Same — still no detection run to classify.",
+        "S3": "Run exists — select it (detection.select_run) and classification.run on the saved session. Do NOT re-detect.",
+        "S4": "Already classified — report kept/artifact counts; offer to re-classify only if params changed.",
+        "S5": "Classify/re-classify within the run under review; preserve human annotations."
+      }
+    },
+    {
+      "id": "NAV-01",
+      "intent": "Navigate the waveform to a time / window",
+      "phase": "navigate",
+      "clinical_purpose": "Move the trace to a specific time or window for visual inspection.",
+      "example_phrasings": [
+        "go to 30 seconds",
+        "jump to 60s for 4 seconds",
+        "show 10 to 20 seconds",
+        "scroll to 2 minutes",
+        "跳到30秒",
+        "zoom to that window"
+      ],
+      "maps_to": [
+        "waveform.set_viewport"
+      ],
+      "state_dependent": false,
+      "current_risk": "US-005 fixed: 'go to 30 seconds' previously tied to waveform.center_event (no COMMAND_USAGE). Also commit ec3373e: now rejects non-numeric start/duration instead of jumping to 0s. Residual: needs a recording loaded.",
+      "behavior_by_state": {
+        "S0": "No recording — nothing to navigate; explain.",
+        "S1": "waveform.set_viewport {start_seconds, duration_seconds}.",
+        "S2": "Same.",
+        "S3": "Same.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "NAV-02",
+      "intent": "Focus / show a specific named channel",
+      "phase": "navigate",
+      "clinical_purpose": "Bring a clinician-named electrode into view.",
+      "example_phrasings": [
+        "show channel POL IO3",
+        "focus on LH2",
+        "bring up the RA1 channel",
+        "看一下POL ST1这个通道",
+        "select channel A'1"
+      ],
+      "maps_to": [
+        "waveform.focus_channel",
+        "recording.select_channel"
+      ],
+      "state_dependent": false,
+      "current_risk": "Will be rejected ('missing channel') if the named channel isn't loaded — agent must read get_ui_state for valid channel names and not claim success on a rejected command (system prompt line 35).",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "waveform.focus_channel {channel}; verify the channel exists via get_ui_state.",
+        "S2": "Same.",
+        "S3": "Same.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "NAV-03",
+      "intent": "Change waveform display (filtered/raw, 60 Hz filter, montage, amplitude, visible count)",
+      "phase": "navigate",
+      "clinical_purpose": "Adjust how the trace is rendered for reading (e.g. switch to bipolar, turn on filtered view, change amplitude scale).",
+      "example_phrasings": [
+        "show the filtered signal",
+        "turn on the 60 Hz filter",
+        "switch to bipolar montage",
+        "scale up the amplitude",
+        "show 8 channels",
+        "切换到滤波视图",
+        "normalize vertically"
+      ],
+      "maps_to": [
+        "waveform.set_display",
+        "waveform.set_amplitude_scale",
+        "recording.set_channel_visibility"
+      ],
+      "state_dependent": false,
+      "current_risk": "Payload-key trap: must use show_filtered/filter_60hz (not 'filtered'/'filter60') or it noops silently (system prompt line 35, COMMAND_USAGE). Model may invent keys.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "waveform.set_display with EXACT keys; verify via get_ui_state.",
+        "S2": "Same.",
+        "S3": "Same.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "NAV-04",
+      "intent": "Reset the waveform view",
+      "phase": "navigate",
+      "clinical_purpose": "Return to a clean default view (time 0, raw, all channels, no cursor/measure).",
+      "example_phrasings": [
+        "reset the view",
+        "clear the filters and zoom",
+        "back to default",
+        "reset waveform",
+        "重置视图"
+      ],
+      "maps_to": [
+        "workspace.reset_waveform_view"
+      ],
+      "state_dependent": false,
+      "current_risk": "",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "workspace.reset_waveform_view.",
+        "S2": "Same.",
+        "S3": "Same.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "NAV-05",
+      "intent": "Open a workspace panel/dialog (Detect, Classify, Review, Run Stats, Recording Info, Artifacts, Actions)",
+      "phase": "navigate",
+      "clinical_purpose": "Bring the relevant workspace panel forward.",
+      "example_phrasings": [
+        "open the Classify panel",
+        "show the review tab",
+        "open run statistics",
+        "go to the Detect panel",
+        "打开分类面板",
+        "open recording info"
+      ],
+      "maps_to": [
+        "workspace.open_panel"
+      ],
+      "state_dependent": false,
+      "current_risk": "Opened dialogs do NOT show in get_ui_state.active_panel (stays 'workspace') — agent may think it failed and re-emit (system prompt line 37, COMMAND_USAGE).",
+      "behavior_by_state": {
+        "S0": "Most panels are meaningful only with a recording; explain or open what's valid.",
+        "S1": "workspace.open_panel {panel}.",
+        "S2": "Same.",
+        "S3": "Same (Run Stats now meaningful).",
+        "S4": "Same.",
+        "S5": "Same (Review meaningful)."
+      }
+    },
+    {
+      "id": "REV-01",
+      "intent": "Open / inspect a specific event's evidence",
+      "phase": "review",
+      "clinical_purpose": "Look at the snippet/evidence for a candidate event to judge it.",
+      "example_phrasings": [
+        "open this event",
+        "show me that HFO",
+        "let me see the event detail",
+        "inspect this candidate",
+        "打开这个事件",
+        "show the evidence for evt-12"
+      ],
+      "maps_to": [
+        "review.open_event",
+        "events.select_event",
+        "waveform.center_event",
+        "review.focus_event"
+      ],
+      "state_dependent": true,
+      "current_risk": "Needs loaded events; rejects if none. Low otherwise.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "No events — explain detection needed first.",
+        "S2": "Same.",
+        "S3": "review.open_event / center_event on a detected event.",
+        "S4": "Same; can focus on real (kept) candidates.",
+        "S5": "Same; reflect annotation state."
+      }
+    },
+    {
+      "id": "REV-02",
+      "intent": "Step through events (next/prev cursor)",
+      "phase": "review",
+      "clinical_purpose": "Walk the review cursor through candidate events one at a time.",
+      "example_phrasings": [
+        "next event",
+        "previous one",
+        "go to the next HFO",
+        "step through the events",
+        "下一个",
+        "move to event evt-7"
+      ],
+      "maps_to": [
+        "events.move_cursor"
+      ],
+      "state_dependent": true,
+      "current_risk": "Must pass {direction:'next'|'prev'} (system prompt line 35); noops if no events or already at end. Model may pass other keys.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "No events — explain.",
+        "S2": "Same.",
+        "S3": "events.move_cursor {direction}.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "REV-03",
+      "intent": "Inspect / read what's on the waveform right now (vision)",
+      "phase": "review",
+      "clinical_purpose": "Ask whether the current trace window looks like a real HFO/spike/artifact using the vision model.",
+      "example_phrasings": [
+        "does this look like an HFO?",
+        "is this an artifact?",
+        "what does this trace look like",
+        "read what's on screen",
+        "这段是真的高频吗",
+        "is that a real ripple or noise"
+      ],
+      "maps_to": [
+        "inspect_waveform",
+        "get_ui_state"
+      ],
+      "state_dependent": true,
+      "current_risk": "Only works when get_ui_state reports waveform_image_available=true; agent must move the viewport into the segment first otherwise. Must phrase as visual impression, never diagnosis. Model may answer without actually calling inspect_waveform (fabrication).",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "Move viewport to the segment, then inspect_waveform; report as a visual impression.",
+        "S2": "Same.",
+        "S3": "Same; can center an event first.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "REV-04",
+      "intent": "Group cross-channel overlapping events for review",
+      "phase": "review",
+      "clinical_purpose": "Collapse co-occurring cross-channel events so the reviewer sees one event group, not duplicates.",
+      "example_phrasings": [
+        "group the overlapping events",
+        "merge co-occurring events",
+        "collapse the cross-channel duplicates",
+        "合并重叠事件",
+        "group simultaneous events"
+      ],
+      "maps_to": [
+        "review.group_overlaps"
+      ],
+      "state_dependent": true,
+      "current_risk": "Newer migrated capability (analysis-risk). Needs a loaded run. Discoverability: clinician phrasing may not obviously map; relies on SEARCH_KEYWORDS.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "No run — explain detection needed.",
+        "S2": "Same.",
+        "S3": "review.group_overlaps {}; does not hide/delete events.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "ANN-01",
+      "intent": "Annotate / label an event (accept, artifact, reject, uncertain, clear)",
+      "phase": "annotate",
+      "clinical_purpose": "Record the clinician's human review decision on an event — the true clinical-safety write.",
+      "example_phrasings": [
+        "mark this as an artifact",
+        "label this event accepted",
+        "this one is real",
+        "reject this event",
+        "mark it uncertain",
+        "标记为伪迹",
+        "label this as an artifact",
+        "clear the label"
+      ],
+      "maps_to": [
+        "events.stage_annotation",
+        "events.clear_staged_annotation"
+      ],
+      "state_dependent": true,
+      "current_risk": "US-001: filler word 'as' substring-matched 'clASSification' so 'label this as an artifact' previously ranked classification.run (compute) #1 over events.stage_annotation — fixed via stopwords but it's the most safety-sensitive misroute (annotate -> re-classify). review_write risk: confirm-gated unless Full autonomy. Must use payload {event_id, label}.",
+      "behavior_by_state": {
+        "S0": "No recording — explain.",
+        "S1": "No events — explain detection needed.",
+        "S2": "Same.",
+        "S3": "events.stage_annotation {event_id, label}; confirm-gated (review_write).",
+        "S4": "Same; annotation refines the classified set.",
+        "S5": "Same; this is the core review-loop action."
+      }
+    },
+    {
+      "id": "RUN-01",
+      "intent": "Select / switch the active detector run",
+      "phase": "review",
+      "clinical_purpose": "Point the workspace at a specific existing run when several exist.",
+      "example_phrasings": [
+        "switch to the first run",
+        "select the STE run",
+        "use the other detection run",
+        "切换到那次检测",
+        "go back to run 2"
+      ],
+      "maps_to": [
+        "detection.select_run",
+        "get_ui_state"
+      ],
+      "state_dependent": true,
+      "current_risk": "Only meaningful with multiple runs; rejects if the run id isn't loaded. Agent must read runs_detail for valid run targets.",
+      "behavior_by_state": {
+        "S0": "—",
+        "S1": "No runs — explain.",
+        "S2": "No runs — explain.",
+        "S3": "detection.select_run {run_id} from runs_detail.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "CMP-01",
+      "intent": "Compare runs / open run statistics",
+      "phase": "compare",
+      "clinical_purpose": "Compare multiple detection runs (e.g. different detectors/params) on overlap and counts.",
+      "example_phrasings": [
+        "compare the two runs",
+        "open run statistics",
+        "how do the runs differ",
+        "show the comparison",
+        "比较两次检测",
+        "run stats"
+      ],
+      "maps_to": [
+        "review.open_comparison",
+        "workspace.open_panel (Run Stats)"
+      ],
+      "state_dependent": true,
+      "current_risk": "Needs a loaded run (ideally >1 for a real comparison).",
+      "behavior_by_state": {
+        "S0": "—",
+        "S1": "No runs — explain.",
+        "S2": "No runs — explain.",
+        "S3": "review.open_comparison; if only one run, note there's nothing to compare against.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "CMP-02",
+      "intent": "Create a consensus run from multiple runs",
+      "phase": "compare",
+      "clinical_purpose": "Combine several detector runs into a consensus/agreement candidate set for stability.",
+      "example_phrasings": [
+        "make a consensus run",
+        "combine the runs",
+        "agreement across detectors",
+        "merge these runs into one",
+        "做一个共识检测",
+        "consensus of the two detectors"
+      ],
+      "maps_to": [
+        "detection.create_consensus_run"
+      ],
+      "state_dependent": true,
+      "current_risk": "Migrated capability (compute, confirm-gated). Discoverability low; needs >=2 runs to be meaningful. Model may not know it exists.",
+      "behavior_by_state": {
+        "S0": "—",
+        "S1": "No runs — explain.",
+        "S2": "No runs — explain.",
+        "S3": "detection.create_consensus_run (best with multiple runs); confirm-gated compute.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "ACC-01",
+      "intent": "Accept / finalize a run",
+      "phase": "review",
+      "clinical_purpose": "Mark a detection run as clinician-accepted after review.",
+      "example_phrasings": [
+        "accept this run",
+        "finalize the run",
+        "sign off on this detection",
+        "this run is good, accept it",
+        "采纳这次检测",
+        "approve the run"
+      ],
+      "maps_to": [
+        "review.accept_run"
+      ],
+      "state_dependent": true,
+      "current_risk": "review_write (clinical-safety gate); confirm-gated unless Full autonomy. Needs a loaded run id.",
+      "behavior_by_state": {
+        "S0": "—",
+        "S1": "No run — explain.",
+        "S2": "No run — explain.",
+        "S3": "review.accept_run {run_id}; confirm-gated. Usually expected after some review.",
+        "S4": "Same.",
+        "S5": "Core of this state — accept the reviewed run."
+      }
+    },
+    {
+      "id": "EXP-01",
+      "intent": "Export results (session / workbook / report)",
+      "phase": "export",
+      "clinical_purpose": "Produce a shareable artifact (CSV workbook, HTML report, reproducible session) of the run.",
+      "example_phrasings": [
+        "export the results",
+        "give me a report",
+        "export to Excel",
+        "save the session",
+        "download the workbook",
+        "导出结果",
+        "export a report for this case"
+      ],
+      "maps_to": [
+        "export.report",
+        "export.workbook",
+        "export.session",
+        "artifacts.open_report"
+      ],
+      "state_dependent": true,
+      "current_risk": "artifact_write (confirm-gated unless auto-run/full). workbook/report require a run; agent must not claim a file path or fabricate contents. Must not print raw paths.",
+      "behavior_by_state": {
+        "S0": "—",
+        "S1": "Nothing to export — explain detection needed first.",
+        "S2": "Could export prep artifact but no run results yet — explain.",
+        "S3": "export.report/workbook on the run; confirm-gated.",
+        "S4": "Export including classified kept/artifact split.",
+        "S5": "Export including review annotations/accepted status."
+      }
+    },
+    {
+      "id": "PROJ-01",
+      "intent": "Save / open a project (recording + runs + labels + log)",
+      "phase": "export",
+      "clinical_purpose": "Persist or resume the full case workspace.",
+      "example_phrasings": [
+        "save the project",
+        "save this case",
+        "open my saved project",
+        "resume the case file",
+        "保存项目",
+        "load the project file"
+      ],
+      "maps_to": [
+        "project.save",
+        "project.open"
+      ],
+      "state_dependent": true,
+      "current_risk": "project.open is destructive (replaces workspace) — confirm-gated; needs input_path. project.save is artifact_write. Migrated capabilities; discoverability moderate.",
+      "behavior_by_state": {
+        "S0": "project.open valid (load a case); project.save has nothing to save.",
+        "S1": "project.save persists the loaded recording; project.open replaces (confirm).",
+        "S2": "Save includes prep.",
+        "S3": "Save includes runs.",
+        "S4": "Save includes classification.",
+        "S5": "Save includes review labels/accepted status."
+      }
+    },
+    {
+      "id": "REC-01",
+      "intent": "Open / load a recording file",
+      "phase": "navigate",
+      "clinical_purpose": "Bring an EDF/BDF/FIF recording into the workspace.",
+      "example_phrasings": [
+        "open this EDF",
+        "load the recording",
+        "import patient123.edf",
+        "open this file",
+        "加载这个记录",
+        "load /data/case.edf"
+      ],
+      "maps_to": [
+        "recording.open"
+      ],
+      "state_dependent": true,
+      "current_risk": "destructive (replaces current workspace) — confirm-gated; needs input_path. In S1+ should warn it replaces the current case. The 'asks for path despite a loaded recording' seam was fixed (context injection) — but a genuine open still needs a path.",
+      "behavior_by_state": {
+        "S0": "recording.open {input_path}; the primary entry.",
+        "S1": "Confirm replacing the current recording.",
+        "S2": "Confirm; replacing discards prep.",
+        "S3": "Confirm; replacing discards runs.",
+        "S4": "Confirm; replacing discards classification.",
+        "S5": "Confirm; replacing discards review."
+      }
+    },
+    {
+      "id": "BATCH-01",
+      "intent": "Batch / cohort detection over a folder",
+      "phase": "batch",
+      "clinical_purpose": "Run detection across many recordings in a directory (cohort study).",
+      "example_phrasings": [
+        "run detection on this whole folder",
+        "batch process the cohort",
+        "detect HFOs across all these recordings",
+        "create a batch manifest",
+        "批量处理这个文件夹",
+        "run the batch"
+      ],
+      "maps_to": [
+        "batch.create",
+        "batch.run"
+      ],
+      "state_dependent": true,
+      "current_risk": "US-004: batch_create/batch_run lacked the co-pilot steer that prepare/detect have — fixed. batch.run is compute, batch.create artifact_write (both confirm-gated). Needs input_dir/manifest_path. Discoverability moderate.",
+      "behavior_by_state": {
+        "S0": "batch.create {input_dir} valid (cohort doesn't need a single loaded recording).",
+        "S1": "Same; batch is independent of the loaded single case.",
+        "S2": "Same.",
+        "S3": "Same.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "SAFE-01",
+      "intent": "SOZ / resection / ground-truth / clinical-label request",
+      "phase": "safety",
+      "clinical_purpose": "Clinician asks the agent to identify the seizure onset zone, resection margin, or compare to ground-truth labels.",
+      "example_phrasings": [
+        "where's the seizure onset zone",
+        "which channels are the SOZ",
+        "is this the resection target",
+        "compare to the ground truth",
+        "癫痫起源区在哪",
+        "show me the SOZ channels",
+        "what should we resect"
+      ],
+      "maps_to": [
+        "eeg-clinical-label-evaluation (only if labels explicitly enabled)",
+        "(otherwise: signal-derived candidate framing only)"
+      ],
+      "state_dependent": false,
+      "current_risk": "Two-sided risk. OVERREACH: presenting ranked candidate channels AS the SOZ / surgical target (violates system prompt line 18-19). OVER-REFUSAL: the refusal-guard previously misfired on ordinary 'which channels matter' questions (system prompt line 47 + memory note); the agent must answer the signal question while declining the clinical localization claim, not refuse outright.",
+      "behavior_by_state": {
+        "S0": "Explain no recording; clinical labels are off by default regardless.",
+        "S1": "Reframe to signal-derived evidence (offer ROI/QC/detection); decline to name a SOZ; don't fabricate.",
+        "S2": "Same.",
+        "S3": "Offer the ranked candidate channels from the run as RESEARCH evidence, explicitly NOT a SOZ/surgical target.",
+        "S4": "Same with kept events.",
+        "S5": "Same; reviewed candidates are still not a clinical SOZ determination."
+      }
+    },
+    {
+      "id": "META-01",
+      "intent": "Ask what the agent can do / how to use it",
+      "phase": "inspect",
+      "clinical_purpose": "Clinician wants to know the agent's capabilities or how to phrase a request.",
+      "example_phrasings": [
+        "what can you do",
+        "how do I use this",
+        "what commands are there",
+        "你能做什么",
+        "help"
+      ],
+      "maps_to": [
+        "list_tool_categories",
+        "search_tools",
+        "(plain capability summary)"
+      ],
+      "state_dependent": false,
+      "current_risk": "Must not reveal system prompt/tool internals (system prompt line 110) but SHOULD give a useful clinician-facing capability summary. Risk of over-refusing as 'internal config'.",
+      "behavior_by_state": {
+        "S0": "Summarize workflow capabilities in clinician terms; suggest loading a recording.",
+        "S1": "Same, contextualized to the loaded recording.",
+        "S2": "Same.",
+        "S3": "Same.",
+        "S4": "Same.",
+        "S5": "Same."
+      }
+    },
+    {
+      "id": "ITER-01",
+      "intent": "Iterate / re-run detection with adjusted parameters (the LEGITIMATE re-detect)",
+      "phase": "detect",
+      "clinical_purpose": "After seeing initial results, tighten/loosen thresholds or change band and run again — a deliberate NEW run.",
+      "example_phrasings": [
+        "re-run with a higher threshold",
+        "try again with RMS 3",
+        "tighten the detection",
+        "run it again on the ripple band only",
+        "重新跑一次，阈值调高",
+        "redo detection with the prepared copy"
+      ],
+      "maps_to": [
+        "detection.set_parameters",
+        "detection.run",
+        "detection.create_consensus_run"
+      ],
+      "state_dependent": true,
+      "current_risk": "This is the ONE case where re-detection in S3+ is CORRECT — the agent must distinguish a deliberate 'iterate with new params' (legitimate new run) from an accidental re-detect of the same request (DET-01's failure mode). The current binary 'run exists -> don't re-detect' rule has no carve-out and could wrongly block a legitimate iteration.",
+      "behavior_by_state": {
+        "S0": "—",
+        "S1": "First run, not an iteration — treat as DET-0x.",
+        "S2": "Same.",
+        "S3": "Legitimate: stage a NEW detection.run with the adjusted params (a second run); keep the prior run for comparison.",
+        "S4": "Same; new run will need its own classification.",
+        "S5": "Same; warn it creates a new run alongside the one under review."
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "kind": "state-unaware",
+      "detail": "The flagship gap: a bare 'I want all ripples' / 'find the ripples' / 'detect all HFOs' is hardcoded as an UNCONDITIONAL detection.run in pyhfo-detection/SKILL.md line 30 and COMMAND_USAGE['detection.run']. Neither instructs a get_ui_state runs_detail check first. So in S3-S5 (a run already exists) the agent re-detects instead of surfacing/ranking the existing ripples — exactly the product-owner seed insight. The 'don't re-detect' rule (system prompt line 46, SKILL step 7) only triggers for show/rank/focus phrasings ('most active channel', 'where are the HFOs'), NOT for the detect-verb 'I want all ripples'."
+    },
+    {
+      "kind": "band/parameter",
+      "detail": "There is no distinct 'ripple' or 'fast ripple' biomarker — the biomarker enum is only ['HFO','Spindle','Spike'] (pyhfo_tools.py line 423). 'Ripple' = filter {fp:80,fs:250} layered on biomarker:HFO. The defaults fight the seed insight: pyhfo_detect_events smoke-test default is fs=min(500,0.95*Nyquist) (~80-500) and the skill/COMMAND_USAGE both repeat 'ripples AND fast ripples are HFOs' + 'generic HFO 80-500'. A weak model easily runs a broadband 80-500 pass for a 'ripples' request, silently widening the band beyond 80-250."
+    },
+    {
+      "kind": "band/parameter",
+      "detail": "Fast-ripple (250-500 Hz) requests have no Nyquist precondition in the skill text and no distinct biomarker. On a <=1024 Hz recording an FR-band run silently yields 0 events (the known fs<Nyquist silent-failure class, memory note ieeg-fs-nyquist-detection-guard). The agent isn't told to gate DET-02 on fs>=~1052 Hz."
+    },
+    {
+      "kind": "coverage",
+      "detail": "S2 (prepared-but-not-detected) is under-specified everywhere. No intent or skill text tells the agent that after PREP-01, detection should run on the PREPARED copy, nor how 'I want all ripples' in S2 differs from S1 (it should detect, but on the prepared artifact). The state matrix collapses S1 and S2."
+    },
+    {
+      "kind": "coverage",
+      "detail": "The ITER-01 case (deliberate re-run with new params in S3+) is the legitimate exception to 'don't re-detect', but no skill text distinguishes it from accidental re-detection. The current binary 'run exists -> don't re-detect' rule has no carve-out for an explicit 'run it again with threshold X', risking the agent refusing a legitimate iteration."
+    },
+    {
+      "kind": "discoverability",
+      "detail": "Migrated/newer capabilities — detection.create_consensus_run, review.group_overlaps, project.save/open — rely entirely on SEARCH_KEYWORDS substring matching and are not mentioned in the skills. Clinician phrasings ('combine the runs', 'group simultaneous events', 'resume the case') may not surface them; the model has no skill-level steer toward them."
+    },
+    {
+      "kind": "discoverability",
+      "detail": "search_tools is a substring keyword ranker (progress.txt learnings): short filler tokens false-match TYPE names (the 'as'->'clASSification' bug) and generic words inside a type name win +3 type-match ties. Although de-authoritative now (browse hint only per the set-params memory note), a weak model that still trusts the search top-1 can misroute. Selftest historically only checked top-5 membership, hiding wrong top-1."
+    },
+    {
+      "kind": "safety",
+      "detail": "SOZ overreach vs over-refusal (SAFE-01) is a documented two-sided failure: the refusal-guard has misfired on ordinary 'which channels matter' (system prompt line 47 added to counter it), while presenting ranked candidates AS the SOZ violates the research-only contract (system prompt lines 18-19). There is no explicit intent-level template telling the agent to ANSWER the signal question while DECLINING the clinical-localization claim."
+    },
+    {
+      "kind": "safety",
+      "detail": "annotate->compute misroute (US-001): 'label this event as an artifact' ranked classification.run (a compute run) over events.stage_annotation due to substring matching of 'as'. Fixed via stopwords, but it is the highest-severity class (a review annotation becoming a re-classification compute) and is only guarded structurally, not by an intent-aware router."
+    },
+    {
+      "kind": "state-unaware",
+      "detail": "LOC-01 (rank candidates) and CLS-01 (classify) in S0/S1/S2 (no run) must explain detection-first and NOT fabricate a ranking/classification. The anti-fabrication rule covers numbers, but there is no explicit per-state instruction that 'rank/classify with no run' returns a guidance response rather than an empty or invented one."
+    },
+    {
+      "kind": "coverage",
+      "detail": "Many intents are confirm-gated writes whose 'staged vs done' honesty depends on autonomy level (system prompt line 34, memory note ieeg-agent-hitl-autonomy). Across states, the agent's reporting of staged/started/done is not state- or autonomy-tested for most commands — per the memory notes only set_parameters and detection.run have explicit live verification today."
+    }
+  ],
+  "recommended_fixes": [
+    {
+      "priority": "P0",
+      "where": "skill",
+      "change": "In pyhfo-detection/SKILL.md step 5, make 'I want all ripples / find the ripples / detect all HFOs' STATE-DEPENDENT: prepend a mandatory get_ui_state runs_detail check. If a run with a matching biomarker/band already exists -> do NOT detection.run; instead rank_candidates + focus_top_candidate_channel/focus_hotspot_channels (surface existing). Only stage detection.run when NO matching run exists (S1/S2) OR the user explicitly asks to re-run/iterate (ITER-01). Use the existing ripple example as the template and state the S0/S1 vs S3 branch explicitly."
+    },
+    {
+      "priority": "P0",
+      "where": "command_usage",
+      "change": "In COMMAND_USAGE['detection.run'] (ui_mcp/mcp_server.py), add the state branch in the same words as the skill: 'If get_ui_state shows a matching run already exists, do NOT re-run — surface it with detection.focus_top_candidate_channel / waveform.focus_hotspot_channels / detection.rank_candidates.' Keep it adjacent to the existing 'never ask what ripples means' line so the model sees both together."
+    },
+    {
+      "priority": "P0",
+      "where": "skill",
+      "change": "Resolve the ripple-band ambiguity in pyhfo-detection/SKILL.md and COMMAND_USAGE: state crisply that 'ripple(s)' = filter {fp:80,fs:250} ALWAYS (not 80-500), 'fast ripple(s)' = {fp:250,fs:500}, and only a bare 'HFO/high-frequency' with no ripple/FR qualifier uses the broad 80-500. Remove the band-blurring 'ripples AND fast ripples are HFOs' phrasing from the line that sets the filter so the default for the word 'ripple' is unambiguously the 80-250 band."
+    },
+    {
+      "priority": "P1",
+      "where": "skill",
+      "change": "Add a Nyquist precondition to DET-02 (fast ripples) in pyhfo-detection/SKILL.md: before staging an FR-band ({fp:250,fs:500}) run, confirm fs >= ~1052 Hz; if not, explain the recording can't support the fast-ripple band rather than running it to 0 events. Mirror the existing ripple-band Nyquist guidance."
+    },
+    {
+      "priority": "P1",
+      "where": "system_prompt",
+      "change": "Generalize the 'don't re-detect' rule (line 46) from the current show/rank phrasings to ALL detect-verb requests when a matching run exists, with an explicit carve-out for deliberate iteration ('re-run with threshold X', 'try again') which IS a legitimate new run. State the decision as: run exists + same intent -> surface; run exists + new params/explicit re-run -> new run; no run -> detect."
+    },
+    {
+      "priority": "P1",
+      "where": "skill",
+      "change": "Add explicit S2 handling: in pyhfo-detection and eeg-preprocessing skills, state that once a prepared copy exists, detection should run on the prepared artifact, and a 'detect ripples' in S2 still detects (on the prepared copy) — distinguishing S1 (raw) from S2 (prepared) so the state matrix doesn't collapse them."
+    },
+    {
+      "priority": "P1",
+      "where": "system_prompt",
+      "change": "Add a SAFE-01 template to the safety contract: for SOZ/resection/ground-truth requests, ANSWER the underlying signal question (offer/return ranked candidate channels as research evidence) while explicitly DECLINING to name a SOZ or surgical target — neither refuse outright (over-refusal) nor present candidates as the SOZ (overreach). This codifies the two-sided failure the refusal-guard note describes."
+    },
+    {
+      "priority": "P2",
+      "where": "catalog",
+      "change": "Improve discoverability of migrated/newer commands (detection.create_consensus_run, review.group_overlaps, project.save/open) by adding a one-line mention in the relevant skills (eeg-result-interpretation for consensus/group, plus a project-lifecycle note) so the model knows they exist rather than relying solely on SEARCH_KEYWORDS substring matches."
+    },
+    {
+      "priority": "P2",
+      "where": "command_usage",
+      "change": "Add a per-state 'no run yet' guidance line to detection.rank_candidates and classification.run COMMAND_USAGE/skills: when no matching run exists, return a 'detection must run first' guidance response and do NOT fabricate a ranking/classification — making the S0/S1/S2 behavior explicit rather than implicit in the anti-fabrication rule."
+    },
+    {
+      "priority": "P2",
+      "where": "handler",
+      "change": "Add the state-dependent intents (ripples S1-vs-S3, fast-ripple Nyquist gate, annotate-vs-classify, SOZ answer-vs-decline, iterate-vs-resurface) to the test matrix as paired S1/S3/S5 fixtures, since the memory notes show only set_parameters and detection.run have explicit per-state live verification today. Build the matrix off the behavior_by_state column of this catalog."
+    }
+  ],
+  "summary": "This catalog consolidates the clinical, capability, and state lenses into 35 de-duplicated clinician intents spanning the full iEEG co-pilot workflow (inspect, ROI, QC/spectral, parameter-set vs prepare, detect, localize/rank, classify, navigate, review, annotate, run-management, compare/consensus, accept, export, project, batch, safety, meta, iterate), each grounded in the real 38-command emit_ui_command catalog (desktop/src/features/agent/uiCommands.ts), the COMMAND_USAGE/SEARCH_KEYWORDS router (ui_mcp/mcp_server.py), the 13 pyhfo_* backend tools, and the domain skills. Every intent carries explicit behavior_by_state across S0-S5. The single biggest theme is the product owner's seed insight: 'I want all ripples' is state-dependent, but the code today treats it as an unconditional detection.run (no get_ui_state precondition), so in S3+ the agent re-detects instead of surfacing/ranking existing ripples — the surface-existing rule only fires for show/rank phrasings, not the bare detect-verb. The second theme is a band-parameter trap: there is no distinct 'ripple' biomarker (enum is HFO/Spindle/Spike), so 'ripple' must be encoded as filter {fp:80,fs:250}, yet the defaults and the 'ripples AND fast ripples are HFOs / generic HFO 80-500' phrasing bias the model toward a broadband 80-500 run that is not ripple-specific; fast-ripple requests additionally lack a Nyquist gate and silently yield 0 events on <=1024 Hz data. The third theme is two-sided safety (SOZ overreach vs documented over-refusal) plus the structural router misroutes already partly fixed (annotate->classify via the 'as'->clASSification substring bug, set-params->prepare). Recommended fixes are prioritized: P0 = make the ripple intent state-branched in both the skill and COMMAND_USAGE and disambiguate the ripple band to a hard 80-250; P1 = generalize the no-re-detect rule with an explicit iterate carve-out, add the fast-ripple Nyquist gate, separate S1-from-S2, and add a SOZ answer-while-declining template; P2 = discoverability for migrated commands and a paired S1/S3/S5 test matrix built off the behavior_by_state column."
+}

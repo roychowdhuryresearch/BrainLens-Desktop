@@ -1,0 +1,190 @@
+/* Waveform overview owner.
+   Keeps loaded waveform viewport/overview behavior in the waveform pane owner,
+   away from annotation, detection, sidebar, shell-header, and toolbar layers. */
+
+/* User-confirmed main waveform left fixed-scroll parity: the loaded workspace's left EEG pane is a fixed-size PyQt viewport sibling; overflow belongs inside that pane, not to the window grid or right sidebar. */
+.loaded-workspace .waveform-stage>.waveform-pane,
+.loaded-workspace .waveform-left-scroll-pane,
+.loaded-workspace [data-pyqt-scroll-pane="pyqt-waveform_left_scroll_pane"]{
+  inline-size:100%;
+  block-size:100%;
+  max-inline-size:100%;
+  max-block-size:100%;
+  min-inline-size:0;
+  min-block-size:0;
+  overflow:auto;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable both-edges;
+  contain:size layout paint;
+}
+
+.loaded-workspace .waveform-stage>.waveform-pane .waveform-plot-shell{
+  /* Reserve room BELOW the plot-shell for the event-map overview (the pane's 2nd child). The
+     pane is contain:size and is NOT a grid, so a full-height plot-shell pushes the carded
+     overview past the pane's bottom where contain:paint clips it ("被盖住"). Subtract the
+     overview's footprint (canvas 24 + chrome + margin ≈ 40px) so it sits fully inside. */
+  block-size:calc(100% - 44px);
+  max-block-size:calc(100% - 44px);
+  min-block-size:0;
+  overflow:hidden;
+}
+
+/* PyQt loaded waveform canvas adjacency parity: PyQt enters the waveform plot immediately after the toolbar; Electron's long diagnostic metadata line is useful for DOM/status evidence but should not consume loaded visual space above the canvas. */
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane{
+  position:relative;
+  grid-template-rows:minmax(0,1fr);
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .waveform-meta{
+  position:absolute;
+  inline-size:1px;
+  block-size:1px;
+  max-block-size:1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  pointer-events:none;
+}
+
+/* PyQt waveform overview/range band parity: PyQt shows a secondary mini-range axis between the main plot and the horizontal scrollbar. Keep Electron's real range input below it, but add the non-interactive overview band to match the two-tier axis layout. */
+.waveform-stage>.waveform-pane .waveform-plot-shell{
+  grid-template-rows:minmax(0,1fr) 34px 18px;
+}
+
+.waveform-overview-axis{
+  grid-column:2/3;
+  grid-row:2;
+  min-width:0;
+  display:grid;
+  grid-template-rows:14px 18px;
+  align-content:start;
+  padding-inline:0;
+  pointer-events:none;
+  user-select:none;
+  overflow:hidden;
+}
+
+.waveform-overview-track{
+  position:relative;
+  block-size:14px;
+  margin-inline:0;
+  border:1px solid var(--lab-line);
+  border-block-color:var(--lab-line-strong);
+  background:#e8eef5;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85);
+}
+
+.waveform-overview-window{
+  position:absolute;
+  inset-block:1px;
+  min-inline-size:28px;
+  border:1px solid rgba(100,116,139,.42);
+  background:rgba(203,213,225,.72);
+}
+
+.waveform-overview-ticks{
+  position:relative;
+  block-size:18px;
+  color:#7c8b9b;
+  font-size:var(--fs-xs);
+  line-height:18px;
+}
+
+.waveform-overview-ticks span{
+  position:absolute;
+  transform:translateX(-50%);
+  white-space:nowrap;
+}
+
+.waveform-stage>.waveform-pane .time-scrollbar{
+  grid-row:3;
+}
+
+/* Full-recording overview minimap (PyQt overview navigator parity): a compact strip below the
+   main waveform with a draggable window band. Sits in its own auto-sized grid row. */
+.waveform-pane{grid-template-rows:auto minmax(0,1fr) auto}
+.waveform-stage>.waveform-pane{grid-template-rows:auto minmax(0,1fr) auto}
+
+/* The event map reads as an intentional panel: the dark tick canvas sits INSIDE the
+   standard white card chrome with its readout label, instead of floating below the
+   waveform as a borderless dark strip that looked like a broken scrollbar. */
+.waveform-overview{
+  display:grid;
+  grid-template-rows:auto auto;
+  gap:2px;
+  margin-block-start:2px;
+  min-inline-size:0;
+  background:#fff;
+  border:1px solid var(--lab-line);
+  border-radius:var(--lab-radius);
+  /* No box-shadow: it renders outside the border and the bottom of the strip sits at the
+     pane edge, so the shadow gets clipped and reads as "cut off". A flat bordered strip is
+     cleaner in this tight slot. Slim padding so the canvas + label both fit the reserved row. */
+  padding:3px 8px;
+}
+
+.waveform-overview-canvas{
+  inline-size:100%;
+  border:1px solid var(--lab-line);
+  border-radius:4px;
+  /* matches the canvas's own painted background (OVERVIEW_BACKGROUND) so an
+     empty/pre-paint event map never flashes a dark strip. */
+  background:#f8fbff;
+}
+
+.waveform-overview-label{
+  color:var(--lab-muted);
+  font-size:var(--fs-xs);
+  line-height:1.1;
+}
+
+.waveform-overview-label-lead{
+  color:var(--lab-ink);
+  font-weight:600;
+}
+
+.waveform-overview-legend{
+  display:inline-flex;
+  gap:10px;
+  margin-inline-start:8px;
+  vertical-align:baseline;
+}
+
+.waveform-overview-legend-item{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+}
+
+.waveform-overview-legend-swatch{
+  inline-size:8px;
+  block-size:8px;
+  border-radius:2px;
+  display:inline-block;
+}
+
+/* Scrub readouts. Both time scrubbers (the slider under the plot and the overview strip beneath it)
+   report the position they are dragging to in H:MM:SS, floating just above the point of contact.
+   position:fixed, with the component supplying viewport coordinates: in the loaded workspace the
+   overview is a 30px overflow:hidden strip and the slider sits inside an overflow:hidden plot shell,
+   so an absolutely-positioned bubble above either one is clipped down to a sliver. A fixed element
+   needs no positioned ancestor and no ancestor can clip it.
+   pointer-events:none so the bubble can never eat the drag it is describing. */
+/* Unscoped selectors on purpose: both readouts are portalled to <body>, so any ancestor-scoped
+   rule would stop matching and the bubble would fall back to static flow at the end of the page. */
+.overview-timestamp,
+.scrub-timestamp{
+  position:fixed;
+  transform:translate(-50%,-100%);
+  z-index:60;
+  padding:1px 6px;
+  border-radius:4px;
+  background:rgba(17,42,53,.92);
+  color:#fff;
+  font-size:var(--fs-2xs);
+  font-variant-numeric:tabular-nums;
+  line-height:1.5;
+  white-space:nowrap;
+  pointer-events:none;
+}
+

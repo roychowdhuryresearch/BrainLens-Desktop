@@ -1,0 +1,100 @@
+/* Quick Detection classifier/export owner. Owns classifier source rows, classifier params/actions, export options, and run-classifier toggle alignment. */
+.quick-detection-right-rail .quick-classifier-model-grid{
+  display:grid!important;
+  gap:6px!important;
+}
+
+.quick-detection-right-rail .quick-model-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(64px,74px)!important;
+  gap:6px!important;
+  align-items:end!important;
+}
+
+.quick-detection-right-rail .quick-model-row label{
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+}
+
+.quick-detection-right-rail .quick-model-row input{
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+
+.quick-detection-right-rail .quick-model-row button{
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  padding-inline:6px!important;
+}
+
+.quick-detection-dialog .quick-detection-right-rail .quick-classifier-model-grid,
+.quick-detection-dialog .quick-detection-right-rail .quick-classifier-param-grid,
+.quick-detection-dialog .quick-detection-right-rail .quick-model-row{
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  max-inline-size:100%!important;
+}
+
+.quick-detection-dialog .quick-detection-right-rail .quick-classifier-param-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+
+.quick-detection-export-options{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:var(--ui-gap)!important;
+}
+
+.quick-detection-dialog .quick-detection-right-rail>[data-testid="pyqt-classifier_groupbox_4"] .quick-classifier-actions.button-row{
+  grid-template-columns:repeat(2,116px)!important;
+  gap:var(--ui-gap)!important;
+}
+
+.quick-detection-dialog .quick-detection-grid .quick-classifier-actions{
+  grid-template-columns:repeat(2,116px)!important;
+  grid-auto-rows:var(--ui-action-h)!important;
+  justify-content:start!important;
+  align-items:center!important;
+}
+
+.quick-detection-dialog .quick-detection-grid .quick-classifier-actions button,
+.quick-detection-dialog .quick-detection-grid .quick-classifier-actions .quick-classifier-toggle{
+  inline-size:116px!important;
+  min-inline-size:116px!important;
+  max-inline-size:116px!important;
+  min-block-size:var(--ui-action-h)!important;
+  block-size:var(--ui-action-h)!important;
+  max-block-size:var(--ui-action-h)!important;
+}
+
+.quick-detection-dialog .quick-detection-grid .quick-classifier-actions .quick-classifier-toggle{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+
+/* Classifier footer toggle owner: keep the PyQt run-classifier checkbox
+   bottom-left in the classifier group without stretching the label text. */
+.quick-detection-dialog .quick-detection-right-rail>[data-testid="pyqt-classifier_groupbox_4"] .quick-classifier-run-toggle{
+  display:grid!important;
+  grid-template-columns:16px max-content!important;
+  align-items:center!important;
+  justify-content:start!important;
+  justify-self:start!important;
+  gap:6px!important;
+  margin-block-start:2px!important;
+  min-block-size:20px!important;
+  white-space:nowrap!important;
+}
+
+.quick-detection-dialog .quick-detection-right-rail>[data-testid="pyqt-classifier_groupbox_4"] .quick-classifier-run-toggle>input[type="checkbox"]{
+  inline-size:16px!important;
+  block-size:16px!important;
+  min-block-size:16px!important;
+  margin:0!important;
+  padding:0!important;
+  justify-self:start!important;
+}

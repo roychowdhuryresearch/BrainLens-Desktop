@@ -1,0 +1,72 @@
+{
+  "name": "ieeg-workstation-v0.1.3-package-slimming",
+  "generated_at": "2026-07-18",
+  "baseline": {
+    "version": "0.1.2",
+    "source_commit": "b67758809853fced798c77531b4167b8e4055074",
+    "app_kib": 891136,
+    "app_logical_bytes": 889840770,
+    "electron_frameworks_kib": 279328,
+    "electron_locales_kib": 48848,
+    "pyhfo_backend_kib": 418644,
+    "agent_runtime_kib": 188932,
+    "first_window_ms": 16239,
+    "main_window_ready_ms": 17091
+  },
+  "candidate": {
+    "version": "0.1.3",
+    "source_branch": "codex/slim-runtime-v012",
+    "app_kib": 767968,
+    "app_logical_bytes": 774081366,
+    "electron_frameworks_kib": 232688,
+    "electron_locales_kib": 2280,
+    "electron_locale_directories": 20,
+    "pyhfo_backend_kib": 418648,
+    "agent_runtime_kib": 113716,
+    "first_window_ms": 4646,
+    "main_window_ready_ms": 4707
+  },
+  "delta": {
+    "app_kib": -123168,
+    "app_percent": -13.82,
+    "electron_frameworks_kib": -46640,
+    "electron_frameworks_percent": -16.70,
+    "electron_locales_kib": -46568,
+    "electron_locales_percent": -95.33,
+    "pyhfo_backend_kib": 4,
+    "pyhfo_backend_percent": 0.00,
+    "agent_runtime_kib": -75216,
+    "agent_runtime_percent": -39.81,
+    "first_window_ms": -11593,
+    "first_window_percent": -71.39,
+    "main_window_ready_ms": -12384,
+    "main_window_ready_percent": -72.46
+  },
+  "gates": {
+    "app_max_bytes": 838860800,
+    "agent_runtime_max_bytes": 146800640,
+    "first_window_max_ms": 15000,
+    "main_window_ready_max_ms": 18000,
+    "all_passed": true
+  },
+  "functional_validation": {
+    "packaged_smoke": "passed",
+    "hf_onnx_online_models_loaded": 3,
+    "hf_onnx_offline_models_loaded": 3,
+    "embedded_classifier_models": 0,
+    "pytorch_embedded": false,
+    "transformers_embedded": false,
+    "real_edf_hfo_events": 34,
+    "real_edf_classified_events": 34,
+    "real_edf_yasa_spindle_events": 120,
+    "production_signoff": "ready",
+    "python_tests_passed": 726,
+    "python_tests_skipped": 4,
+    "desktop_tests_passed": 199
+  },
+  "notes": [
+    "PyHFO remains effectively unchanged in size because MNE/YASA requires Matplotlib at runtime.",
+    "Matplotlib is retained while headless startup stubs YASA's plotting and staging modules.",
+    "Classifier models are downloaded from pinned Hugging Face revisions and are not embedded in the application bundle."
+  ]
+}

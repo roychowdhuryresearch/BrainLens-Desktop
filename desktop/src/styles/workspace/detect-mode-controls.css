@@ -1,0 +1,102 @@
+/* Detect mode controls owner.
+   Owns detector selection, Apply/Run/Protocol controls, and the mode hint. */
+.workspace-tab-panel[data-active-tab="Detect"] .detector-setup-strip{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-areas:"mode"!important;
+  justify-self:stretch!important;
+  inline-size:100%!important;
+  max-inline-size:440px!important;
+  align-items:end!important;
+  gap:5px!important;
+  padding:6px 8px!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  box-shadow:var(--lab-card-shadow)!important;
+  block-size:auto!important;
+  min-block-size:0!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .detector-mode-header{
+  grid-area:mode!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-auto-rows:min-content!important;
+  justify-self:stretch!important;
+  inline-size:100%!important;
+  max-inline-size:100%!important;
+  align-items:start!important;
+  gap:3px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:8px!important;
+  background:transparent!important;
+  block-size:auto!important;
+  min-block-size:0!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .detector-mode-primary-row{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  justify-content:start!important;
+  align-items:end!important;
+  gap:5px!important;
+  min-inline-size:0!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .detector-mode-field{
+  display:grid!important;
+  grid-template-rows:auto var(--ui-density-control-h)!important;
+  gap:2px!important;
+  inline-size:150px!important;
+  min-inline-size:150px!important;
+  max-inline-size:150px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .detector-mode-header label{
+  color:#52677b!important;
+  font-weight:400!important;
+  letter-spacing:0!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] [data-testid="pyqt-detector_mode_combo"]{
+  inline-size:150px!important;
+  width:150px!important;
+  max-inline-size:150px!important;
+  border-color:var(--lab-line-strong)!important;
+  background:#fff!important;
+  color:var(--lab-ink)!important;
+  font-weight:400!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .detector-run-actions,
+.workspace-tab-panel[data-active-tab="Detect"] .protocol-preset-actions{
+  display:grid!important;
+  grid-template-columns:repeat(2,max-content)!important;
+  align-items:center!important;
+  gap:6px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .detector-run-actions button{
+  inline-size:auto!important;
+  min-inline-size:88px!important;
+  max-inline-size:max-content!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .protocol-preset-actions button{
+  inline-size:auto!important;
+  min-inline-size:126px!important;
+  max-inline-size:max-content!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .detector-mode-hint{
+  margin:0!important;
+  max-inline-size:100%!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  white-space:normal!important;
+  font-size:var(--fs-xs)!important;
+  line-height:1.15!important;
+  color:#52677b!important;
+}

@@ -1,0 +1,94 @@
+/* Workflow panel as an anchored popover.
+ *
+ * Three things make this work, after several attempts that did not:
+ *
+ * 1. The shell never leaves waveform mode. MainWindowShell pins
+ *    data-active-workflow-tab="waveform" and reports the open panel via data-workflow-panel. Every
+ *    waveform-mode style keeps applying -- toolbar layout, stage, rail, shell grid rows -- and
+ *    workflow-expanded-layout.css (the full-page takeover: display:none on toolbar and stage, a
+ *    4-row shell grid, panel stretched to 100%) can no longer match. Undoing that takeover rule by
+ *    rule was hopeless: even with the stage and toolbar forced back, the toolbar rendered UNSTYLED,
+ *    because waveform-toolbar-*.css is itself scoped to [data-active-workflow-tab="waveform"].
+ *
+ * 2. position:fixed, not absolute. Fixed takes no grid space and needs no positioned ancestor.
+ *    Absolute positioning required making .loaded-workspace a containing block -- and the pipeline
+ *    rail is absolutely positioned inside it, so the rail moved every time (measured 1075 -> 782).
+ *
+ * 3. Placement comes from JS: the shell measures the Prep/Detect/Classify buttons and sets
+ *    top/right/width/max-height in viewport coordinates, re-measuring on resize. No magic offsets.
+ *
+ * It covers the pipeline rail while open -- the chosen trade: the buttons keep their upstream
+ * position, the panel stays anchored beneath them, and Close brings the rail back.
+ *
+ * Deliberately NOT light-dismissing: clicking the waveform, the rail, or anywhere else leaves it
+ * open. Only Close, or another Prep/Detect/Classify button (which swaps its contents).
+ */
+.loaded-workspace>.workspace-tabs{
+  position:fixed!important;
+  grid-column:auto!important;
+  grid-row:auto!important;
+  justify-self:auto!important;
+  /* Content-sized: max-content for width, auto for height, both capped by the maxWidth/maxHeight
+     the shell measures from the viewport. No !important here -- an important width in this file
+     would beat the inline caps React sets. min-inline-size stops a sparse tab (Detect measured
+     129px when it shrink-wrapped) collapsing into a sliver. */
+  inline-size:max-content;
+  min-inline-size:420px;
+  block-size:auto;
+  overflow:auto!important;
+  z-index:60!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:10px!important;
+  background:var(--lab-surface,#fff)!important;
+  box-shadow:0 14px 36px rgba(15,23,42,.20)!important;
+}
+
+/* The waveform keeps the full width while the panel is open.
+   shell-structure.css still cuts the workspace into the old splitter layout when expanded --
+   minmax(220px,62%) | 8px | 1fr -- which reserved the right-hand columns for the panel back when it
+   WAS a grid column. It is position:fixed now, so those columns sit empty while the waveform is
+   squeezed to 62% (measured 662px against 1067px closed). One column, full width. */
+.loaded-workspace[data-workflow-expanded="true"]{
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:minmax(0,1fr)!important;
+  column-gap:0!important;
+}
+
+/* The splitter only made sense while the panel was a grid column of the workspace. */
+.loaded-workspace>.loaded-workspace-splitter-handle{display:none!important;}
+
+/* Its internal tab strip duplicates the header buttons that drive it. */
+.loaded-workspace>.workspace-tabs .workflow-tab-list{display:none!important;}
+
+/* Keep the rail gutter while the panel is open.
+   waveform-toolbar-layout.css and review-rail.css zero margin-inline-end on the toolbar, header and
+   workspace whenever .loaded-workspace is [data-workflow-expanded="true"] -- correct back when
+   "expanded" meant the panel had taken the screen and the rail was gone. The rail stays now, so
+   without this the toolbar (and, under 1180px, the header and workspace) run underneath it. */
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]:has(.loaded-workspace[data-workflow-expanded="true"])>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console{
+  margin-inline-end:calc(var(--pyqt-main-sidebar-width,268px) + var(--pyqt-main-sidebar-gap,8px))!important;
+}
+
+@media(max-width:1180px){
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]:has(.loaded-workspace[data-workflow-expanded="true"])>.waveform-header,
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]:has(.loaded-workspace[data-workflow-expanded="true"])>.loaded-workspace{
+    margin-inline-end:calc(var(--pyqt-main-sidebar-width) + var(--pyqt-main-sidebar-gap))!important;
+  }
+}
+
+/* Close needs to look like a button.
+   .subpage-back-button is chromeless by default -- border:1px solid transparent on a transparent
+   background -- which reads as bare text until you happen to hover it. That suited a "back to
+   waveform" link on a full page; here it is the only way out of the popover, so give it a contour. */
+.loaded-workspace>.workspace-tabs .subpage-back-button{
+  min-inline-size:76px!important;
+  border-color:#b8c7d2!important;
+  background:#fff!important;
+  color:#35495d!important;
+  box-shadow:0 1px 2px rgba(15,23,42,.06)!important;
+}
+
+.loaded-workspace>.workspace-tabs .subpage-back-button:hover{
+  border-color:#8fa6b6!important;
+  background:#f3f6fb!important;
+}

@@ -1,0 +1,73 @@
+/* Top toolbar actions owner. Application toolbar buttons, labels, and icon
+   glyph sizing live here; dropdown placement belongs to top-toolbar-menu.css. */
+.pyqt-toolbar-action{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 auto!important;
+  min-block-size:var(--top-toolbar-control-h,32px)!important;
+  block-size:var(--top-toolbar-control-h,32px)!important;
+  min-inline-size:34px!important;
+  gap:6px;
+  padding-inline:8px!important;
+  border:1px solid transparent!important;
+  border-radius:6px!important;
+  background:transparent;
+  box-shadow:none;
+  color:#1f2a36!important;
+  font-size:var(--fs-base)!important;
+  font-weight:400!important;
+  line-height:1.1!important;
+  letter-spacing:0!important;
+  white-space:nowrap!important;
+}
+
+.pyqt-toolbar-action:hover{
+  border-color:rgba(22,138,130,.34)!important;
+  color:#0f1822!important;
+  background:rgba(22,138,130,.12)!important;
+}
+
+.pyqt-toolbar-action:focus-visible{
+  outline:2px solid var(--lab-cobalt)!important;
+  outline-offset:2px!important;
+}
+
+.pyqt-toolbar-label{
+  display:inline-block!important;
+  font-weight:400!important;
+  line-height:1!important;
+}
+
+.pyqt-toolbar-icon{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  inline-size:16px!important;
+  block-size:16px!important;
+  flex:0 0 16px!important;
+  color:#127c74!important;
+  line-height:1;
+}
+
+.pyqt-toolbar-icon svg{
+  display:block!important;
+  inline-size:16px!important;
+  block-size:16px!important;
+}
+
+.pyqt-toolbar-icon path{
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:1.7!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+}
+
+.pyqt-toolbar-icon circle{
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:1.7!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+}

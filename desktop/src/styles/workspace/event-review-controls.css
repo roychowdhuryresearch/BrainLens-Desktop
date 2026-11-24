@@ -1,0 +1,30 @@
+/* Event Review shared form controls owner. Base input/select sizing and
+   checkbox row alignment live here; navigation, frequency, prediction, and
+   sticky detail actions each have their own owner files. */
+.event-review-dialog input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.event-review-dialog select{
+  min-block-size:var(--ui-control-h)!important;
+  block-size:var(--ui-control-h)!important;
+  font-size:var(--fs-base)!important;
+  line-height:1.2!important;
+}
+
+.event-review-dialog label.select-toggle{
+  display:grid!important;
+  grid-template-columns:16px minmax(0,1fr)!important;
+  gap:6px!important;
+  align-items:center!important;
+  justify-content:start!important;
+}
+
+.event-review-dialog label.select-toggle input[type="checkbox"]{
+  inline-size:16px!important;
+  block-size:16px!important;
+  margin:0!important;
+  justify-self:start!important;
+}
+
+.event-review-dialog [data-testid="pyqt-UnannotatedOnlyCheckBox"]{
+  margin-inline-start:0!important;
+  transform:none!important;
+}

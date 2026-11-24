@@ -1,0 +1,61 @@
+# System-level configuration example.
+# Copy to config.yaml and keep real tokens in environment variables or local-only files.
+#
+# Authentication is configured through process environment variables.
+# Set PYHFO_AGENT_SERVICE_TOKEN or AGENT_SERVICE_TOKEN to the same generated
+# secret for the runtime and its clients. Desktop generates a token at launch.
+# Set AGENT_BACKEND_TOKEN when connecting to a durable memory backend.
+# Set IEEG_AGENT_CONFIG_DIR to load the YAML files from a different directory.
+# The black-box evaluator uses IEEG_AGENT_SERVICE_TOKEN for the runtime token.
+# Keyless self-hosted model profiles use "local" only as an SDK placeholder.
+# Configure a provider-issued API key for authenticated model endpoints.
+# For an authenticated remote MCP connector, set its access_token from the
+# environment (for example "${MCP_ACCESS_TOKEN:}") for that service_url.
+#
+# Attachments default to local files in data/storage (desktop uses its
+# application data directory). Set IEEG_STORAGE_LOCAL_ROOT to override it.
+# For S3 storage set IEEG_STORAGE_BACKEND=s3 and configure the AWS SDK's
+# credentials and region. IEEG_S3_ENDPOINT_URL can select an S3-compatible
+# service. Keep credentials outside the repository.
+#
+# PyHFO authority boundary (process environment, never a tool argument): direct
+# detection/preparation/batch writes default to the closed `copilot` profile and
+# must go through ieeg_ui approval receipts. Only a dedicated, operator-started
+# headless process may set:
+#   PYHFO_AGENT_EXECUTION_PROFILE=authorized_headless
+# Do not set the authorized profile in the desktop/Electron process.
+
+conversation_concurrency:
+  max_concurrent: 20
+  queue_maxsize: 1000
+  default_timeout: 500
+  enable_priority: false
+
+ai_service:
+  token_bucket:
+    qianwen_token_limit_per_minute: 10000000
+    token_refill_rate: 166667
+    token_bucket_capacity: 1000000
+  token_estimation:
+    char_to_token_ratio: 2.0
+    overhead_tokens: 50
+  retry:
+    max_retries: 2
+    base_delay: 0.5
+    max_delay: 30.0
+    jitter_range: 0.5
+    retryable_status_codes: [429, 500, 502, 503, 504]
+
+context_config:
+  max_context_tokens: 20000
+  recent_keep_turns: 6
+  enable_context_summary: true
+  enable_noise_filter: true
+  summarizer_temperature: 0.3
+
+default_mcp_servers: []
+default_skill_whitelist: null
+
+guarded_tool_policies: []
+
+mcp_servers: []

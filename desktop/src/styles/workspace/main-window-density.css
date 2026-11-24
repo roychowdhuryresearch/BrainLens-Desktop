@@ -1,0 +1,32 @@
+/* Main-window density owner. Electron clamps
+   the desktop app to 1024x800; surface sizing lives in dedicated contracts. */
+.pyqt-main-window{
+  --ui-main-min-inline-size:1024px;
+  --ui-main-min-block-size:800px;
+  --ui-density-control-h:34px;
+  --ui-density-control-h-compact:32px;
+  --ui-density-button-min:76px;
+  --ui-density-icon-button:34px;
+  --ui-density-field-short-min:104px;
+  --ui-density-field-short:136px;
+  --ui-density-field-medium-min:132px;
+  --ui-density-field-medium:176px;
+  --ui-density-detector-input:128px;
+  --ui-density-classifier-tiny:72px;
+  --ui-density-field-long:420px;
+  --ui-density-gap-x:8px;
+  --ui-density-gap-y:5px;
+}
+
+@media(max-width:1100px),(max-height:820px){
+  .pyqt-main-window{
+    --ui-density-control-h:32px;
+    --ui-density-field-short:124px;
+    --ui-density-field-medium:152px;
+    --ui-density-detector-input:118px;
+    --ui-density-classifier-tiny:68px;
+    --ui-density-field-long:360px;
+    --ui-density-gap-x:6px;
+    --ui-density-gap-y:4px;
+  }
+}

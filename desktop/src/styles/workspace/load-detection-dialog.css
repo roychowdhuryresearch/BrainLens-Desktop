@@ -1,0 +1,81 @@
+/* Load Detection dialog owner. Saved-session modal geometry, path row,
+   feedback text, and footer actions live here instead of foundation and channel
+   modal action layers. */
+.load-detection-dialog{
+  width:min(760px,calc(100vw - 48px))!important;
+  grid-template-rows:auto auto auto auto auto!important;
+  padding:18px!important;
+  overflow:hidden!important;
+}
+
+.load-detection-dialog>.helper-copy{
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  color:var(--lab-muted)!important;
+  line-height:1.35!important;
+}
+
+.session-load-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(132px,max-content)!important;
+  gap:10px!important;
+  align-items:end!important;
+}
+
+.session-load-row label{
+  display:grid!important;
+  gap:6px!important;
+  min-inline-size:0!important;
+  font-weight:400!important;
+}
+
+.session-load-row input{
+  min-inline-size:0!important;
+  min-block-size:var(--ui-control-h,34px)!important;
+  padding:.45rem!important;
+  border:1px solid #94a3b8!important;
+  border-radius:6px!important;
+  background:#fff!important;
+}
+
+.load-detection-dialog .status-line{
+  min-block-size:auto!important;
+  display:flex!important;
+  align-items:center!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+
+.load-detection-dialog .modal-actions{
+  display:flex!important;
+  justify-content:flex-end!important;
+  align-items:center!important;
+  gap:10px!important;
+}
+
+.load-detection-dialog .modal-actions button{
+  inline-size:128px!important;
+  min-inline-size:128px!important;
+  max-inline-size:128px!important;
+  flex:0 0 128px!important;
+}
+
+@media(max-width:760px){
+  .session-load-row{
+    grid-template-columns:1fr!important;
+  }
+
+  .load-detection-dialog .modal-actions{
+    justify-content:stretch!important;
+  }
+
+  .load-detection-dialog .modal-actions button{
+    inline-size:100%!important;
+    max-inline-size:none!important;
+    flex:1 1 0!important;
+  }
+}

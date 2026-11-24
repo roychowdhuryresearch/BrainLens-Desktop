@@ -1,0 +1,34 @@
+/* Prepare output/runtime owner. Owns the runtime/progress rows for the Prepare
+   workflow. Statistics + decision-desk panels were removed (run statistics now
+   live in the Run Statistics dialog); their styling went with them. */
+.workspace-tab-panel[data-active-tab="Prepare"] .runtime-log-heading{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;
+  justify-content:start!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .runtime-log-heading .helper-copy{
+  display:none!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .runtime-log-heading button{
+  justify-self:start!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .runtime-current [data-testid="pyqt-runtime_operation_label"]{
+  min-inline-size:0!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  line-height:1.15!important;
+}
+
+/* The embedded Runtime/Progress panel duplicates the global Status Log dialog
+   (RuntimeLogDialog, same runtimeOperation/runtimeLog props) which is reachable
+   from the status strip + toolbar. Hidden here to declutter the Prepare page;
+   the panel + its testids stay in the DOM for the source contract. */
+.workspace-tab-panel[data-active-tab="Prepare"] .runtime-log-panel{
+  display:none!important;
+}

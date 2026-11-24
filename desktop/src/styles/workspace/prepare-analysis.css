@@ -1,0 +1,28 @@
+/* Prepare analysis chrome owner. Shared card chrome and typography for the
+   recording-analysis result cards live here; layout and domain specifics do not. */
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-grid article{
+  border-color:var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:linear-gradient(180deg,#fff,#f7faf8)!important;
+  box-shadow:var(--lab-inset),0 1px 2px rgba(17,24,39,.04)!important;
+  padding:7px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-grid article h4{
+  color:#1f3446!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-grid article p{
+  color:#2e4053!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-grid article strong{
+  color:#111827!important;
+  font-family:var(--ui-mono)!important;
+  font-weight:400!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-grid .mini-list{
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}

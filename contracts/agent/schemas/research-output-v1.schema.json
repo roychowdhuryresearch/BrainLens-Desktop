@@ -1,0 +1,446 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ieeg-agent.invalid/contracts/agent/research-output-v1.schema.json",
+  "title": "XLP-RESEARCH-OUTPUT-V1",
+  "description": "Evidence-linked, research-only output for iEEG analysis and clinical review workflows.",
+  "x-ieeg-contract-id": "XLP-RESEARCH-OUTPUT-V1",
+  "x-ieeg-contract-version": "ieeg-agent.v1",
+  "x-ieeg-unknown-field-policy": "reject",
+  "oneOf": [
+    { "$ref": "#/$defs/ResearchOutput" },
+    { "$ref": "#/$defs/ClinicalProvenance" },
+    { "$ref": "#/$defs/EvidenceItem" },
+    { "$ref": "#/$defs/ResearchClaim" },
+    { "$ref": "#/$defs/ArtifactRef" }
+  ],
+  "x-ieeg-examples": [
+    {
+      "definition": "ResearchOutput",
+      "value": {
+        "schema_version": "research-output.v1",
+        "output_id": "output-17",
+        "request_id": "req-20260715-001",
+        "conversation_id": "conv-42",
+        "message_id": "msg-17",
+        "state_revision": "desktop-state-contract",
+        "recording_fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "run_ids": ["qc-run-1"],
+        "response_language": "en-US",
+        "summary": "QC found one flat channel; remaining channels are suitable for research detection.",
+        "claims": [
+          {
+            "claim_id": "claim-qc-1",
+            "kind": "qc",
+            "assertion": "A1 is flat in the evaluated interval.",
+            "epistemic_status": "derived",
+            "evidence_refs": ["evidence-qc-1"],
+            "run_ids": ["qc-run-1"]
+          }
+        ],
+        "evidence": [
+          {
+            "evidence_id": "evidence-qc-1",
+            "kind": "quality_control",
+            "source": "pyhfo_compute_channel_qc",
+            "recording_id": "recording-aaaaaaaaaaaaaaaaaaaaaaaa",
+            "run_id": "qc-run-1",
+            "value": { "flat_channels": ["A1"] }
+          }
+        ],
+        "provenance": {
+          "software_version": "ieeg-agent@1.0.0",
+          "algorithm": "pyhfo_compute_channel_qc",
+          "algorithm_version": "pyhfo-adapter.v1",
+          "parameters": { "max_duration_seconds": 60 },
+          "parameters_sha256": "7b049fcc4fdb551c589221218a739844e3f32eccf074983cf15ec388e43821a7",
+          "recording": {
+            "recording_id": "recording-aaaaaaaaaaaaaaaaaaaaaaaa",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "sampling_frequency_hz": 2000,
+            "channel_names": ["A1", "A2"],
+            "evaluated_interval_seconds": { "start": 0, "end": 60 }
+          },
+          "software_components": [
+            { "name": "ieeg-agent-runtime", "version": "1.0.0" },
+            { "name": "research-evidence-contract", "version": "1" }
+          ],
+          "run_scope": {
+            "mode": "single_run",
+            "run_ids": ["qc-run-1"]
+          },
+          "generated_at": "2026-07-15T18:00:00Z"
+        },
+        "guardrails": {
+          "intended_use": "research_only",
+          "diagnostic_status": "not_a_clinical_diagnosis",
+          "candidate_terminology": "detector_candidates_are_not_confirmed_hfo",
+          "anatomy_inference": "not_performed",
+          "soz_inference": "not_performed",
+          "aggregation_scope": "single_run"
+        },
+        "limitations": ["This output does not establish diagnosis, anatomy, or seizure-onset zone."],
+        "artifacts": []
+      }
+    }
+  ],
+  "$defs": {
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "IntervalSeconds": {
+      "type": "object",
+      "required": ["start", "end"],
+      "properties": {
+        "start": { "type": "number", "minimum": 0 },
+        "end": { "type": "number", "exclusiveMinimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "RecordingProvenance": {
+      "type": "object",
+      "required": ["recording_id", "sha256", "sampling_frequency_hz", "channel_names", "evaluated_interval_seconds"],
+      "properties": {
+        "recording_id": { "$ref": "#/$defs/Identifier" },
+        "sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "source_uri": { "type": "string", "pattern": "^(?:recording://|urn:).+" },
+        "sampling_frequency_hz": { "type": "number", "exclusiveMinimum": 0 },
+        "nyquist_hz": { "type": "number", "exclusiveMinimum": 0 },
+        "line_frequency_hz": { "type": "number", "exclusiveMinimum": 0 },
+        "channel_names": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "evaluated_interval_seconds": { "$ref": "#/$defs/IntervalSeconds" },
+        "montage": { "type": "string", "minLength": 1 },
+        "reference": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "SoftwareIdentity": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "commit": { "type": "string", "minLength": 7 },
+        "model_digest": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "AlgorithmProvenance": {
+      "type": "object",
+      "required": ["name", "version", "parameters", "parameters_sha256"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "detector": { "type": "string", "minLength": 1 },
+        "biomarker": { "type": "string", "enum": ["HFO", "Spindle", "Spike", "Other"] },
+        "classifier": { "type": "string", "minLength": 1 },
+        "parameters": { "type": "object" },
+        "parameters_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "filter_band_hz": {
+          "type": "object",
+          "required": ["low", "high"],
+          "properties": {
+            "low": { "type": "number", "minimum": 0 },
+            "high": { "type": "number", "exclusiveMinimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "notch_frequencies_hz": {
+          "type": "array",
+          "items": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      },
+      "additionalProperties": false
+    },
+    "RunScope": {
+      "type": "object",
+      "required": ["mode", "run_ids"],
+      "properties": {
+        "mode": { "type": "string", "enum": ["single_run", "explicit_multi_run"] },
+        "run_ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/Identifier" }
+        },
+        "aggregation_method": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "mode": { "const": "single_run" } }, "required": ["mode"] },
+          "then": { "properties": { "run_ids": { "maxItems": 1 } } }
+        },
+        {
+          "if": { "properties": { "mode": { "const": "explicit_multi_run" } }, "required": ["mode"] },
+          "then": { "required": ["aggregation_method"], "properties": { "run_ids": { "minItems": 2 } } }
+        }
+      ]
+    },
+    "ClinicalProvenance": {
+      "type": "object",
+      "required": [
+        "software_version",
+        "algorithm",
+        "algorithm_version",
+        "parameters",
+        "parameters_sha256",
+        "recording",
+        "software_components",
+        "run_scope",
+        "generated_at"
+      ],
+      "properties": {
+        "software_version": { "type": "string", "minLength": 1 },
+        "algorithm": { "type": "string", "minLength": 1 },
+        "algorithm_version": { "type": "string", "minLength": 1 },
+        "parameters": { "type": "object" },
+        "parameters_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "recording": { "$ref": "#/$defs/RecordingProvenance" },
+        "software_components": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/SoftwareIdentity" }
+        },
+        "algorithm_details": { "$ref": "#/$defs/AlgorithmProvenance" },
+        "run_scope": { "$ref": "#/$defs/RunScope" },
+        "parent_output_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/Identifier" }
+        },
+        "generated_at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "EvidenceItem": {
+      "type": "object",
+      "required": ["evidence_id", "kind", "source", "recording_id", "value"],
+      "properties": {
+        "evidence_id": { "$ref": "#/$defs/Identifier" },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "recording_metadata",
+            "quality_control",
+            "spectral_measurement",
+            "severity_score",
+            "detector_candidate",
+            "classifier_prediction",
+            "channel_ranking",
+            "human_review",
+            "annotation",
+            "artifact",
+            "external_source"
+          ]
+        },
+        "source": { "type": "string", "minLength": 1 },
+        "recording_id": { "$ref": "#/$defs/Identifier" },
+        "run_id": { "$ref": "#/$defs/Identifier" },
+        "event_id": { "$ref": "#/$defs/Identifier" },
+        "channel": { "type": "string", "minLength": 1 },
+        "value": true,
+        "unit": { "type": "string", "minLength": 1 },
+        "artifact_id": { "$ref": "#/$defs/Identifier" },
+        "source_uri": { "type": "string", "pattern": "^(?:artifact://|https://|urn:).+" }
+      },
+      "additionalProperties": false
+    },
+    "ReviewActor": {
+      "type": "object",
+      "required": ["actor_id", "role", "session_id_sha256"],
+      "properties": {
+        "actor_id": { "$ref": "#/$defs/Identifier" },
+        "role": { "type": "string", "enum": ["researcher", "clinician", "reviewer"] },
+        "session_id_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "display_name": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "ReviewCommandPayload": {
+      "description": "Exact safe payload whose canonical SHA-256 must match the bound review receipt.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["event_id", "label"],
+          "properties": {
+            "event_id": { "$ref": "#/$defs/Identifier" },
+            "label": { "type": "string", "minLength": 1, "maxLength": 256 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["run_id"],
+          "properties": {
+            "run_id": { "$ref": "#/$defs/Identifier" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "NumericScope": {
+      "type": "object",
+      "required": ["level"],
+      "properties": {
+        "level": { "type": "string", "enum": ["recording", "run", "channel", "event", "interval", "cohort"] },
+        "recording_id": { "$ref": "#/$defs/Identifier" },
+        "run_id": { "$ref": "#/$defs/Identifier" },
+        "channel": { "type": "string", "minLength": 1 },
+        "event_id": { "$ref": "#/$defs/Identifier" },
+        "interval_seconds": { "$ref": "#/$defs/IntervalSeconds" },
+        "cohort_id": { "$ref": "#/$defs/Identifier" }
+      },
+      "additionalProperties": false
+    },
+    "ResearchClaim": {
+      "type": "object",
+      "required": ["claim_id", "kind", "assertion", "epistemic_status", "evidence_refs", "run_ids"],
+      "properties": {
+        "claim_id": { "$ref": "#/$defs/Identifier" },
+        "kind": {
+          "type": "string",
+          "enum": ["candidate", "qc", "anatomy", "soz", "ranking", "comparison", "numeric", "summary"]
+        },
+        "assertion": { "type": "string", "minLength": 1, "maxLength": 4000, "pattern": "\\S" },
+        "epistemic_status": {
+          "type": "string",
+          "enum": ["observed", "derived", "reviewed", "confirmed", "hypothesis"]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/Identifier" }
+        },
+        "run_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/Identifier" }
+        },
+        "review_receipt_id": { "$ref": "#/$defs/Identifier" },
+        "review_actor": { "$ref": "#/$defs/ReviewActor" },
+        "review_command_payload": { "$ref": "#/$defs/ReviewCommandPayload" },
+        "value": { "type": "number" },
+        "units": { "type": "string", "minLength": 1 },
+        "denominator": { "type": "string", "minLength": 1 },
+        "scope": { "$ref": "#/$defs/NumericScope" },
+        "limitations": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "partial_failure_status": { "type": "string", "enum": ["none", "partial", "unknown"] }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": { "epistemic_status": { "enum": ["reviewed", "confirmed"] } },
+            "required": ["epistemic_status"]
+          },
+          "then": { "required": ["review_receipt_id", "review_actor", "review_command_payload"] }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "numeric" } }, "required": ["kind"] },
+          "then": { "required": ["value", "units", "denominator", "scope", "partial_failure_status"] }
+        },
+        {
+          "if": { "properties": { "kind": { "enum": ["anatomy", "soz"] } }, "required": ["kind"] },
+          "then": { "properties": { "evidence_refs": { "minItems": 1 } } }
+        }
+      ]
+    },
+    "ClinicalGuardrails": {
+      "type": "object",
+      "required": [
+        "intended_use",
+        "diagnostic_status",
+        "candidate_terminology",
+        "anatomy_inference",
+        "soz_inference",
+        "aggregation_scope"
+      ],
+      "properties": {
+        "intended_use": { "const": "research_only" },
+        "diagnostic_status": { "const": "not_a_clinical_diagnosis" },
+        "candidate_terminology": { "const": "detector_candidates_are_not_confirmed_hfo" },
+        "anatomy_inference": { "type": "string", "enum": ["not_performed", "explicit_source_only"] },
+        "soz_inference": { "const": "not_performed" },
+        "aggregation_scope": { "type": "string", "enum": ["single_run", "explicit_multi_run"] }
+      },
+      "additionalProperties": false
+    },
+    "ArtifactRef": {
+      "type": "object",
+      "required": ["artifact_id", "kind", "uri", "sha256", "created_by", "created_at"],
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/Identifier" },
+        "kind": {
+          "type": "string",
+          "enum": ["prepared_recording", "detection_run", "classification_run", "annotation_set", "session", "workbook", "report", "snapshot", "other"]
+        },
+        "uri": { "type": "string", "pattern": "^(?:artifact://|https://|urn:).+" },
+        "sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "created_by": { "type": "string", "minLength": 1 },
+        "created_at": { "type": "string", "format": "date-time" },
+        "run_id": { "$ref": "#/$defs/Identifier" }
+      },
+      "additionalProperties": false
+    },
+    "ResearchOutput": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "output_id",
+        "request_id",
+        "conversation_id",
+        "message_id",
+        "state_revision",
+        "recording_fingerprint",
+        "run_ids",
+        "response_language",
+        "summary",
+        "claims",
+        "evidence",
+        "provenance",
+        "guardrails",
+        "limitations",
+        "artifacts"
+      ],
+      "properties": {
+        "schema_version": { "const": "research-output.v1" },
+        "output_id": { "$ref": "#/$defs/Identifier" },
+        "request_id": { "$ref": "#/$defs/Identifier" },
+        "conversation_id": { "$ref": "#/$defs/Identifier" },
+        "message_id": { "$ref": "#/$defs/Identifier" },
+        "state_revision": { "$ref": "#/$defs/Identifier" },
+        "recording_fingerprint": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "run_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/Identifier" }
+        },
+        "response_language": { "type": "string", "enum": ["en-US", "zh-CN"] },
+        "summary": { "type": "string", "minLength": 1, "maxLength": 4000, "pattern": "\\S" },
+        "claims": { "type": "array", "minItems": 1, "maxItems": 128, "items": { "$ref": "#/$defs/ResearchClaim" } },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2048,
+          "items": { "$ref": "#/$defs/EvidenceItem" }
+        },
+        "provenance": { "$ref": "#/$defs/ClinicalProvenance" },
+        "guardrails": { "$ref": "#/$defs/ClinicalGuardrails" },
+        "limitations": { "type": "array", "minItems": 1, "maxItems": 64, "items": { "type": "string", "minLength": 1, "maxLength": 2000 } },
+        "artifacts": { "type": "array", "maxItems": 256, "items": { "$ref": "#/$defs/ArtifactRef" } }
+      },
+      "additionalProperties": false
+    }
+  }
+}

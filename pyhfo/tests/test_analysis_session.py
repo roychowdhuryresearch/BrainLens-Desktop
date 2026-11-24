@@ -1,0 +1,281 @@
+import numpy as np
+
+from pyhfo.hfo_feature import HFO_Feature
+from pyhfo.param.param_detector import ParamDetector, ParamMNI, ParamSTE
+from pyhfo.param.param_filter import ParamFilter
+from pyhfo.spindle_feature import SpindleFeature
+from pyhfo.utils.analysis_session import AnalysisSession, DetectionRun, build_run_comparison, review_event_id
+from pyhfo.utils.session_store import load_session_checkpoint, save_session_checkpoint
+
+
+def _build_hfo_run(detector_name, intervals, channel_names):
+    if detector_name == "STE":
+        detector_param = ParamSTE(2000).to_dict()
+    else:
+        detector_param = ParamMNI(2000).to_dict()
+    return DetectionRun.create(
+        biomarker_type="HFO",
+        detector_name=detector_name,
+        selected_channels=np.array(channel_names),
+        param_filter=ParamFilter(),
+        param_detector=ParamDetector.from_dict({"detector_type": detector_name, "detector_param": detector_param}),
+        event_features=HFO_Feature(np.array(channel_names), np.array(intervals), np.array([]), detector_name, 2000),
+        detector_output=np.array([intervals], dtype=object),
+        classified=False,
+    )
+
+
+def _build_spindle_run(detector_name, intervals, channel_names):
+    starts = np.array([interval[0] for interval in intervals], dtype=int)
+    ends = np.array([interval[1] for interval in intervals], dtype=int)
+    return DetectionRun.create(
+        biomarker_type="Spindle",
+        detector_name=detector_name,
+        selected_channels=np.array(channel_names),
+        param_filter=ParamFilter(),
+        param_detector=None,
+        event_features=SpindleFeature(np.array(channel_names), starts, ends, np.array([]), detector_name, 2000),
+        detector_output=np.array(intervals, dtype=object),
+        classified=False,
+    )
+
+
+def test_analysis_session_tracks_multiple_runs_and_active_run():
+    session = AnalysisSession("HFO")
+    first_run = _build_hfo_run("STE", [[10, 20], [30, 40]], ["A1", "A2"])
+    second_run = _build_hfo_run("MNI", [[50, 70]], ["A1"])
+
+    session.add_run(first_run)
+    session.add_run(second_run)
+
+    assert session.active_run_id == second_run.run_id
+    assert session.get_active_run().detector_name == "MNI"
+    assert session.get_active_run().summary["num_events"] == 1
+
+
+def test_review_cursor_sync_uses_active_run_feature_index():
+    session = AnalysisSession("HFO")
+    run = _build_hfo_run("STE", [[10, 20], [30, 40]], ["A1", "A2"])
+    session.add_run(run)
+    run.event_features.index = 1
+
+    cursor = session.sync_review_cursor_from_active_run()
+
+    assert cursor == review_event_id(run.run_id, 1)
+    assert session.to_dict()["review_cursor_event_id"] == cursor
+
+
+def test_session_store_round_trip_preserves_multiple_runs(tmp_path):
+    session = AnalysisSession("HFO")
+    session.add_run(_build_hfo_run("STE", [[10, 20], [30, 40]], ["A1", "A2"]))
+    session.add_run(_build_hfo_run("MNI", [[50, 70]], ["A1"]))
+    session.review_cursor_event_id = "evt-0000-cursor"
+    session.accept_run(session.active_run_id)
+    session.set_run_visible(session.active_run_id, False)
+
+    checkpoint = {
+        "app_state_version": 3,
+        "biomarker_type": "HFO",
+        "sample_freq": 2000,
+        "channel_names": np.array(["A1", "A2"]),
+        "analysis_session": session.to_dict(),
+    }
+    path = tmp_path / "case.pybrain"
+    save_session_checkpoint(path, checkpoint)
+
+    loaded = load_session_checkpoint(path)
+    restored = AnalysisSession.from_dict(loaded["analysis_session"])
+
+    assert len(restored.runs) == 2
+    assert restored.get_active_run().detector_name == "MNI"
+    assert restored.get_accepted_run().detector_name == "MNI"
+    assert restored.get_active_run().summary["top_channels"][0]["channel_name"] == "A1"
+    assert restored.visible_run_ids == [run_id for run_id in restored.visible_run_ids]
+    assert restored.review_cursor_event_id == "evt-0000-cursor"
+
+
+def test_visible_runs_default_to_newest_run_and_can_be_toggled():
+    session = AnalysisSession("HFO")
+    first = _build_hfo_run("STE", [[10, 20], [30, 40]], ["A1", "A2"])
+    second = _build_hfo_run("MNI", [[50, 70]], ["A1"])
+    session.add_run(first)
+    session.add_run(second)
+
+    assert session.is_run_visible(first.run_id)
+    assert session.is_run_visible(second.run_id)
+
+    session.set_run_visible(first.run_id, False)
+
+    assert not session.is_run_visible(first.run_id)
+    assert session.get_visible_runs()[0].run_id == second.run_id
+
+
+def test_activate_run_restores_hidden_run_visibility():
+    session = AnalysisSession("HFO")
+    first = _build_hfo_run("STE", [[10, 20], [30, 40]], ["A1", "A2"])
+    second = _build_hfo_run("MNI", [[50, 70]], ["A1"])
+    session.add_run(first)
+    session.add_run(second)
+
+    session.set_run_visible(first.run_id, False)
+    session.activate_run(first.run_id)
+
+    assert session.active_run_id == first.run_id
+    assert session.is_run_visible(first.run_id)
+    assert first.run_id in [run.run_id for run in session.get_visible_runs()]
+
+
+def test_channel_ranking_and_run_comparison_support_decision_workflow():
+    session = AnalysisSession("HFO")
+    first = _build_hfo_run("STE", [[10, 20], [30, 40]], ["A1", "A2"])
+    second = _build_hfo_run("MNI", [[10, 20], [80, 100]], ["A1", "A1"])
+    session.add_run(first)
+    session.add_run(second)
+    session.accept_run(first.run_id)
+
+    ranking = session.get_channel_ranking(first.run_id)
+    comparison = session.compare_runs([first.run_id, second.run_id])
+
+    assert ranking[0]["channel_name"] == "A1"
+    assert ranking[0]["total_events"] == 1
+    assert comparison["pairwise_overlap"][0]["overlap_events"] == 1
+    assert comparison["pairwise_overlap"][0]["left_only"] == 1
+    assert comparison["pairwise_overlap"][0]["right_only"] == 1
+
+
+def test_analysis_session_creates_majority_consensus_run_from_source_runs():
+    session = AnalysisSession("HFO")
+    first = _build_hfo_run("STE", [[10, 20], [100, 120]], ["A1", "A1"])
+    second = _build_hfo_run("MNI", [[12, 24], [200, 220]], ["A1", "A1"])
+    third = _build_hfo_run("MNI", [[14, 22], [105, 125]], ["A1", "A1"])
+    session.add_run(first)
+    session.add_run(second)
+    session.add_run(third)
+
+    consensus = session.create_consensus_run(
+        run_ids=[first.run_id, second.run_id, third.run_id],
+        strategy="majority",
+    )
+
+    assert consensus.detector_name == "Consensus Majority"
+    assert session.get_active_run().run_id == consensus.run_id
+    assert session.is_run_visible(consensus.run_id)
+    assert consensus.summary["num_events"] == 2
+    assert consensus.summary["consensus_source_runs"] == 3
+    assert consensus.summary["consensus_min_support"] == 2
+    assert consensus.event_features.starts.tolist() == [10, 100]
+    assert consensus.event_features.ends.tolist() == [24, 125]
+    assert consensus.detector_output["source_run_ids"] == [first.run_id, second.run_id, third.run_id]
+
+
+def test_consensus_run_supports_union_and_intersection_strategies():
+    first = _build_hfo_run("STE", [[10, 20], [100, 120]], ["A1", "A1"])
+    second = _build_hfo_run("MNI", [[15, 25], [130, 140]], ["A1", "A1"])
+
+    union = AnalysisSession("HFO")
+    union.add_run(first)
+    union.add_run(second)
+    union_run = union.create_consensus_run(strategy="union")
+
+    intersection = AnalysisSession("HFO")
+    intersection.add_run(first)
+    intersection.add_run(second)
+    intersection_run = intersection.create_consensus_run(strategy="intersection")
+
+    assert union_run.summary["num_events"] == 3
+    assert union_run.event_features.starts.tolist() == [10, 100, 130]
+    assert union_run.event_features.ends.tolist() == [25, 120, 140]
+    assert intersection_run.summary["num_events"] == 1
+    assert intersection_run.event_features.starts.tolist() == [15]
+    assert intersection_run.event_features.ends.tolist() == [20]
+
+
+def test_consensus_run_round_trip_preserves_metadata(tmp_path):
+    session = AnalysisSession("HFO")
+    session.add_run(_build_hfo_run("STE", [[10, 20]], ["A1"]))
+    session.add_run(_build_hfo_run("MNI", [[12, 22]], ["A1"]))
+    consensus = session.create_consensus_run(strategy="majority")
+
+    checkpoint = {
+        "app_state_version": 3,
+        "biomarker_type": "HFO",
+        "sample_freq": 2000,
+        "channel_names": np.array(["A1"]),
+        "analysis_session": session.to_dict(),
+    }
+    path = tmp_path / "consensus.pybrain"
+    save_session_checkpoint(path, checkpoint)
+
+    loaded = load_session_checkpoint(path)
+    restored = AnalysisSession.from_dict(loaded["analysis_session"])
+    restored_consensus = restored.get_run(consensus.run_id)
+
+    assert restored_consensus is not None
+    assert restored_consensus.detector_name == "Consensus Majority"
+    assert restored_consensus.summary["consensus_strategy"] == "majority"
+    assert restored_consensus.summary["consensus_source_runs"] == 2
+    assert restored_consensus.event_features.consensus_metadata["min_support"] == 2
+
+
+def test_decision_summary_prefers_accepted_run_context():
+    session = AnalysisSession("HFO")
+    first = _build_hfo_run("STE", [[10, 20], [30, 40]], ["A1", "A2"])
+    second = _build_hfo_run("MNI", [[10, 20], [80, 100]], ["A1", "A1"])
+    session.add_run(first)
+    session.add_run(second)
+    session.accept_run(first.run_id)
+
+    accepted = session.get_accepted_run()
+    ranking = session.get_channel_ranking(accepted.run_id)
+
+    assert accepted.detector_name == "STE"
+    assert ranking[0]["channel_name"] in {"A1", "A2"}
+    assert session.accepted_run_id == first.run_id
+
+
+def test_case_run_comparison_supports_cross_biomarker_temporal_overlap():
+    hfo_run = _build_hfo_run("STE", [[100, 160], [320, 360]], ["A1", "B1"])
+    spindle_run = _build_spindle_run("YASA", [[120, 220], [500, 650]], ["A1", "B1"])
+
+    comparison = build_run_comparison([hfo_run, spindle_run])
+
+    assert len(comparison["pairwise_overlap"]) == 1
+    pair = comparison["pairwise_overlap"][0]
+    assert pair["left_label"].startswith("HFO")
+    assert pair["right_label"].startswith("Spindle")
+    assert pair["comparison_mode"] == "temporal_overlap"
+    assert pair["overlap_events"] == 1
+    assert pair["left_only"] == 1
+    assert pair["right_only"] == 1
+
+
+def test_overlap_review_hide_updates_visible_summary_and_round_trip():
+    session = AnalysisSession("HFO")
+    run = _build_hfo_run("STE", [[10, 20], [15, 25], [80, 100]], ["A1", "A2", "B1"])
+
+    summary = run.event_features.apply_cross_channel_overlap_settings(
+        {
+            "action": HFO_Feature.OVERLAP_ACTION_HIDE,
+            "min_overlap_ms": 0.0,
+            "min_channels": 2,
+            "tag_name": "Cross-channel overlap",
+        }
+    )
+    run.refresh_summary()
+    session.add_run(run)
+
+    assert summary["overlap_tagged"] == 1
+    assert summary["overlap_kept"] == 1
+    assert summary["overlap_hidden"] == 1
+    assert run.summary["num_events"] == 2
+    assert set(run.event_features.get_visible_array("channel_names").tolist()) == {"A1", "B1"}
+
+    ranking = session.get_channel_ranking(run.run_id)
+    assert {row["channel_name"] for row in ranking} == {"A1", "B1"}
+    assert ranking[0]["total_events"] == 1
+
+    restored = HFO_Feature.from_dict(run.event_features.to_dict())
+    restored_summary = restored.get_overlap_review_summary()
+    assert restored.get_num_biomarker() == 2
+    assert set(restored.get_visible_array("channel_names").tolist()) == {"A1", "B1"}
+    assert restored_summary["overlap_hidden"] == 1

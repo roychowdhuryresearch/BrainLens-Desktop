@@ -1,0 +1,30 @@
+/* Detect workbench layout owner.
+   Owns only the Detect tab canvas and outer scroll container. Detector mode
+   controls, parameter forms, applied displays, and responsive folding live in
+   adjacent Detect owner files. */
+.workspace-tab-panel[data-active-tab="Detect"]{
+  background:#eef3f8!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .detect-layout{
+  container-type:inline-size;
+  min-inline-size:0!important;
+  min-block-size:0!important;
+  block-size:100%!important;
+  max-block-size:100%!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-auto-rows:min-content!important;
+  align-content:start!important;
+  align-items:start!important;
+  gap:6px!important;
+  padding:6px!important;
+  overflow:auto!important;
+  scrollbar-gutter:stable both-edges!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .workflow-panel-heading{
+  margin:0!important;
+  padding:0!important;
+  border-radius:8px!important;
+}

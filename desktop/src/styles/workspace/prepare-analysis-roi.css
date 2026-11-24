@@ -1,0 +1,109 @@
+/* Prepare ROI review owner. Confirmed exclusion text area, ROI channel table,
+   and ROI action buttons stay separate from analysis chart/card layout. */
+.workspace-tab-panel[data-active-tab="Prepare"] .roi-exclusion-editor textarea{
+  border-color:#afc1cd!important;
+  background:#fff!important;
+  color:#16212a!important;
+  font-weight:400!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.roi-exclusion-editor textarea,
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.roi-exclusion-editor textarea{
+  inline-size:100%!important;
+  max-inline-size:100%!important;
+  block-size:40px!important;
+  height:40px!important;
+  min-block-size:40px!important;
+  min-height:40px!important;
+  max-block-size:40px!important;
+  max-height:40px!important;
+  padding-block:5px!important;
+  resize:none!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .roi-channel-review{
+  border-color:var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  overflow:auto!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .roi-channel-review tr[data-role="excluded"]{
+  background:#fff8ed!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .roi-channel-review td:first-child{
+  display:grid!important;
+  place-items:center!important;
+  text-align:center!important;
+  vertical-align:middle!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .roi-channel-review [data-testid="pyqt-recording_roi_channel_checkbox"]{
+  display:block!important;
+  margin-inline:auto!important;
+  align-self:center!important;
+  justify-self:center!important;
+  transform:none!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.button-row button{
+  border-color:#aebeca!important;
+}
+
+/* Live exclusion feedback: a checked Exclude row tints amber immediately (driven
+   by the checkbox state, not just the static ROI/QC role) so the effect is visible. */
+.workspace-tab-panel[data-active-tab="Prepare"] .roi-channel-review tr[data-excluded="true"]{
+  background:var(--lab-amber-soft)!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .channel-excluded-tag{
+  display:inline-block!important;
+  margin-inline-start:6px!important;
+  padding:0 6px!important;
+  border-radius:999px!important;
+  background:var(--lab-amber-soft)!important;
+  color:var(--lab-amber)!important;
+  font-size:var(--fs-2xs)!important;
+  font-weight:600!important;
+  vertical-align:middle!important;
+}
+
+/* Standing summary above the channel table — makes "what detection will use"
+   visible and live (updates the moment a channel is toggled). */
+.workspace-tab-panel[data-active-tab="Prepare"] .channel-review-summary{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:baseline!important;
+  gap:3px 8px!important;
+  margin:0!important;
+  padding:1px 2px!important;
+  min-inline-size:0!important;
+  font-size:var(--fs-xs)!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .channel-review-summary>strong{
+  color:var(--lab-faint)!important;
+  font-size:var(--fs-2xs)!important;
+  font-weight:600!important;
+  text-transform:uppercase!important;
+  letter-spacing:.02em!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .channel-review-summary .channel-review-counts{
+  color:var(--lab-ink)!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .channel-review-summary[data-has-exclusions="true"] .channel-review-counts b:last-of-type{
+  color:var(--lab-amber)!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .channel-review-summary>em{
+  min-inline-size:0!important;
+  flex:1 1 0!important;
+  color:var(--lab-amber)!important;
+  font-style:normal!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}

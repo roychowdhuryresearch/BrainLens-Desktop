@@ -1,0 +1,98 @@
+/* Detect applied display owner.
+   Owns the read-only applied-parameter summary next to the parameter form. */
+.workspace-tab-panel[data-active-tab="Detect"] .detector-applied-display{
+  grid-area:applied!important;
+  display:grid!important;
+  grid-auto-rows:min-content!important;
+  align-self:start!important;
+  gap:4px!important;
+  margin:0!important;
+  padding:6px!important;
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  max-inline-size:none!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  box-shadow:var(--lab-card-shadow)!important;
+  block-size:auto!important;
+  min-block-size:0!important;
+  max-block-size:none!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .detector-display-heading{
+  display:grid!important;
+  grid-template-columns:max-content max-content!important;
+  justify-content:start!important;
+  align-items:center!important;
+  gap:6px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .detector-display-heading>.status-pill{
+  flex:0 0 auto!important;
+  margin-inline-start:0!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .detector-display-title{
+  color:var(--lab-ink)!important;
+  font-size:var(--fs-sm)!important;
+  font-weight:400!important;
+  line-height:1.1!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .detector-display-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(168px,220px))!important;
+  gap:4px 12px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .detector-display-cell{
+  display:grid!important;
+  grid-template-columns:minmax(84px,max-content) minmax(0,1fr)!important;
+  align-items:baseline!important;
+  gap:6px!important;
+  min-inline-size:0!important;
+  padding-block:2px!important;
+  border-bottom:1px solid var(--lab-line)!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .detector-display-cell span{
+  color:#52677b!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:400!important;
+  letter-spacing:0!important;
+  line-height:1.1!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .detector-display-cell output{
+  inline-size:auto!important;
+  width:auto!important;
+  max-inline-size:100%!important;
+  justify-self:start!important;
+  min-block-size:auto!important;
+  block-size:auto!important;
+  border:0!important;
+  background:transparent!important;
+  color:#16212a!important;
+  padding:0!important;
+  font-family:var(--ui-mono)!important;
+  line-height:1.15!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+.workspace-tab-panel[data-active-tab="Detect"] .detector-applied-display[data-applied-current="false"] output{
+  background:transparent!important;
+  color:#68788b!important;
+}
+
+/* Not-applied state: one muted line spanning the grid instead of a card of "--" cells. */
+.detector-display-empty{
+  grid-column:1/-1!important;
+  margin:0!important;
+  padding:2px 0!important;
+  color:var(--lab-muted)!important;
+  font-size:var(--fs-sm)!important;
+  line-height:1.4!important;
+}

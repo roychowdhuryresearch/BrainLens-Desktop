@@ -1,0 +1,122 @@
+/* Classify execution card owner.
+   Owns the preset/run card, mode selector, GPU hint visibility, and compact
+   classifier status summary. Parameter controls live in classify-controls.css. */
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-header-card{
+  grid-area:setup!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-areas:
+    "mode"
+    "status"
+    "params"!important;
+  gap:6px 8px!important;
+  align-items:start!important;
+  justify-content:stretch!important;
+  justify-self:start!important;
+  inline-size:100%!important;
+  max-inline-size:100%!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  box-shadow:var(--lab-card-shadow)!important;
+  padding:6px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-mode-row{
+  grid-area:mode!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 104px!important;
+  justify-content:start!important;
+  gap:8px!important;
+  align-items:center!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-mode-control,
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-mode-control label{
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  max-inline-size:none!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-mode-control label{
+  display:flex!important;
+  align-items:center!important;
+  color:var(--lab-muted)!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:400!important;
+  letter-spacing:0!important;
+  gap:8px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-mode-row select{
+  flex:1 1 auto!important;
+  block-size:34px!important;
+  min-block-size:34px!important;
+  max-block-size:34px!important;
+  border-color:var(--lab-line-strong)!important;
+  border-radius:var(--ui-control-radius)!important;
+  background:#fff!important;
+  color:var(--lab-ink)!important;
+  box-shadow:none!important;
+}
+
+/* Geometry only — color/disabled come from the canonical `.primary-action`
+   (cobalt --window-primary) so this CTA matches every other primary button. */
+.workspace-tab-panel[data-active-tab="Classify"] [data-testid="pyqt-classifier_run_button"]{
+  block-size:34px!important;
+  min-inline-size:104px!important;
+  border-radius:var(--ui-control-radius)!important;
+  box-shadow:none!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-header-card>.helper-copy,
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-header-card>.classifier-gpu-copy{
+  display:none!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-status-list{
+  grid-area:status!important;
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  justify-content:start!important;
+  align-items:baseline!important;
+  gap:4px 12px!important;
+  margin:0!important;
+  padding:0!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-status-item{
+  display:grid!important;
+  grid-template-columns:max-content minmax(0,1fr)!important;
+  align-items:baseline!important;
+  gap:4px!important;
+  min-inline-size:0!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-status-item dt{
+  color:var(--lab-faint)!important;
+  font-size:var(--fs-2xs)!important;
+  font-weight:600!important;
+  text-transform:uppercase!important;
+  letter-spacing:.02em!important;
+  line-height:1!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-status-item dd{
+  min-inline-size:0!important;
+  margin:0!important;
+  color:var(--lab-ink)!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:500!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-status-item[data-tone="ready"] dd{
+  color:var(--lab-green)!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-status-item[data-tone="blocked"] dd{
+  color:var(--lab-amber)!important;
+}

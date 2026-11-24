@@ -1,0 +1,308 @@
+/* Quick Detection footer/responsive owner. Owns bottom action strip and reachable Electron-size responsive layouts. */
+.quick-detection-dialog>.quick-detection-action-strip,
+.quick-detection-dialog>.quick-detection-action-strip[data-run-status],
+.quick-detection-dialog>.quick-detection-action-strip[data-run-status="complete"],
+.quick-detection-dialog>.quick-detection-action-strip:not([data-run-status="complete"]){
+  position:static!important;
+  inset:auto!important;
+  z-index:auto!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,124px)!important;
+  justify-content:end!important;
+  justify-self:end!important;
+  gap:8px!important;
+  inline-size:max-content!important;
+  max-inline-size:100%!important;
+  min-block-size:38px!important;
+  padding:0 8px 0 0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+}
+
+.quick-detection-dialog>.quick-detection-action-strip button{
+  min-block-size:38px!important;
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  padding-inline:10px!important;
+}
+
+@media(min-width:1000px){
+  .quick-detection-dialog .detector-field-grid{
+    grid-template-columns:repeat(auto-fit,minmax(calc(var(--quick-detector-input) + 40px),1fr))!important;
+  }
+}
+
+@media(max-width:1280px){
+  .quick-detection-dialog{
+    gap:2px!important;
+  }
+
+  .quick-detection-dialog>.quick-detection-grid{
+    grid-template-columns:minmax(230px,290px) minmax(0,1fr)!important;
+  }
+
+  .quick-detection-metadata-grid,
+  .quick-detection-main-column>[data-testid="pyqt-qd_edfInfo"] .recording-info-grid.quick-detection-metadata-grid{
+    grid-template-columns:minmax(84px,84px) minmax(96px,1fr) minmax(84px,84px) minmax(96px,1fr)!important;
+    column-gap:8px!important;
+  }
+
+  .quick-detection-main-column>[data-testid="pyqt-qd_edfInfo"]{
+    min-block-size:clamp(188px,24vh,214px)!important;
+  }
+
+  .quick-detection-dialog .quick-filter-grid{
+    margin-block-start:6px!important;
+    grid-template-columns:repeat(auto-fit,minmax(var(--ui-density-field-short-min),var(--ui-density-field-short)))!important;
+    grid-template-rows:none!important;
+    grid-auto-rows:min-content!important;
+    column-gap:var(--ui-density-gap-x)!important;
+    row-gap:var(--ui-density-gap-y)!important;
+    align-items:end!important;
+  }
+
+  .quick-detection-dialog [data-testid="pyqt-qd_filters"] .quick-filter-field,
+  .quick-detection-dialog [data-testid="pyqt-qd_filters"] .quick-filter-field:nth-child(n){
+    grid-column:auto!important;
+    grid-row:auto!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto var(--ui-density-control-h)!important;
+    gap:2px!important;
+  }
+
+  .quick-detection-metadata-grid dt{
+    white-space:normal!important;
+    line-height:1.1!important;
+  }
+
+  .quick-detection-metadata-grid [data-testid="pyqt-qd_filename"]{
+    font-size:var(--fs-xs)!important;
+    line-height:1.05!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+
+  .quick-detection-grid>.quick-detection-main-column,
+  .quick-detection-grid>.quick-detection-right-rail{
+    grid-column:2!important;
+    grid-row:auto!important;
+  }
+
+  .quick-detection-grid .quick-detector-field{
+    gap:2px!important;
+  }
+
+  .quick-detection-dialog .quick-detection-right-rail>[data-testid="pyqt-classifier_groupbox_4"]{
+    block-size:max-content!important;
+    max-block-size:none!important;
+    overflow:visible!important;
+    overscroll-behavior:auto!important;
+    scrollbar-gutter:auto!important;
+  }
+}
+
+@media(min-width:1000px) and (max-width:1179px){
+  .quick-detection-dialog{
+    --quick-detector-input:80px;
+    padding:14px!important;
+  }
+
+  .quick-detection-dialog>.quick-detection-grid{
+    grid-template-columns:176px minmax(0,1fr) 292px!important;
+    gap:8px!important;
+  }
+
+  .quick-detection-dialog .quick-detection-left-rail{
+    grid-column:1!important;
+    grid-row:1!important;
+    gap:8px!important;
+  }
+
+  .quick-detection-dialog .quick-detection-main-column{
+    grid-column:2!important;
+    grid-row:1!important;
+    gap:8px!important;
+  }
+
+  .quick-detection-dialog [data-testid="pyqt-qd_action_rail"] .quick-setup-field{
+    inline-size:min(100%,176px)!important;
+    max-inline-size:176px!important;
+  }
+
+  .quick-detection-dialog [data-testid="pyqt-qd_action_rail"] .quick-setup-field-short{
+    grid-template-columns:max-content 76px!important;
+  }
+
+  .quick-detection-dialog [data-testid="pyqt-qd_action_rail"]>[data-testid="pyqt-qd_loadEDF_button"],
+  .quick-detection-dialog [data-testid="pyqt-qd_action_rail"]>[data-testid="pyqt-qd_run_detection_button"]{
+    min-inline-size:136px!important;
+  }
+
+  .quick-detection-grid>.quick-detection-right-rail{
+    grid-column:3!important;
+    grid-row:1!important;
+    gap:6px!important;
+  }
+
+  .quick-detection-metadata-grid,
+  .quick-detection-main-column>[data-testid="pyqt-qd_edfInfo"] .recording-info-grid.quick-detection-metadata-grid{
+    grid-template-columns:70px 148px 70px 148px!important;
+    column-gap:6px!important;
+    row-gap:7px!important;
+  }
+
+  .quick-detection-main-column>[data-testid="pyqt-qd_edfInfo"]{
+    min-block-size:132px!important;
+  }
+
+  .quick-detection-metadata-grid [data-testid="pyqt-qd_filename"]{
+    font-size:var(--fs-2xs)!important;
+    line-height:1.1!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    overflow-wrap:normal!important;
+  }
+
+  .quick-detection-dialog .detector-field-grid{
+    grid-template-columns:repeat(auto-fit,minmax(calc(var(--quick-detector-input) + 22px),1fr))!important;
+  }
+
+  .quick-detection-dialog .quick-detector-field .inline-field{
+    grid-template-columns:minmax(0,var(--quick-detector-input)) 22px!important;
+  }
+
+  .quick-detection-grid .quick-detector-field .inline-field>span{
+    inline-size:22px!important;
+    min-inline-size:22px!important;
+    max-inline-size:22px!important;
+  }
+}
+
+@media(min-width:1180px) and (max-width:1280px){
+  .quick-detection-dialog{
+    --quick-detector-input:84px;
+  }
+
+  .quick-detection-dialog>.quick-detection-grid{
+    grid-template-columns:minmax(190px,200px) minmax(0,1fr) minmax(430px,450px)!important;
+  }
+
+  .quick-detection-dialog .quick-detection-main-column{
+    grid-column:2!important;
+    grid-row:1!important;
+    gap:8px!important;
+  }
+
+  .quick-detection-grid>.quick-detection-right-rail{
+    grid-column:3!important;
+    grid-row:1!important;
+    gap:6px!important;
+  }
+
+  .quick-detection-metadata-grid,
+  .quick-detection-main-column>[data-testid="pyqt-qd_edfInfo"] .recording-info-grid.quick-detection-metadata-grid{
+    grid-template-columns:minmax(84px,96px) minmax(0,1fr) minmax(84px,96px) minmax(0,1fr)!important;
+    column-gap:8px!important;
+    row-gap:8px!important;
+  }
+
+  .quick-detection-metadata-grid dd{
+    display:block!important;
+    text-align:left!important;
+    justify-content:start!important;
+  }
+
+  .quick-detection-metadata-grid [data-testid="pyqt-qd_filename"]{
+    font-size:var(--fs-xs)!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    overflow-wrap:normal!important;
+  }
+
+  .quick-detection-main-column>[data-testid="pyqt-qd_edfInfo"]{
+    min-block-size:150px!important;
+  }
+
+  .quick-detection-dialog .detector-field-grid{
+    grid-template-columns:repeat(auto-fit,minmax(calc(var(--quick-detector-input) + 28px),1fr))!important;
+  }
+
+  .quick-detection-dialog .quick-detector-field .inline-field{
+    grid-template-columns:minmax(0,var(--quick-detector-input)) 24px!important;
+  }
+
+  .quick-detection-grid .quick-detector-field .inline-field>span{
+    inline-size:24px!important;
+    min-inline-size:24px!important;
+    max-inline-size:24px!important;
+  }
+
+  .quick-detection-dialog .quick-detection-right-rail .quick-classifier-model-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:5px!important;
+  }
+
+  .quick-detection-dialog .quick-detection-right-rail .quick-model-row{
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto var(--ui-density-control-h)!important;
+    align-items:stretch!important;
+    gap:3px!important;
+  }
+
+  .quick-detection-dialog .quick-detection-right-rail .quick-model-row label{
+    gap:2px!important;
+  }
+
+  .quick-detection-dialog .quick-detection-right-rail .quick-model-row input{
+    font-size:var(--fs-xs)!important;
+    padding-inline:6px!important;
+  }
+
+  .quick-detection-dialog .quick-detection-right-rail .quick-model-row button{
+    inline-size:max-content!important;
+    min-inline-size:74px!important;
+    max-inline-size:84px!important;
+    justify-self:start!important;
+    padding-inline:10px!important;
+  }
+}
+
+@media(max-width:880px){
+  .quick-detection-dialog{
+    inline-size:calc(100vw - 24px)!important;
+    block-size:calc(100vh - 24px)!important;
+    max-inline-size:calc(100vw - 24px)!important;
+    max-block-size:calc(100vh - 24px)!important;
+    padding:12px!important;
+  }
+
+  .quick-detection-dialog>.quick-detection-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+
+  .quick-detection-dialog .quick-detection-left-rail,
+  .quick-detection-grid>.quick-detection-right-rail,
+  .quick-detection-grid>.quick-detection-main-column{
+    grid-column:1!important;
+    grid-row:auto!important;
+  }
+
+  .quick-detection-grid>.quick-detection-right-rail{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+
+  .quick-detection-right-rail>[data-testid="pyqt-classifier_groupbox_4"],
+  .quick-detection-right-rail>[data-testid="pyqt-qd_saveAs"]{
+    grid-column:1!important;
+  }
+
+  .quick-detection-dialog>.quick-detection-action-strip,
+  .quick-detection-dialog>.quick-detection-action-strip[data-run-status],
+  .quick-detection-dialog>.quick-detection-action-strip:not([data-run-status="complete"]){
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+}

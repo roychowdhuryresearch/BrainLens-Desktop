@@ -1,0 +1,81 @@
+/* Recent recordings card owner. Recent recordings parity: PyQt open workflow keeps reopen/remove/clear
+   actions visible from the empty start card. */
+.recent-recordings-card{
+  display:grid!important;
+  gap:8px!important;
+  max-height:190px!important;
+  overflow:hidden!important;
+  margin-top:14px!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  box-shadow:var(--lab-card-shadow)!important;
+  padding:10px!important;
+}
+
+.recent-recordings-card header{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+}
+
+.recent-recordings-card h3{
+  margin:0!important;
+  font-size:var(--fs-md)!important;
+}
+
+.recent-recordings-list{
+  min-height:0!important;
+  overflow:auto!important;
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:6px!important;
+  margin:0!important;
+  padding:0!important;
+  list-style:none!important;
+}
+
+.recent-recordings-list li{
+  min-width:0!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto auto!important;
+  align-items:center!important;
+  gap:6px!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  padding:6px!important;
+}
+
+.recent-recordings-list strong,
+.recent-recordings-list span{
+  display:block!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+.recent-recordings-list span{
+  font-size:var(--fs-xs)!important;
+  color:var(--lab-muted)!important;
+}
+
+.recent-recordings-empty{
+  grid-column:1 / -1!important;
+  border:1px dashed var(--lab-line-strong)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  padding:9px!important;
+}
+
+.recent-recording-open{
+  display:grid!important;
+  gap:2px!important;
+  min-inline-size:0!important;
+  overflow:hidden!important;
+  text-align:left!important;
+  border-color:#c8d7de!important;
+  background:#fff!important;
+}

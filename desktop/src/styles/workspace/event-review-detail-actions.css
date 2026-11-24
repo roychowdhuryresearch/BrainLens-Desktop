@@ -1,0 +1,52 @@
+/* Event Review detail actions owner. Sticky annotation actions and their
+   compact breakpoint behavior live separately from right-column flow. */
+.event-review-dialog .event-detail-card .annotation-detail-actions{
+  /* order:6 places the commit bar directly under the Event Type selector
+     (order:5) per the workflow reorder. It used to be position:sticky at the
+     top of the scroll; now it lives inline next to the label it commits, so it
+     scrolls with the flow (static). */
+  order:6!important;
+  position:static!important;
+  margin-block:8px 0!important;
+  padding:8px!important;
+  /* Match the column's info cards (event-review-detail.css) so the commit bar
+     sits at the same elevation instead of floating above the content with a
+     heavy drop shadow. */
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  box-shadow:var(--lab-card-shadow)!important;
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:4px!important;
+  align-items:center!important;
+  align-content:start!important;
+  justify-content:flex-start!important;
+  block-size:max-content!important;
+  min-block-size:max-content!important;
+  flex:0 0 max-content!important;
+  min-inline-size:0!important;
+  overflow:visible!important;
+}
+
+.event-review-dialog .event-detail-card .annotation-detail-actions button,
+.event-review-dialog .event-detail-card .annotation-detail-actions .annotation-extra-label-action{
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  max-inline-size:none!important;
+  block-size:var(--ui-action-h)!important;
+  min-block-size:var(--ui-action-h)!important;
+  font-size:var(--fs-xs)!important;
+  padding-inline:6px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+
+@media(max-width:760px){
+  .event-review-dialog .event-detail-card .annotation-detail-actions{
+    order:6!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    background:#fff!important;
+  }
+}

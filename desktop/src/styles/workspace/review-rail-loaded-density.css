@@ -1,0 +1,169 @@
+/* Loaded review rail density owner. Loaded review rail control density:
+   loaded waveform review uses compact cards,
+   hidden duplicate prose, and fixed action widths without touching toolbar CSS. */
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar{
+  /* 2px (not 3) keeps the last RESULTS control fully inside the scroll fold at the
+     1440x860 window floor without hiding the Pipeline cards. */
+  gap:2px!important;
+  align-content:start!important;
+  padding-block-end:var(--ui-modal-bottom-clearance)!important;
+  scroll-padding-block-end:var(--ui-modal-bottom-clearance)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar>.pyqt-sidebar-card{
+  gap:3px!important;
+  padding:4px 5px!important;
+  border-radius:var(--lab-radius)!important;
+  font-size:var(--fs-xs)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar>.pyqt-sidebar-card h3{
+  font-size:var(--fs-xs)!important;
+  line-height:1.1!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar>.pyqt-sidebar-card header{
+  min-block-size:24px!important;
+  justify-content:flex-start!important;
+  gap:8px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar .pyqt-sidebar-card header .sidebar-header-actions{
+  margin-inline-start:0!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar>.pyqt-sidebar-card label{
+  gap:3px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar .sidebar-button-row{
+  gap:4px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar .sidebar-copy{
+  max-block-size:30px!important;
+  overflow:hidden!important;
+  line-height:1.15!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar [data-testid="pyqt-sidebar_run_actions_card"] .sidebar-copy,
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar [data-testid="pyqt-sidebar_results_card"] .sidebar-copy{
+  display:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar .sidebar-metadata-grid{
+  gap:2px 6px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar [data-testid="pyqt-sidebar_signal_card"] .sidebar-metadata-grid{
+  display:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar [data-testid="pyqt-sidebar_classification_card"]{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) max-content!important;
+  column-gap:6px!important;
+  row-gap:4px!important;
+  align-items:end!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar [data-testid="pyqt-sidebar_run_actions_card"] .sidebar-button-row button{
+  inline-size:84px!important;
+  min-inline-size:84px!important;
+  max-inline-size:84px!important;
+  flex:0 0 84px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar [data-testid="pyqt-sidebar_results_card"] .sidebar-button-row{
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  gap:4px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar [data-testid="pyqt-sidebar_results_card"] .sidebar-button-row button{
+  flex:1 1 0!important;
+  inline-size:auto!important;
+  min-inline-size:0!important;
+  max-inline-size:none!important;
+  padding-inline:4px!important;
+  font-size:var(--fs-sm)!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar [data-testid="pyqt-sidebar_high_cut_input"]{
+  inline-size:88px!important;
+  max-inline-size:88px!important;
+  margin-inline-start:-2px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar .sidebar-detection-params input{
+  inline-size:72px!important;
+  max-inline-size:72px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar [data-testid="pyqt-sidebar_classifier_preset"]{
+  inline-size:100%!important;
+  max-inline-size:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar [data-testid="pyqt-sidebar_classification_card"]>header{
+  grid-column:1 / -1!important;
+  grid-row:1!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar [data-testid="pyqt-sidebar_classification_card"]>label{
+  grid-column:1!important;
+  grid-row:2!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar [data-testid="pyqt-sidebar_classification_card"]>label input,
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar [data-testid="pyqt-sidebar_classification_card"]>label select{
+  font-size:var(--fs-sm)!important;
+  line-height:1.1!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar [data-testid="pyqt-sidebar_classification_card"]>[data-testid="pyqt-sidebar_classify_button"]{
+  grid-column:2!important;
+  grid-row:2!important;
+  align-self:end!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar [data-testid="pyqt-sidebar_classification_card"]>.sidebar-classifier-toggles{
+  grid-column:1 / -1!important;
+  grid-row:3!important;
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:2px 12px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar .pyqt-sidebar-card button,
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar .pyqt-sidebar-card input:not([type="checkbox"]):not([type="radio"]),
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar .pyqt-sidebar-card select{
+  block-size:var(--ui-density-control-h-compact)!important;
+  min-block-size:var(--ui-density-control-h-compact)!important;
+  max-block-size:var(--ui-density-control-h-compact)!important;
+  padding-block:0!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar [data-testid="pyqt-sidebar_more_results_button"]{
+  inline-size:48px!important;
+  min-inline-size:48px!important;
+  max-inline-size:48px!important;
+}
+
+/* Zone group labels (Pipeline / Runs & output) split the rail into two readable
+   groups instead of five identical boxes. */
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar .sidebar-zone-label{
+  margin:4px 2px 0!important;
+  font-size:var(--fs-2xs)!important;
+  font-weight:700!important;
+  letter-spacing:.07em!important;
+  text-transform:uppercase!important;
+  color:var(--lab-muted)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-right-sidebar .sidebar-zone-label:first-child{
+  margin-block-start:0!important;
+}

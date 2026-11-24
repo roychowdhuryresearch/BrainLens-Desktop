@@ -1,0 +1,43 @@
+/* Detect responsive owner.
+   Owns Detect-only container-query folding across mode controls, parameter
+   forms, and applied-display summaries. */
+@container (max-width:860px){
+  .workspace-tab-panel[data-active-tab="Detect"] .detector-mode-header,
+  .workspace-tab-panel[data-active-tab="Detect"] .detector-mode-primary-row,
+  .workspace-tab-panel[data-active-tab="Detect"] .detector-form-card{
+    grid-template-columns:minmax(0,1fr)!important;
+    justify-content:stretch!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Detect"] .detector-mode-field,
+  .workspace-tab-panel[data-active-tab="Detect"] [data-testid="pyqt-detector_mode_combo"]{
+    inline-size:100%!important;
+    width:100%!important;
+    max-inline-size:100%!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Detect"] .detector-form-card{
+    grid-template-areas:
+      "header"
+      "params"
+      "applied"
+      "feedback"!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Detect"] .detector-form-header,
+  .workspace-tab-panel[data-active-tab="Detect"] .detector-form-body,
+  .workspace-tab-panel[data-active-tab="Detect"] .detector-applied-display,
+  .workspace-tab-panel[data-active-tab="Detect"] .detector-feedback-line{
+    grid-column:1!important;
+    grid-row:auto!important;
+    grid-area:auto!important;
+    inline-size:100%!important;
+    max-inline-size:100%!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Detect"] .detector-field-grid,
+  .workspace-tab-panel[data-active-tab="Detect"] .detector-display-grid{
+    inline-size:100%!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}

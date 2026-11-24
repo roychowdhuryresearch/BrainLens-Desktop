@@ -1,0 +1,199 @@
+/* Waveform toolbar popover owner.
+   Owns selector popovers, inline channel fields, and waveform view settings. */
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector-popover,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-view-settings-popover{
+  position:absolute!important;
+  inset-block-start:36px!important;
+  inset-inline-start:0!important;
+  z-index:120!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  box-shadow:0 16px 34px rgba(17,42,53,.18),0 2px 8px rgba(17,42,53,.12)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector-popover{
+  min-inline-size:248px!important;
+  padding:7px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector-popover-focus{
+  min-inline-size:272px!important;
+  inset-inline-start:auto!important;
+  inset-inline-end:0!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector-popover-output{
+  min-inline-size:292px!important;
+  inset-inline-start:0!important;
+  inset-inline-end:auto!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-popover-row{
+  display:flex!important;
+  align-items:center!important;
+  gap:5px!important;
+  white-space:nowrap!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-popover-row button{
+  block-size:32px!important;
+  min-block-size:32px!important;
+  max-block-size:32px!important;
+  min-inline-size:44px!important;
+  padding-inline:9px!important;
+  border-color:var(--lab-line)!important;
+  background:#f8fbfc!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-inline-field{
+  display:inline-grid!important;
+  grid-template-columns:max-content 34px!important;
+  align-items:center!important;
+  column-gap:5px!important;
+  inline-size:68px!important;
+  min-inline-size:68px!important;
+  block-size:32px!important;
+  min-block-size:32px!important;
+  max-block-size:32px!important;
+  padding-inline:7px!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:5px!important;
+  background:#f8fbfc!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-inline-field input[data-testid="pyqt-n_channel_input"]{
+  inline-size:34px!important;
+  width:34px!important;
+  min-inline-size:34px!important;
+  max-inline-size:34px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  color:#102a35!important;
+  font-family:inherit!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:400!important;
+  text-align:right!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-view-settings-popover{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) max-content!important;
+  align-items:start!important;
+  gap:8px!important;
+  /* Drop below the toolbar rather than overlay the zoom/cursor/measure tool row.
+     The summary trigger sits in toolbar row 1; without this the wide settings
+     bar covers the whole tool row below it. */
+  inset-block-start:114px!important;
+  inline-size:680px!important;
+  max-inline-size:min(680px,calc(100vw - 48px))!important;
+  padding:8px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-view-settings-grid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:7px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-view-settings-popover .toolbar-field{
+  display:grid!important;
+  grid-template-columns:34px minmax(0,1fr)!important;
+  align-items:center!important;
+  block-size:32px!important;
+  min-block-size:32px!important;
+  max-block-size:32px!important;
+  padding:0 8px!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:5px!important;
+  background:#f8fbfc!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .toolbar-field-label{
+  color:#526a75!important;
+  font-size:var(--fs-2xs)!important;
+  font-weight:400!important;
+  line-height:1!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .toolbar-value-with-unit{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) max-content!important;
+  align-items:center!important;
+  gap:4px!important;
+  block-size:30px!important;
+  min-block-size:30px!important;
+  max-block-size:30px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .toolbar-value-with-unit>span{
+  color:#526a75!important;
+  font-size:var(--fs-2xs)!important;
+  font-weight:400!important;
+  line-height:1!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-view-settings-popover .toolbar-field input:not([type="checkbox"]):not([type="radio"]){
+  block-size:30px!important;
+  min-block-size:30px!important;
+  max-block-size:30px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  color:#102a35!important;
+  font-family:inherit!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:400!important;
+  font-variant-numeric:tabular-nums!important;
+  text-align:right!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-view-settings-apply{
+  block-size:32px!important;
+  min-block-size:32px!important;
+  max-block-size:32px!important;
+  inline-size:68px!important;
+  min-inline-size:68px!important;
+  border-color:#126b66!important;
+  background:#126b66!important;
+  color:#fff!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:400!important;
+}
+
+/* Scope/Montage/Focus selector popovers anchor to the TOOLBAR, not their small
+   trigger wrapper, so they always drop from the toolbar's bottom edge over the
+   waveform. Trigger-anchored top:36px landed them on the tool row, and because
+   the toolbar reflows by width the covered controls shifted with the viewport.
+   Dropping the wrapper's positioning context (it only held the popover) lets the
+   popover use the toolbar (position:relative): inset-block-start:100% tracks the
+   toolbar's real height at any width, and inset-inline-end:0 pins the right edge
+   to the toolbar's right (x<=694), clear of the right rail. */
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector:not(.waveform-view-settings):not(.waveform-output-more){
+  position:static!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector-popover-channel,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector-popover-montage,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector-popover-focus{
+  inset-block-start:100%!important;
+  inset-inline-start:auto!important;
+  inset-inline-end:0!important;
+  margin-block-start:4px!important;
+}
+
+/* Trigger-anchored placement. WaveformToolbar measures the button that opened the panel and
+   writes the three custom properties below; the rules above stay as the pre-measurement fallback
+   for the frame before data-anchored lands. position:fixed is what makes this reliable -- the
+   toolbar reflows by width, and a fixed panel needs no positioned ancestor to resolve against. */
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .clinical-selector-popover[data-anchored="true"],
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"]>[data-testid="pyqt-waveform-toolbar"].waveform-toolbar-clinical-console .waveform-view-settings-popover[data-anchored="true"]{
+  position:fixed!important;
+  inset-block-start:var(--popover-anchor-top)!important;
+  inset-inline-start:var(--popover-anchor-left)!important;
+  inset-inline-end:auto!important;
+  max-block-size:var(--popover-anchor-max-height)!important;
+  overflow:auto!important;
+  margin-block-start:0!important;
+}

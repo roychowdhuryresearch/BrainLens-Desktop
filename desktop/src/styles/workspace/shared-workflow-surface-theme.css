@@ -1,0 +1,173 @@
+/* Shared workflow surface theme owner.
+   Generic task cards, field rows, pills, tables, and run-summary chrome live
+   here. Page-specific compactness stays with each workflow owner. */
+/* Layout only. Card chrome (border/radius/background/shadow) is owned by the
+   canonical card rule in workflow-card-visuals.css so every surface matches. */
+.panel-card{
+  display:grid;
+  gap:8px;
+}
+
+.button-row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.field-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+
+.field-grid.compact{
+  grid-template-columns:repeat(4,minmax(70px,1fr));
+}
+
+.field-grid label{
+  display:grid;
+  gap:3px;
+}
+
+.workflow-panel-heading h3,
+.panel-card h3,
+.panel-card h4,
+.panel-heading-row h3,
+.workspace-tabs h3,
+.workspace-tabs h4{
+  color:#1b2a38!important;
+  font-weight:400!important;
+}
+
+.panel-card strong,
+.workspace-tabs strong{
+  font-weight:400!important;
+}
+
+.field-grid label,
+.model-source-row label{
+  color:#53667a!important;
+  font-size:var(--fs-xs);
+  font-weight:400;
+  letter-spacing:0;
+}
+
+.status-line,
+.helper-copy,
+.table-shell{
+  padding:10px;
+  border-color:#d3dfe6!important;
+  border-radius:var(--lab-radius)!important;
+  background:#f6f8f8!important;
+  color:#53667a!important;
+}
+
+.table-shell{
+  margin-top:8px;
+}
+
+.button-row button{
+  border-color:#aebeca;
+}
+
+.primary-action,
+button.primary-action{
+  border-color:var(--lab-cobalt-2)!important;
+  background:var(--lab-cobalt)!important;
+  color:#fff!important;
+  box-shadow:0 1px 1px rgba(20,33,61,.18),inset 0 1px 0 rgba(255,255,255,.18)!important;
+}
+
+.primary-action:hover,
+button.primary-action:hover{
+  border-color:#103b63!important;
+  background:var(--lab-cobalt-2)!important;
+  box-shadow:0 0 0 3px rgba(32,90,155,.12),inset 0 1px 0 rgba(255,255,255,.18)!important;
+}
+
+.status-pill,
+.legend-chip,
+.waveform-mode-badges span,
+.waveform-header-mode-badges span{
+  border-color:#bdd1d6!important;
+  background:#f5faf9!important;
+  color:#294d58!important;
+  font-weight:400!important;
+}
+
+.status-pill.runtime-running,
+.status-pill.runtime-success,
+.runtime-log-success .status-pill,
+.workflow-status-chip[data-status="ready"]{
+  border-color:#98c9ad!important;
+  background:#edf9f1!important;
+  color:#1e6841!important;
+}
+
+.error-panel{
+  margin:.4rem 0;
+  padding:.5rem;
+  border:1px solid #efb3aa;
+  border-radius:var(--lab-radius);
+  border-color:#efb3aa!important;
+  background:#fff2f0!important;
+  color:var(--lab-red)!important;
+}
+
+.data-table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:8px;
+  color:#1d2937;
+  font-size:var(--fs-base);
+  font-variant-numeric:tabular-nums;
+}
+
+.data-table th{
+  border-bottom-color:#bdcbd5!important;
+  background:#e9eff1!important;
+  color:#33485b!important;
+  font-size:var(--fs-xs);
+  font-weight:400!important;
+  letter-spacing:0!important;
+}
+
+.data-table td{
+  padding:6px 8px;
+  text-align:left;
+  border-bottom-color:#e1e7eb!important;
+}
+
+.data-table tr.selected td,
+.data-table tr:hover td{
+  background:#eef8f5!important;
+}
+
+.data-table tr[data-role="excluded"]{
+  background:#fff8ed!important;
+}
+
+
+/* PyQt status strip and Case Inspector Run Actions parity. */
+.compact-summary-table{
+  table-layout:fixed;
+}
+
+.compact-summary-table td{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.mini-list{
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* Run overlap parity (Run Statistics dialog). */
+.comparison-table tr[data-jaccard-high="true"] td{
+  background:#eef8f5!important;
+}
+
+/* Hierarchy: workflow panel section headings anchor their sections (design-refinement.md US-004). */
+.workspace-tab-panel h3,.workspace-tab-panel h4{font-weight:600!important;}

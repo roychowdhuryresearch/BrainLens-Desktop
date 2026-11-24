@@ -1,0 +1,61 @@
+{
+  "pairs": [
+    {
+      "state": "closed-agent-loaded-workspace",
+      "pyqt": "/absolute/path/pyqt-loaded.png",
+      "electron": "/absolute/path/electron-loaded.png",
+      "manual_reviewed": false,
+      "reviewer": "",
+      "regions_verified": [
+        "toolbar",
+        "biomarker-selector",
+        "workflow-header",
+        "waveform-toolbar",
+        "waveform-plot",
+        "prepare-detect-classify-tabs",
+        "status-strip",
+        "review-export-surfaces",
+        "fixed-left-scroll-panes",
+        "dialog-internal-scroll",
+        "agent-right-activity-bar"
+      ],
+      "notes": "Replace screenshot paths, set manual_reviewed true, and name the reviewer after side-by-side PyQt/Electron review."
+    },
+    {
+      "state": "open-agent-workspace",
+      "pyqt": "/absolute/path/pyqt-agent-reference.png",
+      "electron": "/absolute/path/electron-agent-open.png",
+      "manual_reviewed": false,
+      "reviewer": "",
+      "regions_verified": ["toolbar", "biomarker-selector", "workflow-header", "waveform-toolbar", "waveform-plot", "prepare-detect-classify-tabs", "status-strip", "review-export-surfaces", "fixed-left-scroll-panes", "dialog-internal-scroll", "agent-right-activity-bar"],
+      "notes": "Agent must be far-right, VS Code-like, closed by default, and must not hide PyQt-equivalent controls when open."
+    },
+    {
+      "state": "quick-detection-dialog",
+      "pyqt": "/absolute/path/pyqt-quick-detection.png",
+      "electron": "/absolute/path/electron-quick-detection.png",
+      "manual_reviewed": false,
+      "reviewer": "",
+      "regions_verified": ["toolbar", "biomarker-selector", "workflow-header", "waveform-toolbar", "waveform-plot", "prepare-detect-classify-tabs", "status-strip", "review-export-surfaces", "fixed-left-scroll-panes", "dialog-internal-scroll", "agent-right-activity-bar"],
+      "notes": "Quick Detection must expose biomarker, detector, n jobs, filters, classifier controls, detector-specific cards, status, validation, and export choices."
+    },
+    {
+      "state": "event-review-annotation-dialog",
+      "pyqt": "/absolute/path/pyqt-annotation.png",
+      "electron": "/absolute/path/electron-annotation.png",
+      "manual_reviewed": false,
+      "reviewer": "",
+      "regions_verified": ["toolbar", "biomarker-selector", "workflow-header", "waveform-toolbar", "waveform-plot", "prepare-detect-classify-tabs", "status-strip", "review-export-surfaces", "fixed-left-scroll-panes", "dialog-internal-scroll", "agent-right-activity-bar"],
+      "notes": "Annotation window must include event queue/table, waveform snippet, FFT/frequency controls, previous/next, labels, notes, save/clear, history, snapshot, and shortcuts."
+    },
+    {
+      "state": "recording-info-or-runtime-log-dialog",
+      "pyqt": "/absolute/path/pyqt-info-log.png",
+      "electron": "/absolute/path/electron-info-log.png",
+      "manual_reviewed": false,
+      "reviewer": "",
+      "regions_verified": ["toolbar", "biomarker-selector", "workflow-header", "waveform-toolbar", "waveform-plot", "prepare-detect-classify-tabs", "status-strip", "review-export-surfaces", "fixed-left-scroll-panes", "dialog-internal-scroll", "agent-right-activity-bar"],
+      "notes": "Recording Info or Runtime Log must be fixed-size with internal scroll and expose PyQt-equivalent metadata/status/log content."
+    }
+  ]
+}

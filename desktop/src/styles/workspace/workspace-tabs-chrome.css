@@ -1,0 +1,130 @@
+/* Workspace tabs chrome owner. Workflow tab strip, tab buttons, panel shell,
+   and tab-content scrolling live here. */
+.workspace-tabs{
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr)!important;
+  min-block-size:0!important;
+  overflow:hidden!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  box-shadow:var(--lab-card-shadow)!important;
+}
+
+.workspace-tabs-header,
+.tab-bar{
+  min-block-size:46px!important;
+  border-bottom:1px solid #cbd6de!important;
+  background:#eef3f6!important;
+}
+
+.workspace-tabs-header{
+  overflow:hidden!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]:is([data-workflow-panel="prepare"],[data-workflow-panel="detect"],[data-workflow-panel="classify"]) .workspace-tabs-header,
+.pyqt-workspace-shell[data-loaded="true"]:is([data-workflow-panel="prepare"],[data-workflow-panel="detect"],[data-workflow-panel="classify"]) .tab-bar{
+  border-bottom-color:#cbd6de!important;
+  background:#eef3f6!important;
+}
+
+.tab-bar{
+  display:flex!important;
+  min-block-size:46px!important;
+  align-items:center!important;
+  gap:10px!important;
+  padding:6px 10px!important;
+  min-inline-size:0!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  flex-wrap:nowrap!important;
+  scrollbar-gutter:stable!important;
+}
+
+.workflow-tab-list{
+  display:flex!important;
+  align-items:center!important;
+  gap:4px!important;
+  min-inline-size:0!important;
+  overflow-x:auto!important;
+  scrollbar-gutter:stable!important;
+}
+
+.workflow-tab-list button,
+.subpage-back-button,
+.tab-bar button{
+  flex:0 0 auto!important;
+  min-inline-size:92px!important;
+  min-block-size:32px!important;
+  border:1px solid transparent!important;
+  border-radius:5px!important;
+  background:transparent!important;
+  color:#35495d!important;
+  box-shadow:none!important;
+  white-space:nowrap!important;
+}
+
+.workflow-tab-list button:hover,
+.subpage-back-button:hover,
+.tab-bar button:hover{
+  border-color:#b8c7d2!important;
+  background:#fff!important;
+  color:#152434!important;
+}
+
+.workflow-tab-list button.active,
+.workflow-tab-list button[aria-selected="true"],
+.tab-bar button.active{
+  border-color:#7fbdb7!important;
+  background:#fff!important;
+  color:#075e57!important;
+  box-shadow:inset 0 -2px 0 #168a82!important;
+}
+
+/* Reads as an exit from the subpage, not a fourth workflow tab: pushed to the far
+   right, separated by a hairline divider, and given a quiet link treatment instead
+   of the tab pill the shared rule above would otherwise grant it on hover. */
+.subpage-back-button{
+  margin-inline-start:auto!important;
+  min-inline-size:0!important;
+  padding-inline:12px!important;
+  border-radius:0!important;
+  border-inline-start:1px solid var(--lab-line)!important;
+  color:var(--lab-muted)!important;
+}
+
+.subpage-back-button:hover{
+  border-color:transparent!important;
+  border-inline-start-color:var(--lab-line)!important;
+  background:transparent!important;
+  color:var(--lab-ink)!important;
+  text-decoration:underline!important;
+  text-underline-offset:3px!important;
+}
+
+.workspace-tab-panel{
+  min-block-size:0!important;
+  overflow:hidden!important;
+  background:#f4f7f8!important;
+}
+
+.workspace-tabs .tab-content,
+.tab-content{
+  min-block-size:0!important;
+  max-block-size:100%!important;
+  overflow:auto!important;
+  overscroll-behavior:contain!important;
+  color:var(--lab-ink);
+  padding:10px!important;
+}
+
+.workspace-tab-panel>.tab-content{
+  padding-block-end:var(--ui-bottom-clearance)!important;
+  scroll-padding-block-end:var(--ui-bottom-clearance)!important;
+}
+
+@media(max-width:1100px){
+  .workflow-tab-list{
+    gap:4px!important;
+  }
+}

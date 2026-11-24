@@ -1,0 +1,100 @@
+/* Event Review right-column flow owner. The detail card is a scrollable
+   document flow and the annotation side stack paints in source order without
+   overlapping FFT, event information, notes, or status text. */
+.event-review-dialog .event-detail-card{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:6px!important;
+  min-block-size:0!important;
+  overflow:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain!important;
+  scrollbar-gutter:stable!important;
+  padding-block-end:var(--ui-modal-bottom-clearance)!important;
+  scroll-padding-block-end:calc(var(--ui-modal-bottom-clearance) + 48px)!important;
+}
+
+.event-review-dialog .event-detail-card>h3{
+  order:0!important;
+}
+
+.event-review-dialog .annotation-side-stack{
+  /* display:contents dissolves the side-stack box so its children join the
+     detail card's single flex-column ordering context. That lets the workflow
+     reorder interleave side-stack controls with the detail card's own children
+     (Event Information, Notes, Feature Summary, Status) via one set of `order`
+     values — see the reorder block below + event-review-side-stack.css. */
+  display:contents!important;
+}
+
+.event-review-dialog .annotation-side-stack>*{
+  flex:0 0 auto!important;
+  min-block-size:0!important;
+  max-inline-size:100%!important;
+}
+
+.event-review-dialog .annotation-side-stack [data-testid="pyqt-groupBox"],
+.event-review-dialog .event-detail-card>.recording-info-grid,
+.event-review-dialog .event-detail-card>.event-feature-summary-card,
+.event-review-dialog .event-detail-card>label:not(.annotation-select-row),
+.event-review-dialog .event-detail-card>.status-line{
+  flex:0 0 auto!important;
+  position:static!important;
+  margin-block:8px 0!important;
+}
+
+/* --- Right-column workflow order ---
+   One ordering context (side-stack is display:contents) running the review
+   loop top→bottom: title, progress, what-is-this-event, pick-an-event,
+   label+commit, notes, view/filter tools, extra detail, status. Side-stack
+   controls (progress/queue/nav/event-type/interval/scope/freq) get their
+   matching orders in event-review-side-stack.css; the Save bar in
+   event-review-detail-actions.css. */
+.event-review-dialog .event-detail-card>h3{order:0!important}
+.event-review-dialog .event-detail-card>[data-testid="pyqt-groupBox"]{order:2!important}
+.event-review-dialog .event-detail-card>label:not(.annotation-select-row){order:7!important}
+.event-review-dialog .event-detail-card>.event-feature-summary-card{order:11!important}
+.event-review-dialog .event-detail-card>.status-line{order:12!important}
+
+/* Notes textarea: the global 34px control baseline is below the 40px textarea
+   floor the geometry audit enforces; give Notes a 2-line min height. */
+.event-review-dialog [data-testid="pyqt-annotation_notes_input"]{
+  inline-size:100%!important;
+  min-block-size:64px!important;
+  block-size:64px!important;
+}
+
+.event-review-dialog .event-detail-card>.status-line{
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+
+.event-review-dialog .annotation-side-stack [data-testid="pyqt-groupBox"] .recording-info-grid{
+  grid-template-columns:max-content minmax(0,1fr)!important;
+  gap:4px 8px!important;
+  align-items:start!important;
+}
+
+.event-review-dialog .annotation-side-stack [data-testid="pyqt-groupBox"] .recording-info-grid dt{
+  white-space:nowrap!important;
+}
+
+.event-review-dialog .annotation-side-stack [data-testid="pyqt-groupBox"] .recording-info-grid dd{
+  min-inline-size:0!important;
+  max-inline-size:none!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+
+/* --- Right-column density pass ---
+   The review right column stacks ~8 control rows plus three info cards in a
+   narrow (~352px) column; against the global 34px control baseline + 8px gaps
+   the content overflowed the fold ~2x and read too loose. We tighten the gaps,
+   card chrome, and the event-info grid (above) rather than the control heights:
+   the geometry audit (qa:geometry) enforces a 32px-minimum click target plus
+   within-group height consistency, so the 34px control baseline stays. */
+.event-review-dialog .annotation-side-stack .annotation-progress-card{
+  padding:6px 8px!important;
+}

@@ -1,0 +1,235 @@
+/* Runtime Log dialog owner. Status/activity modal geometry, backend
+   health, filter controls, and log-table scrolling live here instead of the
+   foundation and shared modal chrome layers. */
+.runtime-log-dialog{
+  width:min(980px,calc(100vw - 48px));
+  height:min(720px,calc(100vh - 48px));
+  min-inline-size:0!important;
+  overflow:hidden!important;
+  grid-template-rows:auto auto auto auto minmax(88px,.34fr) minmax(0,1fr);
+}
+
+.runtime-log-dialog>*{
+  min-inline-size:0;
+  min-block-size:0;
+}
+
+.runtime-log-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  border-bottom:1px solid #e2e8f0;
+  padding-bottom:10px;
+}
+
+.runtime-log-header .helper-copy{
+  display:none!important;
+}
+
+.runtime-log-summary{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  align-items:center;
+  /* Inset content so the Cancel button (and progress bar) clear the card's own
+     1px rounded border instead of landing flush on it (the overlapping-ring look). */
+  padding:10px 12px;
+}
+
+.runtime-log-summary>div{
+  display:grid;
+  gap:3px;
+  min-width:0;
+}
+
+.runtime-log-summary strong{
+  font-size:var(--fs-xs);
+  color:#475569;
+  text-transform:uppercase;
+  letter-spacing:.02em;
+}
+
+.runtime-log-summary span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.runtime-log-summary progress{
+  width:100%;
+  accent-color:var(--lab-cobalt);
+}
+
+.runtime-log-error,
+.runtime-log-status-text{
+  grid-column:1/-1;
+  margin:0;
+  border-radius:var(--lab-radius);
+  padding:7px 9px;
+}
+
+.runtime-log-error{
+  border:1px solid #fca5a5;
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.runtime-log-status-text{
+  border:0;
+  background:transparent;
+  color:#334155;
+  padding:0;
+}
+
+.runtime-log-summary [data-testid="pyqt-runtime_log_cancel_button"]{
+  inline-size:auto!important;
+  min-inline-size:160px!important;
+  max-inline-size:max-content!important;
+  justify-self:start!important;
+}
+
+.runtime-log-toolbar{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 180px;
+  gap:10px;
+}
+
+.runtime-log-toolbar label{
+  display:grid;
+  gap:5px;
+  font-size:var(--fs-base);
+  color:#334155;
+}
+
+.runtime-log-toolbar input,
+.runtime-log-toolbar select{
+  min-width:0;
+  border:1px solid #94a3b8;
+  border-radius:6px;
+  background:#fff;
+  padding:.38rem .5rem;
+}
+
+.runtime-backend-health{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr)) auto;
+  gap:8px;
+  align-items:center;
+  /* Inset content so the Refresh button clears the card's right/top border. */
+  padding:10px 12px;
+}
+
+.runtime-backend-health>div{
+  display:grid;
+  gap:3px;
+  min-width:0;
+}
+
+.runtime-backend-health strong{
+  font-size:var(--fs-xs);
+  color:#475569;
+  text-transform:uppercase;
+  letter-spacing:.02em;
+}
+
+.runtime-backend-health span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.runtime-backend-health p{
+  grid-column:1/-1;
+  margin:0;
+  color:#475569;
+}
+
+.runtime-log-table-shell{
+  min-height:0;
+  overflow:auto;
+  border:1px solid var(--lab-line);
+  border-radius:var(--lab-radius);
+  background:#fff;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable both-edges;
+}
+
+.runtime-backend-log-shell{
+  min-height:88px;
+}
+
+.runtime-ui-log-shell{
+  min-height:0;
+}
+
+.runtime-log-table{
+  margin:0;
+  table-layout:fixed;
+}
+
+.runtime-log-table th:nth-child(1),
+.runtime-log-table td:nth-child(1){
+  width:110px;
+}
+
+.runtime-log-table th:nth-child(2),
+.runtime-log-table td:nth-child(2){
+  width:86px;
+}
+
+.runtime-log-table th:nth-child(3),
+.runtime-log-table td:nth-child(3){
+  width:150px;
+}
+
+.runtime-log-table td{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.runtime-backend-log-shell .runtime-log-table th:first-child,
+.runtime-backend-log-shell .runtime-log-table td:first-child{
+  width:48px;
+}
+
+.runtime-backend-log-shell .runtime-log-table th:nth-child(2),
+.runtime-backend-log-shell .runtime-log-table td:nth-child(2){
+  width:auto;
+  white-space:pre-wrap;
+}
+
+.runtime-log-table tr[data-level="error"] td{
+  background:#fef2f2;
+}
+
+.runtime-log-table tr[data-level="warning"] td{
+  background:#fffbeb;
+}
+
+.runtime-log-table tr[data-level="success"] td{
+  background:#f0fdf4;
+}
+
+@media(max-width:900px){
+  .runtime-backend-health{
+    grid-template-columns:1fr;
+  }
+
+  .runtime-log-dialog{
+    grid-template-rows:auto auto auto auto minmax(80px,.3fr) minmax(0,1fr);
+  }
+}
+
+@media(max-width:760px){
+  .runtime-log-summary,
+  .runtime-log-toolbar{
+    grid-template-columns:1fr;
+  }
+
+  .runtime-log-dialog{
+    width:calc(100vw - 24px);
+    height:calc(100vh - 24px);
+  }
+}

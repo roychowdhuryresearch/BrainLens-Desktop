@@ -1,0 +1,51 @@
+/* Prepare analysis summary cards owner. ROI and QC stat cards keep compact
+   label/value/list structure independent of spectral and ROI table details. */
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  gap:9px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-stat-card{
+  min-block-size:72px!important;
+  display:grid!important;
+  grid-template-columns:max-content minmax(0,1fr)!important;
+  grid-template-rows:min-content min-content min-content!important;
+  align-items:baseline!important;
+  gap:2px 7px!important;
+  overflow:hidden!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-stat-card h4{
+  margin:0!important;
+  grid-column:1!important;
+  grid-row:1!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-stat-card p:not(.mini-list){
+  grid-column:2!important;
+  grid-row:1!important;
+  margin:0!important;
+  white-space:nowrap!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-stat-card>span{
+  grid-column:1 / -1!important;
+  grid-row:2!important;
+  min-inline-size:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-stat-card .mini-list{
+  grid-column:1 / -1!important;
+  grid-row:3!important;
+  margin:0!important;
+  white-space:nowrap!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-stat-card strong{
+  font-size:var(--fs-md)!important;
+}

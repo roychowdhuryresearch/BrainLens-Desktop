@@ -1,0 +1,70 @@
+# Windows packaging for the iEEG workstation.
+#
+# The app is Electron + a frozen Python backend. electron-builder packs the Electron half; the
+# backend is built separately by PyInstaller (pyhfo/pyhfo_windows.spec -> pyhfo/dist/pyhfo-backend)
+# and copied in as an extraResource, because it is a multi-hundred-MB tree of native libraries that
+# has no business going through asar.
+#
+# main.ts finds it at process.resourcesPath/backend/pyhfo-backend/pyhfo-backend.exe, so the
+# extraResources mapping below must keep that exact shape.
+#
+# Two Python services ship here: the PyHFO analysis backend and the LLM agent runtime. They are
+# built from separate specs (pyhfo/pyhfo_windows.spec, runtime/ieeg_agent_runtime_windows.spec).
+#
+# Size warning: severity scoring needs torch/torchvision/transformers, so the backend alone is
+# well over a GB and the installer will be large. Converting the severity checkpoint to ONNX
+# (see pyhfo/docs/checkpoint-to-onnx.md) is what shrinks this.
+appId: org.roychowdhuryresearch.ieeg
+productName: iEEG
+directories:
+  # Repo root, not desktop/artifacts. The installer plus the unpacked app run to several GB, so they
+  # live in one gitignored place at the top level rather than buried under the desktop workspace.
+  output: ../ieeg-release
+  buildResources: build
+
+# Only the built output and manifest ship. Source, tests, and scripts stay out.
+files:
+  - dist-electron/**/*
+  - dist-renderer/**/*
+  - package.json
+
+extraResources:
+  - from: ../pyhfo/dist/pyhfo-backend
+    to: backend/pyhfo-backend
+    filter:
+      - "**/*"
+  # The LLM co-pilot. main.ts points IEEG_AGENT_RUNTIME_EXECUTABLE, IEEG_UI_BROKER_EXECUTABLE and
+  # IEEG_UI_MCP_EXECUTABLE at this one binary, so all three modes ship together. Running from source
+  # falls back to `python -m uvicorn runtime.main:app`, but a packaged app takes the executable
+  # branch -- omit this and the packaged app has no chat at all.
+  - from: ../runtime/dist/ieeg-agent-runtime
+    to: backend/agent-runtime
+    filter:
+      - "**/*"
+  # The Skills the co-pilot reasons with. The frozen runtime resolves these from disk relative to its
+  # own location, which inside a PyInstaller bundle points at nothing -- so omitting them does not
+  # error, it just loads zero skills, and the agent then tells the user it has no access to severity
+  # scoring. main.ts points SKILLS_BASE_DIR at this copy.
+  - from: ../skills
+    to: skills
+    filter:
+      - "**/*"
+
+# asar keeps the JS tidy; the backend is an extraResource so it is unaffected.
+asar: true
+
+win:
+  target:
+    # nsis  -> a normal installer (recommended: fast launch, Start-menu entry)
+    # portable -> the closest thing to a single all-in-one .exe; it self-extracts
+    #             the whole ~2GB payload to a temp dir on every launch, so first
+    #             start is slow. Kept available deliberately, not as the default.
+    - target: nsis
+      arch:
+        - x64
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  deleteAppDataOnUninstall: false

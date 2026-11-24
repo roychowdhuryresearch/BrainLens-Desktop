@@ -1,0 +1,110 @@
+/* Top toolbar menu owner. Settings and overflow dropdown visibility,
+   positioning, and trigger chrome live separately from toolbar actions. */
+.pyqt-settings-menu{
+  position:relative;
+  overflow:visible!important;
+}
+
+.pyqt-settings-menu>.pyqt-menu-button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-block-size:var(--top-toolbar-control-h,32px);
+  block-size:var(--top-toolbar-control-h,32px);
+  border:1px solid rgba(17,24,39,.14);
+  border-radius:8px;
+  background:var(--lab-canvas)!important;
+  color:#1f2a36!important;
+  padding:0 13px;
+  font-size:var(--fs-base);
+  font-weight:500;
+  line-height:1;
+  cursor:pointer;
+  text-transform:none!important;
+  letter-spacing:.01em!important;
+  white-space:nowrap!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 1px 2px rgba(8,14,18,.32);
+  transition:background .15s ease,border-color .15s ease,box-shadow .15s ease;
+}
+
+.pyqt-settings-menu>.pyqt-menu-button:hover{
+  border-color:rgba(120,205,197,.5);
+  background:#dce4ea!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 2px 8px rgba(8,14,18,.4);
+}
+
+.pyqt-settings-menu[open]>.pyqt-menu-button{
+  border-color:#65beb7!important;
+  background:#d4dde4!important;
+  color:#0f1822!important;
+}
+
+.pyqt-settings-menu:not([open]) .pyqt-toolbar-menu,
+.pyqt-toolbar-overflow:not([open])>.pyqt-toolbar-menu{
+  display:none!important;
+  visibility:hidden!important;
+}
+
+.pyqt-settings-menu[open] .pyqt-toolbar-menu{
+  position:fixed!important;
+  inset-block-start:56px!important;
+  inset-inline-start:auto!important;
+  inset-inline-end:8px!important;
+  z-index:80!important;
+  display:grid!important;
+  inline-size:240px!important;
+  gap:6px;
+  border:1px solid #324756!important;
+  border-radius:var(--lab-radius);
+  background:#f8faf9!important;
+  box-shadow:0 18px 36px rgba(12,18,24,.22)!important;
+  padding:8px;
+}
+
+.pyqt-settings-menu[open] .pyqt-toolbar-menu,
+.pyqt-toolbar-overflow[open]>.pyqt-toolbar-menu{
+  display:grid!important;
+  visibility:visible!important;
+  pointer-events:auto;
+}
+
+.pyqt-settings-menu[open] .pyqt-toolbar-menu button{
+  justify-content:flex-start!important;
+  inline-size:100%!important;
+  width:100%!important;
+  max-inline-size:none!important;
+  max-width:none!important;
+  min-inline-size:0!important;
+  min-block-size:30px!important;
+  font-weight:400!important;
+}
+
+.pyqt-settings-menu>.pyqt-menu-button::-webkit-details-marker{
+  display:none!important;
+}
+
+.pyqt-settings-menu>.pyqt-menu-button::marker{
+  content:""!important;
+}
+
+.pyqt-toolbar-overflow>summary{
+  border:1px solid rgba(17,24,39,.14)!important;
+  border-radius:8px!important;
+  background:var(--lab-canvas)!important;
+  color:#1f2a36!important;
+  min-block-size:var(--top-toolbar-control-h,32px)!important;
+  block-size:var(--top-toolbar-control-h,32px)!important;
+  padding:0 13px!important;
+  font-weight:400!important;
+  text-transform:none!important;
+  letter-spacing:0!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 1px 2px rgba(8,14,18,.32)!important;
+}
+
+.pyqt-toolbar-overflow>summary:hover{
+  border-color:rgba(120,205,197,.5)!important;
+  background:#dce4ea!important;
+  color:#0f1822!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 2px 8px rgba(8,14,18,.4)!important;
+}

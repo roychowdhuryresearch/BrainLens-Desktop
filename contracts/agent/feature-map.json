@@ -1,0 +1,334 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "contract_family": "ieeg-agent.v1",
+  "feature_order": [
+    "XLF-LOAD",
+    "XLF-QC",
+    "XLF-CONFIGURE",
+    "XLF-DETECT",
+    "XLF-SEVERITY",
+    "XLF-CLASSIFY",
+    "XLF-RANK",
+    "XLF-REVIEW",
+    "XLF-ANNOTATE",
+    "XLF-EXPORT"
+  ],
+  "shared_protocol_elements": {
+    "XLP-IEEG-WIRE-V1": {
+      "defs": [
+        "ActorContext",
+        "AgentChatRequest",
+        "AgentChatResponse",
+        "AttachmentInput",
+        "ContractVersion",
+        "Identifier",
+        "PublicError",
+        "ResourceScope",
+        "ResponseLanguage",
+        "UICommandType",
+        "UserInputSubmission"
+      ]
+    },
+    "XLP-STREAM-EVENT-V1": {
+      "defs": [
+        "ContentData",
+        "DoneData",
+        "ErrorData",
+        "EventName",
+        "Identifier",
+        "ImageUrlsData",
+        "InternalEventData",
+        "ProgressData",
+        "ToolApprovalResultData",
+        "UserInputRequiredData"
+      ],
+      "events": [
+        "status",
+        "public_progress",
+        "image_urls",
+        "content",
+        "user_input_required",
+        "tool_approval_result",
+        "thinking",
+        "verification",
+        "skill_routing",
+        "plan_created",
+        "plan_updated",
+        "plan_completed",
+        "agent_control",
+        "step_handoff",
+        "step_completed",
+        "step_status",
+        "tool_call",
+        "tool_result",
+        "error",
+        "done"
+      ]
+    },
+    "XLP-RESEARCH-OUTPUT-V1": {
+      "defs": [
+        "AlgorithmProvenance",
+        "ArtifactRef",
+        "ClinicalGuardrails",
+        "ClinicalProvenance",
+        "EvidenceItem",
+        "Identifier",
+        "IntervalSeconds",
+        "NumericScope",
+        "RecordingProvenance",
+        "ReviewActor",
+        "ReviewCommandPayload",
+        "RunScope",
+        "SoftwareIdentity"
+      ]
+    },
+    "XLP-ACTION-RECEIPT-V1": {
+      "defs": [
+        "ActorContext",
+        "ApprovalRecord",
+        "CommandType",
+        "Identifier",
+        "Postcondition",
+        "ReceiptError",
+        "ReceiptStatus"
+      ]
+    }
+  },
+  "features": [
+    {
+      "id": "XLF-LOAD",
+      "title": "Load and scope a recording",
+      "outcome": "The Agent and desktop agree on one fingerprinted recording and revision before downstream analysis.",
+      "commands": [
+        "workspace.open_panel",
+        "workspace.show_toast",
+        "workspace.reset_waveform_view",
+        "agent.show_trace_step",
+        "recording.open",
+        "recording.inspect_metadata",
+        "recording.select_channel",
+        "recording.set_channel_visibility",
+        "project.open"
+      ],
+      "protocol_refs": [
+        { "contract_id": "XLP-IEEG-WIRE-V1", "defs": ["UICommandEnvelope", "UIStateSnapshot"] },
+        { "contract_id": "XLP-STREAM-EVENT-V1", "events": ["ui_command", "action_receipt", "research_output"] },
+        { "contract_id": "XLP-RESEARCH-OUTPUT-V1", "defs": ["ResearchOutput", "ResearchClaim"] },
+        { "contract_id": "XLP-ACTION-RECEIPT-V1", "defs": ["ActionReceipt"] }
+      ],
+      "owners": [
+        { "layer": "runtime", "path": "runtime/api/internal_agent.py" },
+        { "layer": "desktop", "path": "desktop/src/app/App.tsx" },
+        { "layer": "pyhfo", "path": "pyhfo/src/pyhfo/agent_mcp/tools.py" }
+      ],
+      "evidence_requirements": ["recording_fingerprint", "sampling_frequency_hz", "channel_names", "state_revision"],
+      "clinical_invariants": ["No downstream run may use an implicit or stale recording scope."],
+      "proofs": ["tests/test_ieeg_cross_layer_contracts.py", "tests/test_pyhfo_active_recording.py"]
+    },
+    {
+      "id": "XLF-QC",
+      "title": "Quality-control and spectral evidence",
+      "outcome": "QC and spectral findings are linked to a fingerprint, interval, channels, and reproducible parameters.",
+      "commands": [
+        "recording.infer_roi",
+        "analysis.run_qc",
+        "analysis.compute_spectral_profile",
+        "analysis.prepare_recording"
+      ],
+      "protocol_refs": [
+        { "contract_id": "XLP-IEEG-WIRE-V1", "defs": ["UICommandEnvelope", "UIStateSnapshot"] },
+        { "contract_id": "XLP-STREAM-EVENT-V1", "events": ["ui_command", "action_receipt", "research_output"] },
+        { "contract_id": "XLP-RESEARCH-OUTPUT-V1", "defs": ["ResearchOutput", "ResearchClaim"] },
+        { "contract_id": "XLP-ACTION-RECEIPT-V1", "defs": ["ActionReceipt"] }
+      ],
+      "owners": [
+        { "layer": "runtime", "path": "runtime/agent_runtime/pyhfo_tools.py" },
+        { "layer": "desktop", "path": "desktop/src/app/App.tsx" },
+        { "layer": "pyhfo", "path": "pyhfo/src/pyhfo/agent_mcp/tools.py" }
+      ],
+      "evidence_requirements": ["evaluated_interval_seconds", "sampling_frequency_hz", "nyquist_hz", "line_frequency_hz", "excluded_channels_with_reasons"],
+      "clinical_invariants": ["QC is a research measurement, not a diagnosis or anatomy label."],
+      "proofs": ["tests/test_ieeg_cross_layer_contracts.py", "tests/test_pyhfo_tools.py"]
+    },
+    {
+      "id": "XLF-CONFIGURE",
+      "title": "Configure detectors and classifiers",
+      "outcome": "The selected biomarker, algorithm, channel scope, filters, and parameters are explicit and digestible before execution.",
+      "commands": ["detection.plan", "detection.set_parameters", "classification.set_parameters"],
+      "protocol_refs": [
+        { "contract_id": "XLP-IEEG-WIRE-V1", "defs": ["UICommandEnvelope", "UIStateSnapshot"] },
+        { "contract_id": "XLP-STREAM-EVENT-V1", "events": ["ui_command", "action_receipt"] },
+        { "contract_id": "XLP-RESEARCH-OUTPUT-V1", "defs": ["ResearchOutput", "ResearchClaim"] },
+        { "contract_id": "XLP-ACTION-RECEIPT-V1", "defs": ["ActionReceipt"] }
+      ],
+      "owners": [
+        { "layer": "ui_mcp", "path": "ui_mcp/mcp_server.py" },
+        { "layer": "desktop", "path": "desktop/src/features/agent/uiCommands.ts" },
+        { "layer": "pyhfo", "path": "pyhfo/src/pyhfo/param/param_detector.py" }
+      ],
+      "evidence_requirements": ["biomarker", "algorithm", "algorithm_version", "parameters", "parameters_sha256", "channel_scope"],
+      "clinical_invariants": ["The Agent may not silently choose detector family, filter band, threshold, or all-channel scope."],
+      "proofs": ["tests/test_ieeg_cross_layer_contracts.py", "tests/test_ui_mcp_server_contract.py"]
+    },
+    {
+      "id": "XLF-DETECT",
+      "title": "Run candidate detection",
+      "outcome": "A confirmed detector execution yields a unique run, terminal receipt, candidate evidence, and checksummed artifacts.",
+      "commands": ["detection.run", "detection.select_run", "batch.create", "batch.run"],
+      "protocol_refs": [
+        { "contract_id": "XLP-IEEG-WIRE-V1", "defs": ["UICommandEnvelope", "UIStateSnapshot"] },
+        { "contract_id": "XLP-STREAM-EVENT-V1", "events": ["ui_command", "action_receipt", "research_output"] },
+        { "contract_id": "XLP-RESEARCH-OUTPUT-V1", "defs": ["ResearchOutput", "ResearchClaim"] },
+        { "contract_id": "XLP-ACTION-RECEIPT-V1", "defs": ["ActionReceipt"] }
+      ],
+      "owners": [
+        { "layer": "runtime", "path": "runtime/agent_runtime/tool_executor.py" },
+        { "layer": "desktop", "path": "desktop/src/app/App.tsx" },
+        { "layer": "pyhfo", "path": "pyhfo/src/pyhfo/agent_mcp/tools.py" }
+      ],
+      "evidence_requirements": ["recording_fingerprint", "run_id", "algorithm_version", "parameters_sha256", "artifact_sha256", "candidate_count"],
+      "clinical_invariants": ["Detector events are candidates and must not be described as confirmed HFOs."],
+      "proofs": ["tests/test_ieeg_cross_layer_contracts.py", "desktop/tests/agent-detection-payload-contract.test.js"]
+    },
+    {
+      "id": "XLF-SEVERITY",
+      "title": "Score scalp-EEG background severity",
+      "outcome": "A clinician-confirmed severity execution remains bound to the loaded scalp recording, exact model identity, effective parameters, result digest, and terminal receipt.",
+      "commands": ["severity.run"],
+      "protocol_refs": [
+        { "contract_id": "XLP-IEEG-WIRE-V1", "defs": ["UICommandEnvelope", "UIStateSnapshot"] },
+        { "contract_id": "XLP-STREAM-EVENT-V1", "events": ["ui_command", "action_receipt", "research_output"] },
+        { "contract_id": "XLP-RESEARCH-OUTPUT-V1", "defs": ["ResearchOutput", "ResearchClaim"] },
+        { "contract_id": "XLP-ACTION-RECEIPT-V1", "defs": ["ActionReceipt"] }
+      ],
+      "owners": [
+        { "layer": "runtime", "path": "runtime/agent_runtime/pyhfo_tools.py" },
+        { "layer": "desktop", "path": "desktop/src/app/App.tsx" },
+        { "layer": "pyhfo", "path": "pyhfo/src/pyhfo/severity_app.py" }
+      ],
+      "evidence_requirements": ["recording_fingerprint", "model_name", "model_version", "model_sha256", "parameters_sha256", "result_sha256", "severity_summary"],
+      "clinical_invariants": ["Severity scores are research signal measurements for scalp EEG and must not be presented as a diagnosis or as evidence from an iEEG recording."],
+      "proofs": ["tests/test_ieeg_cross_layer_contracts.py", "tests/test_pyhfo_authority_guard.py"]
+    },
+    {
+      "id": "XLF-CLASSIFY",
+      "title": "Classify an existing run",
+      "outcome": "Classifier predictions remain bound to the exact source run and model identity without silent redetection.",
+      "commands": ["classification.run"],
+      "protocol_refs": [
+        { "contract_id": "XLP-IEEG-WIRE-V1", "defs": ["UICommandEnvelope", "UIStateSnapshot"] },
+        { "contract_id": "XLP-STREAM-EVENT-V1", "events": ["ui_command", "action_receipt", "research_output"] },
+        { "contract_id": "XLP-RESEARCH-OUTPUT-V1", "defs": ["ResearchOutput", "ResearchClaim"] },
+        { "contract_id": "XLP-ACTION-RECEIPT-V1", "defs": ["ActionReceipt"] }
+      ],
+      "owners": [
+        { "layer": "runtime", "path": "runtime/agent_runtime/pyhfo_tools.py" },
+        { "layer": "desktop", "path": "desktop/src/app/App.tsx" },
+        { "layer": "pyhfo", "path": "pyhfo/src/pyhfo/classifer.py" }
+      ],
+      "evidence_requirements": ["source_run_id", "model_digest", "classifier_parameters", "event_prediction_refs"],
+      "clinical_invariants": ["Classification must not rerun detection unless the fallback is explicit and returns a new run ID."],
+      "proofs": ["tests/test_ieeg_cross_layer_contracts.py", "tests/test_pyhfo_tools.py"]
+    },
+    {
+      "id": "XLF-RANK",
+      "title": "Rank candidate channels",
+      "outcome": "Ranking reports its exact runs, denominator, duration, exclusions, and aggregation method.",
+      "commands": [
+        "detection.rank_candidates",
+        "detection.show_candidate_ranking",
+        "detection.focus_top_candidate_channel",
+        "waveform.focus_hotspot_channels"
+      ],
+      "protocol_refs": [
+        { "contract_id": "XLP-IEEG-WIRE-V1", "defs": ["UICommandEnvelope", "UIStateSnapshot"] },
+        { "contract_id": "XLP-STREAM-EVENT-V1", "events": ["ui_command", "action_receipt", "research_output"] },
+        { "contract_id": "XLP-RESEARCH-OUTPUT-V1", "defs": ["ResearchOutput", "ResearchClaim"] },
+        { "contract_id": "XLP-ACTION-RECEIPT-V1", "defs": ["ActionReceipt"] }
+      ],
+      "owners": [
+        { "layer": "runtime", "path": "runtime/agent_runtime/pyhfo_tools.py" },
+        { "layer": "desktop", "path": "desktop/src/app/App.tsx" },
+        { "layer": "pyhfo", "path": "pyhfo/src/pyhfo/agent_mcp/tools.py" }
+      ],
+      "evidence_requirements": ["run_ids", "aggregation_method", "duration_seconds", "excluded_channels", "denominator", "ranking_values"],
+      "clinical_invariants": ["Multiple runs are aggregated only when explicit_multi_run is declared."],
+      "proofs": ["tests/test_ieeg_cross_layer_contracts.py", "tests/test_pyhfo_tools.py"]
+    },
+    {
+      "id": "XLF-REVIEW",
+      "title": "Review waveforms, events, and runs",
+      "outcome": "Review navigation and comparisons stay bound to loaded run/event IDs and expose the evidence actually viewed.",
+      "commands": [
+        "waveform.set_viewport",
+        "waveform.focus_channel",
+        "waveform.center_event",
+        "waveform.set_amplitude_scale",
+        "waveform.set_display",
+        "events.select_event",
+        "events.move_cursor",
+        "review.focus_event",
+        "review.open_event",
+        "review.open_comparison",
+        "review.accept_run",
+        "detection.create_consensus_run",
+        "review.group_overlaps"
+      ],
+      "protocol_refs": [
+        { "contract_id": "XLP-IEEG-WIRE-V1", "defs": ["UICommandEnvelope", "UIStateSnapshot"] },
+        { "contract_id": "XLP-STREAM-EVENT-V1", "events": ["ui_command", "action_receipt", "research_output"] },
+        { "contract_id": "XLP-RESEARCH-OUTPUT-V1", "defs": ["ResearchOutput", "ResearchClaim"] },
+        { "contract_id": "XLP-ACTION-RECEIPT-V1", "defs": ["ActionReceipt"] }
+      ],
+      "owners": [
+        { "layer": "ui_mcp", "path": "ui_mcp/mcp_server.py" },
+        { "layer": "desktop", "path": "desktop/src/features/shell/EventReviewDialog.tsx" },
+        { "layer": "pyhfo", "path": "pyhfo/src/pyhfo/agent_api/review.py" }
+      ],
+      "evidence_requirements": ["recording_fingerprint", "run_id", "event_id", "viewport_interval", "feature_or_snippet_refs"],
+      "clinical_invariants": ["Visual impressions remain hypotheses unless linked to explicit review evidence."],
+      "proofs": ["tests/test_ieeg_cross_layer_contracts.py", "desktop/tests/event-review-parity.test.js"]
+    },
+    {
+      "id": "XLF-ANNOTATE",
+      "title": "Record human review annotations",
+      "outcome": "A review write is actor-bound, auditable, and linked to the exact event and source run.",
+      "commands": ["events.stage_annotation", "events.clear_staged_annotation"],
+      "protocol_refs": [
+        { "contract_id": "XLP-IEEG-WIRE-V1", "defs": ["UICommandEnvelope", "UIStateSnapshot"] },
+        { "contract_id": "XLP-STREAM-EVENT-V1", "events": ["ui_command", "action_receipt", "research_output"] },
+        { "contract_id": "XLP-RESEARCH-OUTPUT-V1", "defs": ["ResearchOutput", "ResearchClaim"] },
+        { "contract_id": "XLP-ACTION-RECEIPT-V1", "defs": ["ActionReceipt"] }
+      ],
+      "owners": [
+        { "layer": "runtime", "path": "runtime/agent_runtime/tool_executor.py" },
+        { "layer": "desktop", "path": "desktop/src/app/App.tsx" },
+        { "layer": "pyhfo", "path": "pyhfo/src/pyhfo/agent_api/review.py" }
+      ],
+      "evidence_requirements": ["review_receipt_id", "review_actor", "review_command_payload", "payload_sha256", "run_id", "event_id", "annotation_before_after"],
+      "clinical_invariants": ["Only a human-linked receipt may promote a claim to reviewed or confirmed."],
+      "proofs": ["tests/test_ieeg_cross_layer_contracts.py", "desktop/tests/agent-ui-command-contract.test.js"]
+    },
+    {
+      "id": "XLF-EXPORT",
+      "title": "Export reproducible research artifacts",
+      "outcome": "Exports identify exact inputs, runs, software, parameters, creator, destination, and checksum.",
+      "commands": ["artifacts.open_report", "export.session", "export.workbook", "export.report", "project.save"],
+      "protocol_refs": [
+        { "contract_id": "XLP-IEEG-WIRE-V1", "defs": ["UICommandEnvelope", "UIStateSnapshot"] },
+        { "contract_id": "XLP-STREAM-EVENT-V1", "events": ["ui_command", "action_receipt", "research_output"] },
+        { "contract_id": "XLP-RESEARCH-OUTPUT-V1", "defs": ["ResearchOutput", "ResearchClaim"] },
+        { "contract_id": "XLP-ACTION-RECEIPT-V1", "defs": ["ActionReceipt"] }
+      ],
+      "owners": [
+        { "layer": "ui_mcp", "path": "ui_mcp/mcp_server.py" },
+        { "layer": "desktop", "path": "desktop/src/app/App.tsx" },
+        { "layer": "pyhfo", "path": "pyhfo/src/pyhfo/utils/reporting.py" }
+      ],
+      "evidence_requirements": ["recording_fingerprint", "run_ids", "artifact_uri", "artifact_sha256", "software_version", "parameters_sha256"],
+      "clinical_invariants": ["Export success requires a terminal receipt and a checksummed artifact that exists."],
+      "proofs": ["tests/test_ieeg_cross_layer_contracts.py", "tests/test_pyhfo_tools.py"]
+    }
+  ]
+}

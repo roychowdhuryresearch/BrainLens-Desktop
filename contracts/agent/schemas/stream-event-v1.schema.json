@@ -1,0 +1,328 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ieeg-agent.invalid/contracts/agent/stream-event-v1.schema.json",
+  "title": "XLP-STREAM-EVENT-V1",
+  "description": "Typed semantic events for one iEEG Agent turn; transport EOF is not a terminal event.",
+  "x-ieeg-contract-id": "XLP-STREAM-EVENT-V1",
+  "x-ieeg-contract-version": "ieeg-agent.v1",
+  "x-ieeg-public-events": [
+    "status",
+    "public_progress",
+    "image_urls",
+    "content",
+    "ui_command",
+    "action_receipt",
+    "research_output",
+    "user_input_required",
+    "tool_approval_result",
+    "error",
+    "done"
+  ],
+  "x-ieeg-internal-events": [
+    "thinking",
+    "verification",
+    "skill_routing",
+    "plan_created",
+    "plan_updated",
+    "plan_completed",
+    "agent_control",
+    "step_handoff",
+    "step_completed",
+    "step_status",
+    "tool_call",
+    "tool_result"
+  ],
+  "x-ieeg-terminal-model": {
+    "terminal_events": ["done"],
+    "exactly_one_terminal_event": true,
+    "events_after_terminal": "forbidden",
+    "eof_without_terminal": "failure",
+    "error_is_terminal": false,
+    "success_requires_done_outcome": "completed"
+  },
+  "x-ieeg-unknown-field-policy": "reject",
+  "x-ieeg-unknown-event-policy": "reject",
+  "type": "object",
+  "required": ["contract_version", "request_id", "conversation_id", "sequence", "event", "visibility", "data"],
+  "properties": {
+    "contract_version": { "const": "ieeg-agent.v1" },
+    "request_id": { "$ref": "#/$defs/Identifier" },
+    "conversation_id": { "$ref": "#/$defs/Identifier" },
+    "sequence": { "type": "integer", "minimum": 0 },
+    "event": { "$ref": "#/$defs/EventName" },
+    "visibility": { "type": "string", "enum": ["public", "internal"] },
+    "data": true,
+    "emitted_at": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": { "properties": { "event": { "enum": ["status", "public_progress"] } }, "required": ["event"] },
+      "then": { "properties": { "data": { "$ref": "#/$defs/ProgressData" }, "visibility": { "const": "public" } } }
+    },
+    {
+      "if": { "properties": { "event": { "const": "image_urls" } }, "required": ["event"] },
+      "then": { "properties": { "data": { "$ref": "#/$defs/ImageUrlsData" }, "visibility": { "const": "public" } } }
+    },
+    {
+      "if": { "properties": { "event": { "const": "content" } }, "required": ["event"] },
+      "then": { "properties": { "data": { "$ref": "#/$defs/ContentData" }, "visibility": { "const": "public" } } }
+    },
+    {
+      "if": { "properties": { "event": { "const": "ui_command" } }, "required": ["event"] },
+      "then": { "properties": { "data": { "$ref": "ieeg-wire-v1.schema.json#/$defs/UICommandEnvelope" }, "visibility": { "const": "public" } } }
+    },
+    {
+      "if": { "properties": { "event": { "const": "action_receipt" } }, "required": ["event"] },
+      "then": { "properties": { "data": { "$ref": "action-receipt-v1.schema.json#/$defs/ActionReceipt" }, "visibility": { "const": "public" } } }
+    },
+    {
+      "if": { "properties": { "event": { "const": "research_output" } }, "required": ["event"] },
+      "then": { "properties": { "data": { "$ref": "research-output-v1.schema.json#/$defs/ResearchOutput" }, "visibility": { "const": "public" } } }
+    },
+    {
+      "if": { "properties": { "event": { "const": "user_input_required" } }, "required": ["event"] },
+      "then": { "properties": { "data": { "$ref": "#/$defs/UserInputRequiredData" }, "visibility": { "const": "public" } } }
+    },
+    {
+      "if": { "properties": { "event": { "const": "tool_approval_result" } }, "required": ["event"] },
+      "then": { "properties": { "data": { "$ref": "#/$defs/ToolApprovalResultData" }, "visibility": { "const": "public" } } }
+    },
+    {
+      "if": { "properties": { "event": { "const": "error" } }, "required": ["event"] },
+      "then": { "properties": { "data": { "$ref": "#/$defs/ErrorData" }, "visibility": { "const": "public" } } }
+    },
+    {
+      "if": { "properties": { "event": { "const": "done" } }, "required": ["event"] },
+      "then": { "properties": { "data": { "$ref": "#/$defs/DoneData" }, "visibility": { "const": "public" } } }
+    },
+    {
+      "if": {
+        "properties": {
+          "event": {
+            "enum": [
+              "thinking",
+              "verification",
+              "skill_routing",
+              "plan_created",
+              "plan_updated",
+              "plan_completed",
+              "agent_control",
+              "step_handoff",
+              "step_completed",
+              "step_status",
+              "tool_call",
+              "tool_result"
+            ]
+          }
+        },
+        "required": ["event"]
+      },
+      "then": { "properties": { "data": { "$ref": "#/$defs/InternalEventData" }, "visibility": { "const": "internal" } } }
+    }
+  ],
+  "x-ieeg-examples": [
+    {
+      "value": {
+        "contract_version": "ieeg-agent.v1",
+        "request_id": "req-20260715-001",
+        "conversation_id": "conv-42",
+        "sequence": 4,
+        "event": "content",
+        "visibility": "public",
+        "data": { "text": "QC completed.", "response_language": "en-US" }
+      }
+    },
+    {
+      "value": {
+        "contract_version": "ieeg-agent.v1",
+        "request_id": "req-20260715-001",
+        "conversation_id": "conv-42",
+        "sequence": 5,
+        "event": "done",
+        "visibility": "public",
+        "data": {
+          "outcome": "completed",
+          "message_id": "msg-17",
+          "final_content": "QC completed.",
+          "response_language": "en-US",
+          "action_receipts": [],
+          "ui_commands": []
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "EventName": {
+      "type": "string",
+      "enum": [
+        "status",
+        "public_progress",
+        "image_urls",
+        "content",
+        "ui_command",
+        "action_receipt",
+        "research_output",
+        "user_input_required",
+        "tool_approval_result",
+        "thinking",
+        "verification",
+        "skill_routing",
+        "plan_created",
+        "plan_updated",
+        "plan_completed",
+        "agent_control",
+        "step_handoff",
+        "step_completed",
+        "step_status",
+        "tool_call",
+        "tool_result",
+        "error",
+        "done"
+      ]
+    },
+    "ProgressData": {
+      "type": "object",
+      "required": ["message", "phase"],
+      "properties": {
+        "message": { "type": "string", "minLength": 1 },
+        "phase": {
+          "type": "string",
+          "enum": ["scope", "planning", "approval", "execution", "verification", "finalization"]
+        },
+        "step": { "type": "integer", "minimum": 0 },
+        "total_steps": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "ContentData": {
+      "type": "object",
+      "required": ["text", "response_language"],
+      "properties": {
+        "text": { "type": "string" },
+        "response_language": { "type": "string", "enum": ["en-US", "zh-CN"] },
+        "replace": { "type": "boolean", "default": false }
+      },
+      "additionalProperties": false
+    },
+    "ImageUrlsData": {
+      "description": "Persisted attachment references already authorized for the requesting client.",
+      "type": "object",
+      "required": ["image_urls", "attachment_urls"],
+      "properties": {
+        "image_urls": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "attachment_urls": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      },
+      "additionalProperties": false
+    },
+    "UserInputRequiredData": {
+      "type": "object",
+      "required": ["input_id", "prompt", "input_type", "actor_user_id", "expires_at"],
+      "properties": {
+        "input_id": { "$ref": "#/$defs/Identifier" },
+        "prompt": { "type": "string", "minLength": 1 },
+        "input_type": { "type": "string", "enum": ["text", "confirm", "choice"] },
+        "options": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "actor_user_id": { "$ref": "#/$defs/Identifier" },
+        "command_id": { "$ref": "#/$defs/Identifier" },
+        "state_revision": { "$ref": "#/$defs/Identifier" },
+        "expires_at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "ToolApprovalResultData": {
+      "type": "object",
+      "required": ["input_id", "decision", "actor_user_id"],
+      "properties": {
+        "input_id": { "$ref": "#/$defs/Identifier" },
+        "decision": { "type": "string", "enum": ["approved", "rejected", "cancelled"] },
+        "actor_user_id": { "$ref": "#/$defs/Identifier" },
+        "command_id": { "$ref": "#/$defs/Identifier" }
+      },
+      "additionalProperties": false
+    },
+    "InternalEventData": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["reasoning", "verification", "routing", "plan", "control", "step", "tool"]
+        },
+        "step_id": { "$ref": "#/$defs/Identifier" },
+        "name": { "type": "string", "minLength": 1 },
+        "status": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string" },
+        "payload": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "ErrorData": {
+      "type": "object",
+      "required": ["code", "message", "retryable"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "invalid_request",
+            "contract_version_mismatch",
+            "scope_missing",
+            "scope_conflict",
+            "permission_denied",
+            "approval_required",
+            "cancelled",
+            "timeout",
+            "execution_failed",
+            "terminal_event_missing",
+            "internal_error"
+          ]
+        },
+        "message": { "type": "string", "minLength": 1 },
+        "retryable": { "type": "boolean" },
+        "correlation_id": { "$ref": "#/$defs/Identifier" }
+      },
+      "additionalProperties": false
+    },
+    "DoneData": {
+      "type": "object",
+      "required": ["outcome", "message_id", "response_language", "action_receipts", "ui_commands"],
+      "properties": {
+        "outcome": { "type": "string", "enum": ["completed", "cancelled", "failed"] },
+        "message_id": { "$ref": "#/$defs/Identifier" },
+        "final_content": { "type": "string", "minLength": 1, "pattern": "\\S" },
+        "response_language": { "type": "string", "enum": ["en-US", "zh-CN"] },
+        "research_output": { "$ref": "research-output-v1.schema.json#/$defs/ResearchOutput" },
+        "action_receipts": {
+          "type": "array",
+          "items": { "$ref": "action-receipt-v1.schema.json#/$defs/ActionReceipt" }
+        },
+        "ui_commands": {
+          "description": "Compatibility list of commands emitted during this turn; not execution proof.",
+          "type": "array",
+          "items": { "$ref": "ieeg-wire-v1.schema.json#/$defs/UICommandEnvelope" }
+        },
+        "error": { "$ref": "#/$defs/ErrorData" }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "outcome": { "const": "completed" } }, "required": ["outcome"] },
+          "then": { "required": ["final_content"], "not": { "required": ["error"] } },
+          "else": { "required": ["error"] }
+        }
+      ]
+    }
+  }
+}

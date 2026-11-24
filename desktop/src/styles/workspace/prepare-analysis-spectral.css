@@ -1,0 +1,154 @@
+/* Prepare spectral analysis owner. Spectral card layout, PSD curve, band bars,
+   and line-noise chips are isolated from ROI/QC summary and panel layout. */
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-spectral-card{
+  border-color:var(--lab-line)!important;
+  grid-column:1 / -1!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 112px!important;
+  grid-template-rows:min-content min-content min-content!important;
+  align-items:start!important;
+  gap:7px 10px!important;
+  overflow:hidden!important;
+}
+
+/* Title and the Nyq/HFO meta share one baseline-aligned row (title fixed, meta ellipsizes). */
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-spectral-card .spectral-card-heading{
+  grid-column:1!important;
+  grid-row:1!important;
+  align-self:center!important;
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  align-items:baseline!important;
+  gap:8px!important;
+  min-inline-size:0!important;
+  margin:0!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-spectral-card .spectral-card-heading h4,
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-spectral-card .spectral-card-heading p{
+  margin:0!important;
+  line-height:1.15!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-spectral-card .spectral-card-heading h4{
+  flex:0 0 auto!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-spectral-card .spectral-card-heading p{
+  flex:0 1 auto!important;
+  min-inline-size:0!important;
+  color:var(--lab-muted)!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  overflow-wrap:normal!important;
+  text-overflow:ellipsis!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-spectral-card .spectral-card-heading p strong{
+  color:var(--lab-ink)!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-analysis-spectral-card>.spectral-curve-plot{
+  grid-column:2!important;
+  grid-row:1!important;
+  align-self:center!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .spectral-band-bars{
+  grid-column:1 / -1!important;
+  grid-row:2!important;
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:3px 8px!important;
+  overflow:hidden!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .spectral-band-row{
+  min-inline-size:0!important;
+  display:grid!important;
+  grid-template-columns:42px minmax(0,1fr) max-content!important;
+  align-items:center!important;
+  gap:6px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .spectral-line-noise-list{
+  grid-column:1 / -1!important;
+  grid-row:3!important;
+  min-inline-size:0!important;
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  gap:6px!important;
+  overflow:hidden!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .spectral-curve-plot{
+  min-block-size:34px!important;
+  border-color:var(--lab-line)!important;
+  background:
+    linear-gradient(90deg,rgba(82,196,186,.12) 0 1px,transparent 1px 100%),
+    linear-gradient(180deg,#fbfefe,#eef7f5)!important;
+  background-size:25% 100%,100% 100%!important;
+  box-shadow:var(--lab-inset)!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .spectral-curve-plot svg{
+  display:block!important;
+  inline-size:100%!important;
+  height:32px!important;
+  shape-rendering:geometricPrecision!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .spectral-curve-plot rect{
+  fill:rgba(82,196,186,.22)!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .spectral-curve-plot polyline{
+  fill:none!important;
+  stroke:var(--lab-cobalt)!important;
+  stroke-width:2!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .spectral-band-track{
+  block-size:6px!important;
+  border-radius:3px!important;
+  overflow:hidden!important;
+  background:#d8e1e6!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .spectral-band-track i{
+  display:block!important;
+  block-size:6px!important;
+  border-radius:3px!important;
+  background:linear-gradient(90deg,var(--lab-teal),var(--lab-cobalt))!important;
+}
+
+/* Muted "Line noise" caption + empty-state opt out of the amber chip treatment. */
+.workspace-tab-panel[data-active-tab="Prepare"] .spectral-line-noise-list .ln-caption{
+  flex:0 0 auto!important;
+  color:var(--lab-muted)!important;
+  font-size:12px!important;
+  font-weight:600!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .spectral-line-noise-list .ln-empty{
+  flex:0 1 auto!important;
+  min-inline-size:0!important;
+  color:var(--lab-muted)!important;
+  font-size:12px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .spectral-line-noise-list span:not(.ln-caption):not(.ln-empty){
+  flex:0 0 auto!important;
+  padding:1px 8px!important;
+  border-radius:999px!important;
+  border:1px solid #f0c283!important;
+  background:#fff3de!important;
+  color:#8a4d0b!important;
+  font-weight:500!important;
+}

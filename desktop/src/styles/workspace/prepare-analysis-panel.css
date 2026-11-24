@@ -1,0 +1,100 @@
+/* Prepare analysis panel owner. The recording planning panel grid and its
+   Analyze action belong here, separate from ROI/QC/Spectral card internals. */
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel,
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel{
+  order:1!important;
+  grid-column:1!important;
+  grid-row:auto!important;
+  display:grid!important;
+  /* Single column: heading → ROI/QC/Spectral analysis → channel table stack
+     vertically (was analysis | table side by side). */
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-auto-rows:min-content!important;
+  gap:8px!important;
+  align-items:start!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.panel-heading-row,
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.panel-heading-row{
+  grid-column:1 / -1!important;
+  grid-row:1!important;
+  display:grid!important;
+  grid-template-columns:max-content auto!important;
+  justify-content:start!important;
+  align-items:center!important;
+  gap:10px!important;
+  overflow:visible!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.panel-heading-row h3,
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.panel-heading-row h3{
+  min-inline-size:max-content!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  white-space:normal!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.panel-heading-row button,
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.panel-heading-row button{
+  flex:0 0 auto!important;
+  justify-self:start!important;
+  min-inline-size:0!important;
+  inline-size:max-content!important;
+  max-inline-size:100%!important;
+  block-size:30px!important;
+  min-block-size:30px!important;
+  padding-inline:14px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] [data-testid="pyqt-recording_analysis_button"]{
+  border-color:var(--lab-cobalt-2)!important;
+  background:var(--lab-cobalt)!important;
+  color:#fff!important;
+  box-shadow:0 1px 1px rgba(20,33,61,.18),inset 0 1px 0 rgba(255,255,255,.18)!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] [data-testid="pyqt-recording_analysis_button"]:hover{
+  border-color:#103b63!important;
+  background:var(--lab-cobalt-2)!important;
+  box-shadow:0 0 0 3px rgba(32,90,155,.12),inset 0 1px 0 rgba(255,255,255,.18)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.recording-analysis-grid,
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.recording-analysis-grid{
+  grid-column:1!important;
+  grid-row:auto!important;
+  align-self:start!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.roi-exclusion-editor,
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.roi-exclusion-editor{
+  /* Hidden to declutter — the ROI/QC review grid below is the exclusion editor
+     and edits the same confirmed_exclusions set; kept in the DOM for testids. */
+  display:none!important;
+  grid-column:2!important;
+  grid-row:2!important;
+  min-inline-size:0!important;
+  inline-size:100%!important;
+  max-inline-size:100%!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.roi-channel-review,
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.roi-channel-review{
+  grid-column:1!important;
+  grid-row:auto!important;
+  max-block-size:148px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.button-row,
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.button-row{
+  grid-column:1!important;
+  grid-row:auto!important;
+  margin:0 0 4px!important;
+  align-self:start!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.error-panel,
+.workspace-tab-panel[data-active-tab="Prepare"] .recording-planning-panel>.error-panel{
+  grid-column:1 / -1!important;
+  grid-row:auto!important;
+}

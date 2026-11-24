@@ -1,0 +1,16 @@
+/* Prepare workbench scroll owner. Owns only the outer Prepare tab grid and
+   scroll container. Case console, summary, output, analysis, and controls live
+   in adjacent Prepare owner files. */
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"]>.prepare-grid,
+.workspace-tab-panel[data-active-tab="Prepare"]>.prepare-grid{
+  min-inline-size:0!important;
+  min-block-size:0!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-auto-rows:min-content!important;
+  align-content:start!important;
+  align-items:start!important;
+  gap:8px!important;
+  padding:10px!important;
+  overflow:auto!important;
+}

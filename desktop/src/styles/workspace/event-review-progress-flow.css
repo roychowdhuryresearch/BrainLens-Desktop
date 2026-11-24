@@ -1,0 +1,74 @@
+/* Annotation progress/queue chrome owner. Progress card and queue selector
+   layout live here; side-stack flow, navigation, and frequency controls have
+   dedicated Event Review owners. */
+.event-review-dialog .annotation-side-stack [data-testid="pyqt-progressCard"],
+.annotation-side-stack [data-testid="pyqt-progressCard"]{
+  grid-column:1 / -1!important;
+  display:grid!important;
+  grid-template-columns:max-content minmax(0,1fr)!important;
+  gap:4px 10px!important;
+  align-items:center!important;
+  align-content:center!important;
+  min-block-size:0!important;
+  max-block-size:max-content!important;
+  padding:6px 8px!important;
+  overflow:hidden!important;
+}
+
+.event-review-dialog .annotation-side-stack [data-testid="pyqt-progressCard"] strong,
+.annotation-side-stack [data-testid="pyqt-progressCard"] strong{
+  display:block!important;
+  inline-size:100%!important;
+  max-inline-size:100%!important;
+  writing-mode:horizontal-tb!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  font-size:var(--fs-sm)!important;
+  font-weight:600!important;
+  line-height:1.1!important;
+}
+
+.event-review-dialog .annotation-side-stack [data-testid="pyqt-progressTextbox"],
+.annotation-side-stack [data-testid="pyqt-progressTextbox"]{
+  display:block!important;
+  min-inline-size:0!important;
+  min-block-size:20px!important;
+  padding:2px 8px!important;
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:400!important;
+  line-height:1.25!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+.event-review-dialog .annotation-side-stack .annotation-queue-row,
+.annotation-side-stack .annotation-queue-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:3px!important;
+  max-block-size:none!important;
+  overflow:visible!important;
+}
+
+.event-review-dialog .annotation-side-stack .annotation-queue-label,
+.annotation-side-stack .annotation-queue-label{
+  position:absolute!important;
+  inline-size:1px!important;
+  block-size:1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+}
+
+.event-review-dialog .annotation-side-stack .annotation-queue-row select,
+.annotation-side-stack .annotation-queue-row select{
+  inline-size:100%!important;
+  min-block-size:var(--ui-control-h)!important;
+  padding:.12rem .35rem!important;
+  font-size:var(--fs-sm)!important;
+}

@@ -1,0 +1,75 @@
+/* Workspace shell chrome owner. Root window and workspace shell sizing live
+   here; header, tabs, status strip, and recent recordings have own files. */
+/* Contract anchors retained while root ownership lives here:
+   Left workspace containment, Fixed-left viewport contract,
+   Fixed-size left workspace column, Left-pane clamp,
+   Production left-pane fixed scroll, Fixed-scroll left toolbar,
+   PyQt waveform-first fixed-left scroll refinement,
+   PyQt main loaded workspace tab-strip parity,
+   PyQt loaded workspace splitter parity,
+   PyQt horizontal waveform|tabs split parity,
+   User-confirmed main waveform left fixed-scroll parity,
+   User-requested fixed-scroll contract: the left PyQt workspace column stays fixed to the viewport,
+   .pyqt-main-window, inline-size:100vw, block-size:100vh,
+   height:100vh;max-height:100vh;overflow:hidden,
+   inline-size:calc(100vw - var(--agent-rail-width)),
+   max-inline-size:calc(100vw - var(--agent-rail-width)),
+   block-size:96px;max-block-size:96px;min-block-size:96px;overflow:auto,
+   block-size:82px;max-block-size:82px;min-block-size:82px,
+   grid-template-columns:minmax(220px,var(--workspace-waveform-percent,62%)) 8px minmax(0,1fr),
+   contain:size layout, contain:size layout paint, cursor:col-resize,
+   scrollbar-gutter:stable both-edges, overscroll-behavior:contain,
+   scrollbar-color:#aeb8c4 #eef3f8, ::-webkit-scrollbar-thumb,
+   background:#d8e0e8, ::-webkit-scrollbar-track, background:#eef3f8. */
+.pyqt-main-window{
+  --ui-bottom-clearance:24px;
+  background:var(--lab-canvas)!important;
+}
+
+.pyqt-workspace-shell{
+  min-inline-size:0!important;
+  min-block-size:0!important;
+  inline-size:100%!important;
+  block-size:100vh!important;
+  max-block-size:100vh!important;
+  display:grid!important;
+  gap:7px!important;
+  overflow:hidden!important;
+  padding:8px!important;
+  background:var(--lab-canvas)!important;
+}
+
+.pyqt-workspace-shell>*{
+  min-inline-size:0!important;
+  min-block-size:0!important;
+}
+
+/* Tuned scrollbars to match the --lab palette (the rules the comment above documents).
+   Invisible under macOS overlay scrollbars, but with "Show scroll bars: Always" or on
+   Windows the dense rail / Prepare tables / agent transcript would otherwise show stock
+   chrome-gray bars against the tuned surfaces. Scoped to the shell so dialogs/canvas
+   are unaffected. */
+.pyqt-workspace-shell{
+  scrollbar-color:#aeb8c4 #eef3f8;
+}
+
+.pyqt-workspace-shell ::-webkit-scrollbar{
+  inline-size:10px;
+  block-size:10px;
+}
+
+.pyqt-workspace-shell ::-webkit-scrollbar-thumb{
+  background:#d8e0e8;
+  border-radius:6px;
+}
+
+.pyqt-workspace-shell ::-webkit-scrollbar-track{
+  background:#eef3f8;
+}
+
+@media(max-width:1100px){
+  .pyqt-workspace-shell{
+    padding:6px!important;
+    gap:6px!important;
+  }
+}

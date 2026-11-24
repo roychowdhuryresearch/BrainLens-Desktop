@@ -1,0 +1,212 @@
+/* Quick Detection layout owner. Owns the scrollable quick dialog grid, left action rail, decoupled main column, metadata card, and right-rail placement. */
+.quick-detection-dialog>.quick-detection-grid{
+  min-block-size:0!important;
+  block-size:auto!important;
+  max-block-size:100%!important;
+  display:grid!important;
+  grid-template-columns:minmax(300px,310px) minmax(420px,1fr) minmax(300px,340px)!important;
+  grid-auto-rows:min-content!important;
+  align-content:start!important;
+  align-items:start!important;
+  gap:12px!important;
+  overflow:auto!important;
+  overscroll-behavior:contain!important;
+  scrollbar-gutter:stable both-edges!important;
+  padding:0 8px calc(var(--ui-modal-bottom-clearance,18px) + 10px) 0!important;
+  scroll-padding-block-end:calc(var(--ui-modal-bottom-clearance,18px) + 10px)!important;
+}
+
+.quick-detection-dialog .quick-detection-left-rail{
+  grid-column:1!important;
+  grid-row:1!important;
+  position:static!important;
+  inline-size:100%!important;
+  max-inline-size:none!important;
+  max-block-size:none!important;
+  display:grid!important;
+  gap:12px!important;
+  overflow:visible!important;
+}
+
+.quick-detection-dialog .quick-detection-left-rail>.panel-card{
+  min-inline-size:0!important;
+}
+
+.quick-detection-dialog .quick-detection-main-column{
+  grid-column:2!important;
+  grid-row:1!important;
+  min-inline-size:0!important;
+  inline-size:100%!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-auto-rows:min-content!important;
+  align-content:start!important;
+  align-items:start!important;
+  gap:12px!important;
+  overflow:visible!important;
+}
+
+.quick-detection-dialog [data-testid="pyqt-qd_action_rail"]{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  align-items:start!important;
+  gap:5px!important;
+}
+
+.quick-detection-dialog [data-testid="pyqt-qd_action_rail"]>h3,
+.quick-detection-dialog [data-testid="pyqt-qd_action_rail"]>button,
+.quick-detection-dialog [data-testid="pyqt-qd_action_rail"]>label{
+  grid-column:1!important;
+}
+
+.quick-detection-dialog .panel-card,
+.quick-detection-dialog .quick-detection-filter-card,
+.quick-detection-dialog .quick-detector-panel,
+.quick-detection-dialog .quick-classifier-card{
+  overflow:visible!important;
+  contain:none!important;
+}
+
+/* Card interior padding. A bare <section> has 0 padding, so bordered controls
+   (notably the Run Detection button's 2px outset border) landed flush on the
+   card's own 1px rounded border — two borders stacked at the corner read as an
+   overlapping ring. Inset all card content so every control clears the border. */
+.quick-detection-dialog .panel-card{
+  padding:10px 12px!important;
+}
+
+.quick-detection-dialog [data-testid="pyqt-qd_action_rail"]>[data-testid="pyqt-qd_loadEDF_button"],
+.quick-detection-dialog [data-testid="pyqt-qd_action_rail"]>[data-testid="pyqt-qd_run_detection_button"]{
+  inline-size:auto!important;
+  min-inline-size:150px!important;
+  max-inline-size:max-content!important;
+  justify-self:start!important;
+}
+
+/* The rail "Run Detection" is the SECONDARY trigger; the footer "Run" is the single
+   cobalt primary for this dialog. It rides the neutral outline tier from the shared
+   control recipe, so the dialog has exactly one primary and no rogue slate color. */
+.quick-detection-dialog .quick-detection-rail-run-button:disabled{
+  cursor:not-allowed!important;
+}
+
+.quick-detection-dialog [data-testid="pyqt-qd_action_rail"] label{
+  inline-size:100%!important;
+  min-inline-size:0!important;
+}
+
+.quick-detection-dialog [data-testid="pyqt-qd_action_rail"] .quick-setup-field{
+  inline-size:min(100%,264px)!important;
+  max-inline-size:264px!important;
+}
+
+.quick-detection-dialog [data-testid="pyqt-qd_action_rail"] .quick-setup-field-short{
+  inline-size:max-content!important;
+  max-inline-size:100%!important;
+  display:grid!important;
+  grid-template-columns:max-content 104px!important;
+  align-items:center!important;
+  gap:8px!important;
+}
+
+.quick-detection-dialog [data-testid="pyqt-qd_action_rail"] .quick-setup-field select,
+.quick-detection-dialog [data-testid="pyqt-qd_action_rail"] .quick-setup-field input:not([type="checkbox"]):not([type="radio"]){
+  width:100%!important;
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  max-inline-size:100%!important;
+}
+
+.quick-detection-main-column>[data-testid="pyqt-qd_edfInfo"],
+.quick-detection-main-column>[data-testid="pyqt-qd_filters"],
+.quick-detection-main-column>[data-testid="pyqt-quick-detector-card"]{
+  min-inline-size:0!important;
+  inline-size:100%!important;
+}
+
+.quick-detection-metadata-grid,
+.quick-detection-main-column>[data-testid="pyqt-qd_edfInfo"] .recording-info-grid.quick-detection-metadata-grid{
+  display:grid!important;
+  grid-template-columns:max-content minmax(0,1fr)!important;
+  gap:4px 12px!important;
+  align-items:center!important;
+  margin:0!important;
+}
+
+.quick-detection-main-column>[data-testid="pyqt-qd_edfInfo"] .recording-info-grid.quick-detection-metadata-grid{
+  inline-size:100%!important;
+  max-inline-size:100%!important;
+  justify-self:stretch!important;
+  margin-inline-start:0!important;
+}
+
+.quick-detection-main-column>[data-testid="pyqt-qd_edfInfo"]{
+  min-block-size:auto!important;
+}
+
+.quick-detection-metadata-grid dd:first-of-type{
+  grid-column:auto!important;
+}
+
+.quick-detection-metadata-grid dt,
+.quick-detection-metadata-grid dd{
+  min-inline-size:0!important;
+  max-inline-size:100%!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+.quick-detection-metadata-grid dt,
+.quick-detection-dialog h3{
+  font-weight:400!important;
+}
+
+.quick-detection-dialog h3{
+  margin:0!important;
+}
+
+.quick-detection-status-card h3{
+  margin-block-end:5px!important;
+}
+
+.quick-detection-metadata-grid dd{
+  inline-size:auto!important;
+  min-block-size:22px!important;
+  block-size:22px!important;
+  line-height:22px!important;
+  justify-self:stretch!important;
+}
+
+.quick-detection-grid>.quick-detection-right-rail{
+  grid-column:3!important;
+  grid-row:1!important;
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:min-content min-content!important;
+  align-content:start!important;
+  align-items:start!important;
+  gap:10px!important;
+}
+
+.quick-detection-right-rail>[data-testid="pyqt-classifier_groupbox_4"],
+.quick-detection-right-rail>[data-testid="pyqt-qd_saveAs"]{
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  max-inline-size:none!important;
+  overflow:visible!important;
+  grid-column:1!important;
+  grid-row:auto!important;
+  align-self:start!important;
+  justify-self:stretch!important;
+}
+
+.quick-detection-dialog .quick-detection-right-rail>[data-testid="pyqt-classifier_groupbox_4"]{
+  grid-template-columns:minmax(0,1fr)!important;
+  height:auto!important;
+  block-size:max-content!important;
+  max-block-size:max-content!important;
+  min-block-size:0!important;
+}

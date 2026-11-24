@@ -1,0 +1,463 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ieeg-agent.invalid/contracts/agent/action-receipt-v1.schema.json",
+  "title": "XLP-ACTION-RECEIPT-V1",
+  "description": "A durable, privacy-preserving observation of one catalog-issued UI/PyHFO action.",
+  "x-ieeg-contract-id": "XLP-ACTION-RECEIPT-V1",
+  "x-ieeg-contract-version": "ieeg-agent.v1",
+  "x-ieeg-unknown-field-policy": "reject",
+  "x-ieeg-nonterminal-statuses": ["queued", "applied", "running"],
+  "x-ieeg-conditionally-terminal-statuses": ["applied"],
+  "x-ieeg-terminal-statuses": ["complete", "failed", "rejected", "noop"],
+  "x-ieeg-success-statuses": ["complete", "applied"],
+  "$ref": "#/$defs/ActionReceipt",
+  "x-ieeg-examples": [
+    {
+      "definition": "ActionReceipt",
+      "value": {
+        "contract_version": "ieeg-agent.v1",
+        "receipt_id": "receipt-21",
+        "command_id": "mcp-4c9f",
+        "command_type": "analysis.run_qc",
+        "status": "queued",
+        "terminal": false,
+        "occurred_at": "2026-07-15T18:00:00Z",
+        "effect": "analysis",
+        "requires_confirmation": false,
+        "owner": "desktop.analysis",
+        "research_impact": "derived_evidence",
+        "idempotency": {
+          "mode": "deduplicate_by_key",
+          "key_scope": "command_type_and_payload",
+          "key_supplied": false
+        },
+        "retry": { "mode": "same_key_only", "max_attempts": 2, "backoff_ms": 500 },
+        "timeout_seconds": 120,
+        "approval_role": "none",
+        "affected_resources": ["analysis_state", "recording_context"],
+        "postcondition_name": "derived_analysis_is_recorded_and_observable",
+        "data_sensitivity": "clinical_derived",
+        "provenance": {
+          "source": "mcp",
+          "payload_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "command_effect": "analysis.run_qc",
+          "effect_class": "derived_analysis"
+        },
+        "transitions": [
+          {
+            "sequence": 0,
+            "from": null,
+            "to": "queued",
+            "observed_at": "2026-07-15T18:00:00Z",
+            "source": "broker_emit"
+          }
+        ],
+        "transition_count": 1,
+        "created_at": "2026-07-15T18:00:00Z"
+      }
+    },
+    {
+      "definition": "ActionReceipt",
+      "value": {
+        "contract_version": "ieeg-agent.v1",
+        "receipt_id": "receipt-22",
+        "request_id": "request-detect-1",
+        "message_id": "message-detect-1",
+        "conversation_id": "desktop-copilot-42",
+        "recording_fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issuance_session_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "issuance_resource_scope_sha256": "abababababababababababababababababababababababababababababababab",
+        "command_id": "mcp-detect-1",
+        "command_type": "detection.run",
+        "status": "complete",
+        "terminal": true,
+        "success": true,
+        "occurred_at": "2026-07-15T18:01:00Z",
+        "effect": "compute",
+        "requires_confirmation": true,
+        "actor": {
+          "role": "clinician",
+          "actor_id_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "session_id_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "source": "desktop_renderer"
+        },
+        "state_revision": "desktop-state-rev13",
+        "owner": "desktop.detection",
+        "research_impact": "research_output",
+        "idempotency": {
+          "mode": "deduplicate_by_key",
+          "key_scope": "command_type_and_payload",
+          "key_supplied": true,
+          "key_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        },
+        "retry": { "mode": "same_key_only", "max_attempts": 2, "backoff_ms": 1000 },
+        "timeout_seconds": 300,
+        "approval_role": "clinician",
+        "affected_resources": ["detection_runs", "analysis_state"],
+        "postcondition_name": "compute_result_and_run_provenance_are_recorded",
+        "data_sensitivity": "research_derived",
+        "provenance": {
+          "source": "mcp",
+          "payload_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "command_effect": "detection.run",
+          "effect_class": "research_compute"
+        },
+        "transitions": [
+          {
+            "sequence": 0,
+            "from": null,
+            "to": "queued",
+            "observed_at": "2026-07-15T18:00:00Z",
+            "source": "broker_emit"
+          },
+          {
+            "sequence": 1,
+            "from": "running",
+            "to": "complete",
+            "observed_at": "2026-07-15T18:01:00Z",
+            "source": "renderer_ack",
+            "state_revision": "desktop-state-rev13",
+            "conversation_id": "desktop-copilot-42",
+            "actor_id_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "session_id_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "evidence_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          }
+        ],
+        "transition_count": 4,
+        "created_at": "2026-07-15T18:00:00Z",
+        "result": {
+          "observed": { "operation_id_sha256": "1111111111111111111111111111111111111111111111111111111111111111" }
+        },
+        "postcondition": {
+          "name": "compute_result_and_run_provenance_are_recorded",
+          "state_revision": "desktop-state-rev13",
+          "verified": true,
+          "observed_at": "2026-07-15T18:01:00Z",
+          "source": "backend",
+          "evidence": { "operation_id_sha256": "1111111111111111111111111111111111111111111111111111111111111111" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "CommandType": {
+      "$ref": "ieeg-wire-v1.schema.json#/$defs/UICommandType"
+    },
+    "ActorContext": {
+      "description": "A broker-normalized actor binding; raw actor and workspace session identifiers are never retained.",
+      "type": "object",
+      "required": ["role", "actor_id_sha256", "session_id_sha256", "source"],
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": ["researcher", "clinician", "reviewer", "administrator", "service"]
+        },
+        "actor_id_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "session_id_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "source": { "type": "string", "minLength": 1, "maxLength": 64 }
+      },
+      "additionalProperties": false
+    },
+    "ReceiptStatus": {
+      "type": "string",
+      "enum": ["queued", "applied", "running", "complete", "failed", "rejected", "noop"]
+    },
+    "ApprovalRecord": {
+      "type": "object",
+      "required": ["decision", "actor", "decided_at"],
+      "properties": {
+        "decision": { "type": "string", "enum": ["approved", "rejected", "cancelled"] },
+        "actor": { "$ref": "#/$defs/ActorContext" },
+        "decided_at": { "type": "string", "format": "date-time" },
+        "approved_payload_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "Postcondition": {
+      "type": "object",
+      "required": ["name", "state_revision", "verified", "observed_at", "source", "evidence"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "state_revision": { "$ref": "#/$defs/Identifier" },
+        "verified": { "const": true },
+        "observed_at": { "type": "string", "format": "date-time" },
+        "source": { "type": "string", "minLength": 1 },
+        "evidence": { "type": "object", "minProperties": 1 }
+      },
+      "additionalProperties": false
+    },
+    "ReceiptError": {
+      "type": "object",
+      "required": ["code", "message", "retryable"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "validation_failed",
+            "scope_missing",
+            "scope_conflict",
+            "permission_denied",
+            "approval_missing",
+            "stale_state",
+            "resource_not_found",
+            "backend_busy",
+            "timeout",
+            "execution_failed",
+            "cancelled",
+            "internal_error"
+          ]
+        },
+        "message": { "type": "string", "minLength": 1 },
+        "retryable": { "type": "boolean" },
+        "safe_details": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "ActionReceipt": {
+      "type": "object",
+      "required": [
+        "contract_version",
+        "receipt_id",
+        "command_id",
+        "command_type",
+        "status",
+        "terminal",
+        "occurred_at",
+        "effect",
+        "requires_confirmation",
+        "owner",
+        "research_impact",
+        "idempotency",
+        "retry",
+        "timeout_seconds",
+        "approval_role",
+        "affected_resources",
+        "postcondition_name",
+        "data_sensitivity",
+        "provenance",
+        "transitions",
+        "transition_count",
+        "created_at"
+      ],
+      "properties": {
+        "contract_version": { "const": "ieeg-agent.v1" },
+        "receipt_id": { "$ref": "#/$defs/Identifier" },
+        "request_id": { "$ref": "#/$defs/Identifier" },
+        "conversation_id": { "$ref": "#/$defs/Identifier" },
+        "message_id": { "$ref": "#/$defs/Identifier" },
+        "recording_fingerprint": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "scope_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "issuance_session_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "issuance_resource_scope_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "command_id": { "$ref": "#/$defs/Identifier" },
+        "command_type": { "$ref": "#/$defs/CommandType" },
+        "status": { "$ref": "#/$defs/ReceiptStatus" },
+        "terminal": { "type": "boolean" },
+        "success": { "type": "boolean" },
+        "occurred_at": { "type": "string", "format": "date-time" },
+        "effect": {
+          "type": "string",
+          "enum": ["view", "read", "analysis", "compute", "artifact_write", "review_write", "destructive"]
+        },
+        "requires_confirmation": { "type": "boolean" },
+        "actor": { "$ref": "#/$defs/ActorContext" },
+        "state_revision": { "$ref": "#/$defs/Identifier" },
+        "owner": { "type": "string", "minLength": 1 },
+        "research_impact": { "type": "string", "minLength": 1 },
+        "idempotency": {
+          "type": "object",
+          "required": ["mode", "key_scope", "key_supplied"],
+          "properties": {
+            "mode": { "type": "string", "enum": ["idempotent", "deduplicate_by_key", "non_idempotent"] },
+            "key_scope": { "type": "string", "minLength": 1 },
+            "key_supplied": { "type": "boolean" },
+            "key_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" }
+          },
+          "additionalProperties": false
+        },
+        "retry": {
+          "type": "object",
+          "required": ["mode", "max_attempts", "backoff_ms"],
+          "properties": {
+            "mode": { "type": "string", "enum": ["safe", "same_key_only", "never"] },
+            "max_attempts": { "type": "integer", "minimum": 1 },
+            "backoff_ms": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "timeout_seconds": { "type": "number", "exclusiveMinimum": 0 },
+        "approval_role": { "type": "string", "enum": ["none", "clinician"] },
+        "affected_resources": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "postcondition_name": { "type": "string", "minLength": 1 },
+        "data_sensitivity": { "type": "string", "minLength": 1 },
+        "provenance": {
+          "type": "object",
+          "required": ["source", "payload_sha256", "command_effect", "effect_class"],
+          "properties": {
+            "source": { "const": "mcp" },
+            "payload_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+            "command_effect": { "type": "string", "minLength": 1 },
+            "effect_class": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "transitions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "required": ["sequence", "from", "to", "observed_at", "source"],
+            "properties": {
+              "sequence": { "type": "integer", "minimum": 0 },
+              "from": {
+                "oneOf": [
+                  { "type": "null" },
+                  { "$ref": "#/$defs/ReceiptStatus" }
+                ]
+              },
+              "to": { "$ref": "#/$defs/ReceiptStatus" },
+              "observed_at": { "type": "string", "format": "date-time" },
+              "source": { "type": "string", "enum": ["broker_emit", "renderer_ack"] },
+              "state_revision": { "$ref": "#/$defs/Identifier" },
+              "conversation_id": { "$ref": "#/$defs/Identifier" },
+              "actor_id_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+              "session_id_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+              "evidence_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "transition_count": { "type": "integer", "minimum": 1 },
+        "created_at": { "type": "string", "format": "date-time" },
+        "result": { "type": "object", "minProperties": 1 },
+        "postcondition": { "$ref": "#/$defs/Postcondition" },
+        "reason": { "type": "string", "minLength": 1 },
+        "error": { "$ref": "#/$defs/ReceiptError" }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": { "requires_confirmation": { "const": true } },
+            "required": ["requires_confirmation"]
+          },
+          "then": {
+            "required": [
+              "request_id",
+              "message_id",
+              "conversation_id",
+              "state_revision",
+              "issuance_session_sha256",
+              "issuance_resource_scope_sha256"
+            ]
+          }
+        },
+        {
+          "if": { "properties": { "status": { "enum": ["queued", "running"] } }, "required": ["status"] },
+          "then": {
+            "properties": { "terminal": { "const": false } },
+            "not": { "anyOf": [{ "required": ["success"] }, { "required": ["postcondition"] }] }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": { "const": "applied" },
+              "effect": { "enum": ["analysis", "compute", "artifact_write", "review_write", "destructive"] }
+            },
+            "required": ["status", "effect"]
+          },
+          "then": {
+            "properties": { "terminal": { "const": false } },
+            "not": { "anyOf": [{ "required": ["success"] }, { "required": ["postcondition"] }] }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": { "const": "applied" },
+              "effect": { "enum": ["view", "read"] }
+            },
+            "required": ["status", "effect"]
+          },
+          "then": {
+            "required": ["success", "result", "postcondition"],
+            "properties": { "terminal": { "const": true }, "success": { "const": true } },
+            "not": { "required": ["error"] }
+          }
+        },
+        {
+          "if": { "properties": { "status": { "const": "complete" } }, "required": ["status"] },
+          "then": {
+            "required": ["success", "result", "postcondition"],
+            "properties": { "terminal": { "const": true }, "success": { "const": true } },
+            "not": { "required": ["error"] }
+          }
+        },
+        {
+          "if": { "properties": { "status": { "enum": ["failed", "rejected", "noop"] } }, "required": ["status"] },
+          "then": {
+            "required": ["success", "reason"],
+            "properties": { "terminal": { "const": true }, "success": { "const": false } },
+            "not": { "required": ["postcondition"] }
+          }
+        },
+        {
+          "if": { "properties": { "status": { "const": "failed" } }, "required": ["status"] },
+          "then": { "required": ["error"] }
+        },
+        {
+          "if": { "properties": { "status": { "enum": ["applied", "running", "complete"] } }, "required": ["status"] },
+          "then": { "required": ["conversation_id", "state_revision"] }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": { "enum": ["applied", "running", "complete"] },
+              "effect": { "enum": ["compute", "artifact_write", "review_write", "destructive"] }
+            },
+            "required": ["status", "effect"]
+          },
+          "then": {
+            "required": ["actor"],
+            "properties": {
+              "approval_role": { "const": "clinician" },
+              "actor": { "properties": { "role": { "const": "clinician" } } }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "effect": { "const": "review_write" },
+              "terminal": { "const": true }
+            },
+            "required": ["effect", "terminal"]
+          },
+          "then": {
+            "required": [
+              "request_id",
+              "message_id",
+              "conversation_id",
+              "state_revision",
+              "recording_fingerprint",
+              "scope_sha256"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

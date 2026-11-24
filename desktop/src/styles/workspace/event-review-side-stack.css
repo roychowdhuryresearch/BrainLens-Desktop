@@ -1,0 +1,62 @@
+/* Event Review side-stack source-order owner. The side stack is display:contents
+   (see event-review-right-column-flow.css), so these `order` values sort in the
+   detail card's single flex context, interleaved with the card's own children.
+   Full review-loop order (side-stack items marked *):
+     0  Title (h3)
+     1* Annotation Progress      (glanceable status)
+     2  Event Information        (what event is this)
+     3* Annotation queue         (pick an event)
+     4* Navigation               (Prev/Next/Prev Open/Next Open)
+     5* Event type               (choose the label)  ┐ adjacent to
+     6  Save + Next / Reject…    (commit)            ┘ the label
+     7  Notes
+     8* Interval                 ┐
+     9* Review Scope + Match     ├ view/filter tools
+    10* Frequency controls       ┘
+    11  Event Feature Summary
+    12  Status line
+   The three direct <label class="annotation-select-row"> children are, in
+   source order: nth-of-type(1)=Queue, (2)=Event type, (3)=Interval. */
+.annotation-side-stack [data-testid="pyqt-progressCard"]{order:1!important}
+.annotation-side-stack>label.annotation-select-row:nth-of-type(1){order:3!important}
+.annotation-side-stack .annotation-navigation-row{order:4!important}
+.annotation-side-stack>label.annotation-select-row:nth-of-type(2){order:5!important}
+.annotation-side-stack>label.annotation-select-row:nth-of-type(3){order:8!important}
+.annotation-side-stack [data-testid="pyqt-predictionScopeCard"]{order:9!important}
+.annotation-side-stack [data-testid="pyqt-frequency_range_group"]{
+  order:10!important;
+  position:static!important;
+}
+
+/* Prediction-scope card: cap RETIRED (was max-block-size:160→220 + overflow:auto).
+   Its own scroll clipped the dropdown / Prev-Next Match buttons at narrow
+   viewports once the one-row scope layout wraps tall. The detail column already
+   scrolls, so the card no longer needs an internal cap — let it size to content. */
+.annotation-side-stack [data-testid="pyqt-predictionScopeCard"]{
+  max-block-size:none!important;
+  overflow:visible!important;
+  overscroll-behavior:contain!important;
+}
+
+.event-review-dialog .annotation-side-stack .annotation-navigation-row button{
+  white-space:nowrap!important;
+  text-overflow:clip!important;
+}
+
+/* Event type + Interval rows lay out as a fixed label column + full-width
+   control, so the selects fill the column (and align with each other) instead
+   of sitting natural-width with dead space to their right. nth-of-type(2)/(3)
+   are the Event and Interval labels; nth-of-type(1) is the queue row, which
+   owns its own full-width grid in event-review-progress-flow.css. */
+.annotation-side-stack>label.annotation-select-row:nth-of-type(2),
+.annotation-side-stack>label.annotation-select-row:nth-of-type(3){
+  display:grid!important;
+  grid-template-columns:58px minmax(0,1fr)!important;
+  align-items:center!important;
+  gap:6px!important;
+}
+.annotation-side-stack>label.annotation-select-row:nth-of-type(2)>select,
+.annotation-side-stack>label.annotation-select-row:nth-of-type(3)>select{
+  inline-size:100%!important;
+  min-inline-size:0!important;
+}

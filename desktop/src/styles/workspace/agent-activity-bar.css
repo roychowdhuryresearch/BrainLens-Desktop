@@ -1,0 +1,93 @@
+/* Agent activity bar owner. Owns the fixed activity rail, icon-only buttons, active indicator, and hidden labels. */
+.agent-activity-bar button{
+  position:relative!important;
+  display:grid!important;
+  place-items:center!important;
+}
+
+.agent-activity-bar button::before{
+  content:""!important;
+  position:absolute!important;
+  left:-4px!important;
+  top:7px!important;
+  bottom:7px!important;
+  width:3px!important;
+  border-radius:999px!important;
+  background:transparent!important;
+}
+
+/* Active state is carried by the filled cobalt button below; the left accent
+   bar stays transparent so it never fuses with the same-color button edge. */
+.agent-activity-bar button.active::before{
+  background:transparent!important;
+}
+
+.agent-activity-bar .activity-icon{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;
+  font-size:var(--fs-md)!important;
+  font-weight:400!important;
+  line-height:1!important;
+}
+
+.agent-activity-bar .activity-icon svg{
+  display:block!important;
+}
+
+.agent-activity-bar .activity-label{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+  border:0!important;
+}
+
+.agent-activity-bar{
+  grid-column:2!important;
+  grid-row:1!important;
+  inline-size:var(--agent-rail-width)!important;
+  width:var(--agent-rail-width)!important;
+  block-size:100vh!important;
+  height:100vh!important;
+  display:grid!important;
+  grid-auto-rows:36px!important;
+  align-content:start!important;
+  justify-items:center!important;
+  gap:6px!important;
+  padding:8px 6px!important;
+  overflow:hidden!important;
+  border-left-color:var(--lab-line)!important;
+  background:#edf3f5!important;
+}
+
+.agent-activity-bar button{
+  inline-size:34px!important;
+  min-inline-size:34px!important;
+  max-inline-size:34px!important;
+  block-size:34px!important;
+  min-block-size:34px!important;
+  max-block-size:34px!important;
+  padding:0!important;
+  border-color:var(--lab-line)!important;
+  border-radius:8px!important;
+  background:#ffffff!important;
+  color:var(--lab-muted)!important;
+  box-shadow:none!important;
+}
+
+.agent-activity-bar button:hover{
+  border-color:var(--lab-line-strong)!important;
+  background:#eef2f7!important;
+  color:var(--lab-cobalt-2)!important;
+  box-shadow:none!important;
+}
+
+.agent-activity-bar button.active{
+  border-color:var(--lab-cobalt-2)!important;
+  background:var(--lab-cobalt)!important;
+  color:#fff!important;
+  box-shadow:0 1px 2px rgba(20,33,61,.18)!important;
+}

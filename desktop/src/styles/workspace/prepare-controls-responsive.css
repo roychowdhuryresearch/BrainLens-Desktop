@@ -1,0 +1,84 @@
+/* Prepare controls responsive owner. Compact-window field and action
+   reflow belongs here so base field/action files stay size-stable. */
+@container (max-width:1080px){
+  .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-toggle-grid,
+  .workspace-tab-panel[data-active-tab="Prepare"] .prepare-toggle-grid{
+    grid-template-columns:repeat(4,max-content)!important;
+  }
+}
+
+@container (max-width:520px){
+  .workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel .field-grid.compact{
+    grid-template-columns:repeat(2,minmax(0,var(--ui-density-field-short)))!important;
+  }
+}
+
+@media(max-height:820px){
+  .workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel{
+    padding-block:4px!important;
+    gap:3px!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel .prepare-section-heading{
+    min-block-size:16px!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel .prepare-section-heading .status-pill{
+    display:none!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Prepare"] .prepare-control-cluster{
+    gap:3px!important;
+  }
+
+  .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .runtime-control-row,
+  .workspace-tab-panel[data-active-tab="Prepare"] .runtime-control-row{
+    grid-template-columns:repeat(4,minmax(0,var(--ui-density-field-short)))!important;
+    gap:var(--ui-density-gap-y) 11px!important;
+    transform:none!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Prepare"] .prepare-runtime-action,
+  .workspace-tab-panel[data-active-tab="Prepare"] .runtime-control-row button,
+  .workspace-tab-panel[data-active-tab="Prepare"] .runtime-control-row input:not([type="checkbox"]):not([type="radio"]),
+  .workspace-tab-panel[data-active-tab="Prepare"] .prepare-runtime-jobs{
+    block-size:32px!important;
+    min-block-size:32px!important;
+    max-block-size:32px!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Prepare"] .prepare-runtime-action{
+    inline-size:72px!important;
+    min-inline-size:72px!important;
+    max-inline-size:72px!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Prepare"] .prepare-runtime-jobs{
+    grid-template-columns:56px max-content!important;
+    column-gap:1px!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Prepare"] .prepare-runtime-jobs input:not([type="checkbox"]):not([type="radio"]){
+    inline-size:56px!important;
+    width:56px!important;
+    max-inline-size:56px!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Prepare"] .prepare-toggle-grid{
+    padding:1px 4px!important;
+    gap:1px 10px!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Prepare"] .prepare-toggle-option{
+    min-block-size:17px!important;
+  }
+
+  .pyqt-main-window:not([data-agent-open="true"]) .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel .field-grid.compact,
+  .pyqt-main-window:not([data-agent-open="true"]) .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-strategy-grid,
+  .pyqt-main-window:not([data-agent-open="true"]) .pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .runtime-control-row,
+  .pyqt-main-window:not([data-agent-open="true"]) .workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel .field-grid.compact,
+  .pyqt-main-window:not([data-agent-open="true"]) .workspace-tab-panel[data-active-tab="Prepare"] .prepare-strategy-grid,
+  .pyqt-main-window:not([data-agent-open="true"]) .workspace-tab-panel[data-active-tab="Prepare"] .runtime-control-row{
+    column-gap:24px!important;
+  }
+}

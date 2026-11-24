@@ -1,0 +1,148 @@
+.DS_Store
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+config.yaml
+user_config.yaml
+.claude/
+
+# Runtime data, generated assets, and databases
+data/
+logs/
+.omc/
+**/.omc/
+.tmp/
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+*.sqlite-*
+*.sqlite3-*
+*.log
+*.log.*
+*.sqlite
+*.sqlite3
+
+# EEG/recording payloads stay local
+*.edf
+*.bdf
+*.fif
+*.fif.gz
+*.vhdr
+*.eeg
+*.vmrk
+*.set
+*.cnt
+*.fdt
+*.gdf
+*.trc
+*.nwb
+*.pybrain
+
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.hypothesis/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Build outputs
+build/
+dist/
+*.egg-info/
+
+# Bundled PyHFO local/runtime outputs
+pyhfo/.venv/
+pyhfo/venv/
+pyhfo/.pytest_cache/
+pyhfo/.idea/
+pyhfo/artifacts/
+pyhfo/states/
+pyhfo/*.edf
+pyhfo/*.bdf
+pyhfo/*.fif
+pyhfo/*.fif.gz
+pyhfo/*.vhdr
+pyhfo/*.eeg
+pyhfo/*.vmrk
+pyhfo/*.xlsx
+
+# Local OMX runtime state
+.omx/
+desktop/node_modules/
+desktop/dist-renderer/
+desktop/dist-electron/
+.pyhfo_agent_projects/
+.pyhfo_agent_exports/
+desktop/artifacts/
+
+# Agent / PyHFO runtime outputs (regenerated locally, never committed)
+/analysis/
+pyhfo/output/
+pyhfo/run-*/
+pyhfo/analysis/
+
+# Eval run logs and generated reports (the harness + scenarios stay tracked)
+evals/*.log
+evals/report_*.json
+evals/trajectory_eval_report.json
+
+# Local media renders (1GB+) and optimize-loop run history (regenerated locally, never committed)
+videos/
+evals/optimize/history.jsonl
+
+# ONNX export outputs (hosted on HF Hub, not git)
+pyhfo/ckpt_onnx/
+*.onnx
+
+# Local scratch from working sessions (never committed): underscore-prefixed one-off repro/probe
+# scripts, ad-hoc eval probes + generated clinical report, a session note, and the standalone
+# HyperFrames demo-video project (~450MB, has its own node_modules).
+demo-video/
+desktop/scripts/_*.mjs
+evals/_*.py
+evals/_*.json
+evals/clinical/clinical_eval_report.json
+docs/agent-latency-optimization-2026-06-15.md
+progress.txt
+
+# Release build output (electron-builder default). Multi-GB installer + unpacked app.
+ieeg-release/
+
+# Developer-local configuration, test outputs and credentials
+.DS_Store
+.codex/
+.agents/
+.aws/
+.idea/
+.vscode/
+*.pem
+*.key
+node_modules/
+evals/**/*_report.json
+evals/**/trajectories.jsonl
+/trajectories.jsonl
+
+# Local evaluations and recording-derived artifacts
+/skills/test/
+/skills/submitted_skills.json
+/runs/
+*.[eE][dD][fF]
+*.[bB][dD][fF]
+*.[fF][iI][fF]
+*.[fF][iI][fF].[gG][zZ]
+*.[vV][hH][dD][rR]
+*.[vV][mM][rR][kK]
+*.[eE][eE][gG]
+*.npz
+*.npy
+*.mat
+*.h5
+*.hdf5

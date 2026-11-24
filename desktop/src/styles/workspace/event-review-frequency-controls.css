@@ -1,0 +1,153 @@
+/* Event Review frequency controls owner. Frequency range field geometry is
+   scoped to the annotation dialog and does not use unscoped data-testid
+   overrides. */
+.event-review-dialog .annotation-side-stack [data-testid="pyqt-frequency_range_group"],
+.annotation-side-stack [data-testid="pyqt-frequency_range_group"]{
+  grid-column:1 / -1!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,92px)!important;
+  grid-template-rows:auto!important;
+  justify-content:start!important;
+  align-items:end!important;
+  gap:6px 8px!important;
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  max-inline-size:100%!important;
+  min-block-size:0!important;
+  max-block-size:none!important;
+  padding-inline:0!important;
+  overflow:visible!important;
+}
+
+.event-review-dialog .annotation-side-stack [data-testid="pyqt-frequency_range_group"] .frequency-controls,
+.annotation-side-stack [data-testid="pyqt-frequency_range_group"] .frequency-controls{
+  display:grid!important;
+  grid-template-columns:repeat(3,92px)!important;
+  justify-content:start!important;
+  align-items:end!important;
+  gap:8px!important;
+  max-block-size:none!important;
+  overflow:visible!important;
+}
+
+.event-review-dialog .annotation-side-stack [data-testid="pyqt-frequency_range_group"] label,
+.annotation-side-stack [data-testid="pyqt-frequency_range_group"] label,
+.event-review-dialog .annotation-side-stack [data-testid="pyqt-frequency_range_group"] .frequency-controls label,
+.annotation-side-stack [data-testid="pyqt-frequency_range_group"] .frequency-controls label{
+  display:grid!important;
+  grid-template-rows:auto var(--ui-control-h)!important;
+  gap:2px!important;
+  min-inline-size:0!important;
+}
+
+.event-review-dialog .annotation-side-stack [data-testid="pyqt-frequency_range_group"] input,
+.annotation-side-stack [data-testid="pyqt-frequency_range_group"] input,
+.event-review-dialog [data-testid="pyqt-spinBox_minFreq"],
+.event-review-dialog [data-testid="pyqt-spinBox_maxFreq"]{
+  width:92px!important;
+  inline-size:92px!important;
+  min-inline-size:92px!important;
+  max-inline-size:92px!important;
+  margin-inline-start:-1px!important;
+}
+
+.event-review-dialog .annotation-side-stack [data-testid="pyqt-frequency_range_group"] button,
+.annotation-side-stack [data-testid="pyqt-frequency_range_group"] button,
+.event-review-dialog [data-testid="pyqt-SetFreqLimit"]{
+  width:92px!important;
+  inline-size:92px!important;
+  min-inline-size:92px!important;
+  max-inline-size:92px!important;
+}
+
+/* Frequency-range bar relocated into the LEFT plot column (between Time-Frequency
+   and FFT): Min/Max Hz drives BOTH spectral plots, so the control sits with them
+   instead of in the right-hand annotation controls. Compact horizontal strip;
+   its flex `order` is set in event-review-detail.css. */
+.event-review-left-panel [data-testid="pyqt-frequency_range_group"]{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  inline-size:100%!important;
+  min-block-size:0!important;
+  block-size:100%!important;
+  padding:0 8px!important;
+  overflow:hidden!important;
+}
+.event-review-left-panel [data-testid="pyqt-frequency_range_group"] .freq-bar-title{
+  font-size:var(--fs-sm)!important;
+  font-weight:600!important;
+  color:#41506a!important;
+  white-space:nowrap!important;
+}
+.event-review-left-panel [data-testid="pyqt-frequency_range_group"] label{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  font-size:var(--fs-xs)!important;
+  color:#53667a!important;
+  white-space:nowrap!important;
+}
+.event-review-left-panel [data-testid="pyqt-frequency_range_group"] input{
+  inline-size:84px!important;
+  min-inline-size:84px!important;
+  max-inline-size:84px!important;
+}
+.event-review-left-panel [data-testid="pyqt-frequency_range_group"] button{
+  white-space:nowrap!important;
+  /* match the 84px inputs so the freq group passes the control-width-drift gate */
+  inline-size:84px!important;
+  min-inline-size:84px!important;
+  max-inline-size:84px!important;
+}
+
+/* Compact + SHORT Frequency-range group when folded into the bottom view-controls
+   toolbar (placement + right-push live in event-review-view-controls.css): narrow
+   52px inputs and a 24px control height so it sits in the toolbar's dead space as a
+   short strip, not a tall standalone row. */
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-frequency_range_group"]{
+  display:flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  inline-size:auto!important;
+  block-size:auto!important;
+  min-block-size:0!important;
+  padding:0!important;
+  overflow:visible!important;
+}
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-frequency_range_group"] label{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:4px!important;
+  font-size:var(--fs-xs)!important;
+  white-space:nowrap!important;
+}
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-frequency_range_group"] input{
+  inline-size:56px!important;
+  min-inline-size:56px!important;
+  max-inline-size:56px!important;
+  block-size:28px!important;
+  min-block-size:28px!important;
+  padding-block:0!important;
+  font-size:var(--fs-xs)!important;
+}
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-frequency_range_group"] button{
+  inline-size:48px!important;
+  min-inline-size:48px!important;
+  max-inline-size:48px!important;
+  block-size:34px!important;
+  min-block-size:34px!important;
+  padding-inline:0!important;
+  font-size:var(--fs-xs)!important;
+  white-space:nowrap!important;
+}
+/* Drop the number-input spinner arrows so "1000" fits the compact 44px input. */
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-frequency_range_group"] input{
+  appearance:textfield!important;
+  -moz-appearance:textfield!important;
+}
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-frequency_range_group"] input::-webkit-outer-spin-button,
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-frequency_range_group"] input::-webkit-inner-spin-button{
+  -webkit-appearance:none!important;
+  margin:0!important;
+}

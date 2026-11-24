@@ -1,0 +1,213 @@
+/* Waveform header chrome owner. Header typography, loaded biomarker relocation,
+   waveform workflow shortcuts, and mode badges live here. */
+/* Contract anchors retained while header ownership lives here:
+   Loaded waveform header relocation, PyQt loaded biomarker-header relocation parity,
+   PyQt workflowHeader/workflowSteps parity,
+   PyQt main waveform dominance parity, grid-template-rows:48px 44px 118px 58px 96px minmax(0,1fr) 32px,
+   grid-template-rows:48px 44px 58px 96px minmax(0,1fr) 32px,
+   grid-template-rows:44px 38px 84px 48px 82px minmax(0,1fr) 30px. */
+.waveform-header{
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  box-shadow:var(--lab-card-shadow)!important;
+}
+
+.waveform-header h1{
+  color:#172331!important;
+  font-weight:400!important;
+}
+
+.waveform-header p{
+  color:#465a6f!important;
+  font-weight:400!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]{
+  grid-template-rows:42px 0 0 62px 64px minmax(0,1fr) 28px;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]>.biomarker-bar{
+  visibility:hidden;
+  pointer-events:none;
+  block-size:0;
+  max-block-size:0;
+  min-block-size:0;
+  padding:0;
+  margin:0;
+  border:0;
+  overflow:hidden;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-header{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  justify-content:flex-start!important;
+  align-items:start;
+  gap:12px!important;
+  /* Match the 8px horizontal gutter of the toolbar/plot cards below so the
+     title lines up over "Signal" and the action buttons end on the same right
+     edge — a clean vertical rhythm down the left column. */
+  padding:2px 8px 5px 8px;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-header-copy{
+  min-width:0;
+  display:grid;
+  gap:1px;
+  align-content:start;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-header-title-row{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* Recording info lives next to the title (relocated out of the right action
+   cluster). A chromeless "details" file-glyph icon button — no border/box so it
+   reads as a quiet affordance beside the heading instead of a control competing
+   with the title. The 30px footprint keeps it on the control-size gate; a soft
+   tinted square surfaces only on hover. */
+.pyqt-workspace-shell[data-loaded="true"] .waveform-header-info-button{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  inline-size:30px!important;
+  min-inline-size:30px!important;
+  block-size:30px!important;
+  min-block-size:30px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:8px!important;
+  background:transparent!important;
+  color:var(--lab-muted)!important;
+  box-shadow:none!important;
+  transition:color .12s ease,background-color .12s ease;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-header-info-button svg{
+  inline-size:16px;
+  block-size:16px;
+  display:block;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-header-info-button:hover{
+  background:#eef2f7!important;
+  color:var(--window-primary)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-header-title-row h1{
+  flex:0 0 auto;
+  margin:0;
+  font-size:var(--fs-base);
+  line-height:1.15;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-header-chips{
+  min-width:0;
+  display:grid;
+  gap:3px;
+  align-content:start;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-header-mode-badges{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  flex-wrap:wrap;
+  /* Sits directly under the file path rather than floating clear of it. */
+  margin-block-start:1px;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-header-mode-badges span{
+  padding:.08rem .38rem;
+  font-size:var(--fs-xs);
+  line-height:1.25;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-header p{
+  margin:0;
+  font-size:var(--fs-xs);
+  line-height:1.15;
+  font-weight:400!important;
+  color:#475569;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-header-actions{
+  align-self:center!important;
+  display:flex;
+  gap:6px;
+  margin-inline-start:0!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-header-actions button{
+  min-block-size:var(--ui-action-h)!important;
+  block-size:var(--ui-action-h)!important;
+  font-size:var(--fs-base)!important;
+  line-height:1.1!important;
+  letter-spacing:0!important;
+}
+
+/* Reset clears workspace state. Keep it offset from the workflow actions, but
+   retain complete button chrome so it doesn't read as a clipped group segment. */
+.pyqt-workspace-shell[data-loaded="true"]>.waveform-header .waveform-header-actions [data-testid="pyqt-waveform_reset_view_button"]{
+  inline-size:auto!important;
+  width:auto!important;
+  min-inline-size:72px!important;
+  max-inline-size:none!important;
+  padding-inline:12px!important;
+  margin-inline-start:10px!important;
+  border-color:#b8c7d2!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  color:#1f3446!important;
+  box-shadow:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]>.waveform-header .waveform-header-actions [data-testid="pyqt-waveform_reset_view_button"]:hover{
+  border-color:#5caea7!important;
+  background:#eef7f6!important;
+  color:#0d5e57!important;
+}
+
+/* PyQt waveform context badges parity: source/scope/tool chips reflect live
+   controls. */
+.waveform-mode-badges span[data-active="true"],
+.waveform-header-mode-badges span[data-active="true"]{
+  padding:.12rem .5rem!important;
+  border:1px solid #60a5fa!important;
+  border-radius:999px!important;
+  background:#eff6ff!important;
+  color:#1d4ed8!important;
+}
+
+.waveform-workflow-actions{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(58px,max-content))!important;
+  align-items:center!important;
+  gap:6px!important;
+}
+
+.waveform-workflow-actions button{
+  min-inline-size:max-content;
+  min-block-size:34px!important;
+  border-color:#b8c7d2!important;
+  background:#fff!important;
+  color:#1f3446!important;
+  box-shadow:none!important;
+}
+
+.waveform-workflow-actions button.active,
+.waveform-workflow-actions button:hover{
+  border-color:#5caea7!important;
+  background:#eef7f6!important;
+  color:#0d5e57!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]) .waveform-workflow-actions{
+  display:none!important;
+}

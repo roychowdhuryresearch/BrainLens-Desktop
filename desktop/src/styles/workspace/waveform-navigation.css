@@ -1,0 +1,224 @@
+/* Waveform navigation owner.
+   Owns the loaded waveform plot surface, scroll rails, and overview minimap.
+   Toolbar controls live in the waveform-toolbar-* owner files; review rail
+   controls live in the review rail owner. */
+/* PyQt light waveform plot parity. */
+.waveform-canvas{
+  background:#ffffff!important;
+  border-color:var(--lab-line)!important;
+}
+
+@media(max-height:820px){
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .waveform-stage{
+    grid-template-rows:minmax(204px,1fr) auto!important;
+  }
+
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .waveform-pane{
+    block-size:auto!important;
+    min-block-size:204px!important;
+    max-block-size:none!important;
+  }
+}
+
+/* Modern waveform navigation: one clear plot viewport, a slim channel rail,
+   a single time scrubber, and a compact overview minimap. This keeps the PyQt
+   test ids and range semantics while removing the duplicated native-scrollbar
+   look that made the waveform scrolling feel misaligned. */
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane{
+  --waveform-nav-track:#dbe5f0;
+  --waveform-nav-thumb:var(--lab-cobalt);
+  --waveform-nav-thumb-soft:#aebfd6;
+  --waveform-nav-surface:#f8fbff;
+  --waveform-nav-border:#d6e1ec;
+  grid-template-rows:minmax(0,1fr) 34px!important;
+  overflow:hidden!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .waveform-plot-shell{
+  display:grid!important;
+  grid-template-columns:32px minmax(0,1fr)!important;
+  grid-template-rows:minmax(0,1fr) 32px!important;
+  gap:6px!important;
+  min-block-size:0!important;
+  /* Leave the pane's 34px overview row (see grid-template-rows above) for the
+     full-recording overview minimap. block-size:100% resolves against the
+     contain:size pane (its full height), so a bare 100% makes the plot fill the
+     whole pane and pushes the overview minimap into the clipped overflow — making
+     it vanish. Subtracting the overview row keeps the minimap visible. */
+  block-size:calc(100% - 34px)!important;
+  padding:8px 8px 6px 6px!important;
+  border:1px solid var(--waveform-nav-border)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  overflow:hidden!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .waveform-canvas{
+  grid-column:2!important;
+  grid-row:1!important;
+  min-block-size:0!important;
+  block-size:100%!important;
+  border:0!important;
+  border-radius:4px!important;
+  background:#fff!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .channel-scrollbar{
+  grid-column:1!important;
+  grid-row:1 / span 2!important;
+  align-items:stretch!important;
+  justify-content:center!important;
+  min-inline-size:32px!important;
+  inline-size:32px!important;
+  padding:4px 0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .time-scrollbar{
+  grid-column:2!important;
+  grid-row:2!important;
+  display:flex!important;
+  align-items:center!important;
+  min-block-size:32px!important;
+  block-size:32px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .waveform-overview-axis{
+  display:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .channel-scrollbar input,
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .time-scrollbar input{
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  border:0!important;
+  background:transparent!important;
+  margin:0!important;
+  cursor:pointer!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .channel-scrollbar input{
+  writing-mode:vertical-rl!important;
+  direction:rtl!important;
+  transform:none!important;
+  inline-size:16px!important;
+  width:16px!important;
+  block-size:100%!important;
+  height:100%!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .time-scrollbar input{
+  inline-size:100%!important;
+  width:100%!important;
+  block-size:18px!important;
+  height:18px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .time-scrollbar input::-webkit-slider-runnable-track{
+  block-size:4px!important;
+  border:0!important;
+  border-radius:999px!important;
+  background:linear-gradient(90deg,var(--waveform-nav-thumb-soft),var(--waveform-nav-track))!important;
+  box-shadow:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .channel-scrollbar input::-webkit-slider-runnable-track{
+  inline-size:4px!important;
+  border:0!important;
+  border-radius:999px!important;
+  background:linear-gradient(180deg,var(--waveform-nav-track),var(--waveform-nav-thumb-soft))!important;
+  box-shadow:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .time-scrollbar input::-webkit-slider-thumb,
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .channel-scrollbar input::-webkit-slider-thumb{
+  -webkit-appearance:none!important;
+  inline-size:11px!important;
+  block-size:11px!important;
+  margin-block-start:-4px!important;
+  border:2px solid #fff!important;
+  border-radius:999px!important;
+  background:var(--waveform-nav-thumb)!important;
+  box-shadow:0 1px 3px rgba(32,90,155,.24)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .channel-scrollbar input::-webkit-slider-thumb{
+  margin-block-start:0!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .time-scrollbar input::-moz-range-track,
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .channel-scrollbar input::-moz-range-track{
+  border:0!important;
+  border-radius:999px!important;
+  background:var(--waveform-nav-track)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .time-scrollbar input::-moz-range-thumb,
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .channel-scrollbar input::-moz-range-thumb{
+  inline-size:11px!important;
+  block-size:11px!important;
+  border:2px solid #fff!important;
+  border-radius:999px!important;
+  background:var(--waveform-nav-thumb)!important;
+  box-shadow:0 1px 3px rgba(32,90,155,.24)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .waveform-overview{
+  min-block-size:30px!important;
+  display:grid!important;
+  grid-template-rows:30px!important;
+  gap:0!important;
+  margin-block-start:2px!important;
+  padding-inline:26px 8px!important;
+  overflow:hidden!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .waveform-overview-canvas{
+  block-size:30px!important;
+  height:30px!important;
+  border:1px solid var(--waveform-nav-border)!important;
+  border-radius:var(--lab-radius)!important;
+  background:var(--waveform-nav-surface)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .waveform-overview-label{
+  position:absolute!important;
+  inline-size:1px!important;
+  block-size:1px!important;
+  margin:-1px!important;
+  padding:0!important;
+  border:0!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+}
+
+@media(max-width:760px){
+  .pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane{
+    grid-template-rows:minmax(0,1fr) 32px!important;
+  }
+
+  .pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .waveform-plot-shell{
+    grid-template-columns:32px minmax(0,1fr)!important;
+    grid-template-rows:minmax(0,1fr) 32px!important;
+    gap:5px!important;
+    padding:6px 6px 5px 4px!important;
+  }
+
+  .pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .waveform-overview{
+    grid-template-rows:28px!important;
+    min-block-size:28px!important;
+    padding-inline:22px 6px!important;
+  }
+
+  .pyqt-workspace-shell[data-loaded="true"] .waveform-stage>.waveform-pane .waveform-overview-canvas{
+    block-size:28px!important;
+    height:28px!important;
+  }
+}

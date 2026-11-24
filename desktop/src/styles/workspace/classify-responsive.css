@@ -1,0 +1,61 @@
+/* Classify responsive owner.
+   Owns Classify-only folding across the workbench grid, execution card, source
+   card rows, and parameter/status rows. */
+@media(max-width:980px){
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-workbench-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-areas:
+      "setup"
+      "stack"
+      "local"
+      "hub"!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-header-card{
+    grid-template-columns:max-content!important;
+    grid-template-areas:none!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-mode-row,
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-status-list,
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-ignore-grid{
+    grid-column:1!important;
+    grid-area:auto!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-status-list{
+    grid-template-columns:repeat(2,max-content)!important;
+    justify-content:start!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-source-list{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-source-list .model-source-row{
+    grid-template-columns:minmax(0,1fr) 110px!important;
+    max-inline-size:none!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-source-card label{
+    max-inline-size:none!important;
+  }
+}
+
+@media(max-width:900px){
+  .workspace-tab-panel[data-active-tab="Classify"] .classify-layout,
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-workbench-grid,
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-header-card{
+    inline-size:min(100%,calc(100vw - var(--agent-rail-width,48px) - 24px))!important;
+    max-inline-size:calc(100vw - var(--agent-rail-width,48px) - 24px)!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-controls-card{
+    inline-size:100%!important;
+    max-inline-size:calc(100vw - var(--agent-rail-width,48px) - 24px)!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-control-grid{
+    grid-template-columns:repeat(2,max-content)!important;
+  }
+}

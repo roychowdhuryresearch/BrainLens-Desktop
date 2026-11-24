@@ -1,0 +1,36 @@
+/* Prepare control chrome owner. Visual treatment for Prepare scalar fields
+   and runtime controls lives here; sizing belongs to field/action owners. */
+.workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel input:not([type="checkbox"]):not([type="radio"]),
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-strategy-grid input,
+.workspace-tab-panel[data-active-tab="Prepare"] .runtime-control-row input{
+  border-color:#afc1cd!important;
+  background:#fff!important;
+  color:#16212a!important;
+  font-weight:400!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-strategy-grid label{
+  color:var(--lab-muted)!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:400!important;
+  letter-spacing:.01em!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .runtime-control-row,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-toggle-grid{
+  border-color:var(--lab-line)!important;
+  background:#f4f7f6!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .runtime-control-row button{
+  border-color:#aebeca!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel .prepare-section-heading{
+  justify-content:flex-start!important;
+  gap:8px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel .prepare-section-heading .status-pill{
+  flex:0 0 auto!important;
+}

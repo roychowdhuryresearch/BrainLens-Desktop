@@ -1,0 +1,74 @@
+/* Prepare filter field owner. Filter and strategy values are short scalar
+   inputs, so they stay in fixed compact tracks instead of path-field widths. */
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel,
+.workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel{
+  display:grid!important;
+  gap:7px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-control-cluster,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-control-cluster{
+  display:grid!important;
+  gap:5px!important;
+  min-inline-size:0!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel .field-grid.compact,
+.workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel .field-grid.compact{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,var(--ui-density-field-short)))!important;
+  row-gap:var(--ui-density-gap-y)!important;
+  column-gap:11px!important;
+  justify-content:start!important;
+  justify-items:stretch!important;
+  align-items:end!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel label,
+.workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel label{
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  max-inline-size:var(--ui-density-field-short)!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel .field-grid.compact label,
+.workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel .field-grid.compact label{
+  justify-self:stretch!important;
+  max-inline-size:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel input:not([type="checkbox"]):not([type="radio"]),
+.workspace-tab-panel[data-active-tab="Prepare"] .filter-parameter-panel input:not([type="checkbox"]):not([type="radio"]){
+  inline-size:100%!important;
+  width:100%!important;
+  max-inline-size:100%!important;
+  block-size:var(--ui-density-control-h)!important;
+  min-block-size:var(--ui-density-control-h)!important;
+  max-block-size:var(--ui-density-control-h)!important;
+  padding-inline:8px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-strategy-grid,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-strategy-grid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,var(--ui-density-field-short)))!important;
+  inline-size:100%!important;
+  max-inline-size:100%!important;
+  justify-content:start!important;
+  justify-items:stretch!important;
+  align-items:end!important;
+  gap:var(--ui-density-gap-y) 11px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-strategy-grid label,
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-strategy-grid label{
+  grid-column:auto!important;
+  inline-size:100%!important;
+  min-inline-size:0!important;
+  max-inline-size:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-workflow-panel="prepare"] .workspace-tab-panel[data-active-tab="Prepare"] .prepare-strategy-grid label:nth-child(2),
+.workspace-tab-panel[data-active-tab="Prepare"] .prepare-strategy-grid label:nth-child(2){
+  grid-column:2!important;
+}

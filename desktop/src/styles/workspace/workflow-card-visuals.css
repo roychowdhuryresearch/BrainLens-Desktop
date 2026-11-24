@@ -1,0 +1,17 @@
+/* Workflow card visuals owner.
+   Owns only generic workflow card chrome. Tab-specific Detect/Classify surfaces
+   live in their adjacent owner files. */
+.panel-card,
+.annotation-progress-card,
+.prediction-scope-card,
+.annotation-info-card{
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  box-shadow:var(--lab-card-shadow)!important;
+}
+
+.panel-heading-row{
+  margin:0!important;
+  padding:0!important;
+}

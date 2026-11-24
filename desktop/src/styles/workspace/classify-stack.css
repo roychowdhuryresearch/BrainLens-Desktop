@@ -1,0 +1,182 @@
+/* Classify stack owner. Keeps source/path summary rows separate from parameter
+   controls so long read-only fields stay constrained. */
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-card{
+  border:1px solid var(--lab-line)!important;
+  border-radius:var(--lab-radius)!important;
+  background:#fff!important;
+  box-shadow:var(--lab-card-shadow)!important;
+  padding:6px!important;
+  display:grid!important;
+  gap:6px!important;
+  margin-block-end:var(--ui-bottom-clearance)!important;
+  justify-self:start!important;
+  inline-size:max-content!important;
+  max-inline-size:100%!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-card h3{
+  margin:0!important;
+  color:var(--lab-ink)!important;
+  font-size:var(--fs-md)!important;
+  font-weight:400!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-list{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(178px,220px))!important;
+  justify-content:start!important;
+  gap:0 10px!important;
+  margin:0!important;
+  padding:0!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-item{
+  min-inline-size:0!important;
+  display:grid!important;
+  grid-template-columns:minmax(72px,max-content) minmax(0,1fr)!important;
+  align-items:baseline!important;
+  gap:6px!important;
+  padding-block:3px!important;
+  border-bottom:1px solid var(--lab-line)!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-item dt{
+  color:var(--lab-muted)!important;
+  font-size:var(--fs-xs)!important;
+  font-weight:400!important;
+  letter-spacing:0!important;
+  line-height:1.1!important;
+  white-space:nowrap!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-item dd{
+  min-inline-size:0!important;
+  margin:0!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-item-path{
+  grid-template-columns:minmax(58px,max-content) minmax(0,1fr)!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-item-path,
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-item-source,
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-item-steps{
+  grid-column:1 / -1!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-item-source,
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-item-steps{
+  grid-template-columns:minmax(58px,max-content) minmax(0,1fr)!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-item-path .stack-display,
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-item-source .stack-display,
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-item-steps .stack-display{
+  max-inline-size:100%!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .stack-display{
+  display:block!important;
+  min-inline-size:0!important;
+  inline-size:auto!important;
+  max-inline-size:100%!important;
+  color:var(--lab-ink)!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace!important;
+  font-size:var(--fs-xs)!important;
+  line-height:1.15!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-card .status-line{
+  min-block-size:22px!important;
+  margin:0!important;
+  display:block!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:var(--lab-muted)!important;
+  padding:0!important;
+  line-height:1.2!important;
+}
+
+@media(max-height:820px){
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-card{
+    padding-block:6px!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-card h3{
+    margin-block:0 2px!important;
+    font-size:var(--fs-md)!important;
+    line-height:1!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-card .classifier-stack-list{
+    gap:5px 8px!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-card .classifier-stack-item{
+    padding-block:3px!important;
+  }
+}
+
+@media(max-width:1180px){
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-card{
+    inline-size:max-content!important;
+  }
+}
+
+@media(max-width:900px){
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-card{
+    inline-size:max-content!important;
+    max-inline-size:calc(100vw - var(--agent-rail-width,48px) - 24px)!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-list,
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-card .classifier-stack-list{
+    grid-template-columns:repeat(2,minmax(178px,220px))!important;
+  }
+
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-item-path,
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-item-source,
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-stack-item-steps{
+    grid-column:1 / -1!important;
+  }
+}
+
+/* Classify workbench stack column contract. */
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-workbench-grid>.classifier-stack-card{
+  grid-area:stack!important;
+  justify-self:stretch!important;
+  inline-size:100%!important;
+  width:100%!important;
+  max-inline-size:100%!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-workbench-grid>.classifier-stack-card .classifier-stack-list{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  inline-size:100%!important;
+  max-inline-size:100%!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-workbench-grid>.classifier-stack-card .classifier-stack-item{
+  grid-template-columns:minmax(58px,max-content) minmax(0,1fr)!important;
+  gap:5px!important;
+}
+
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-workbench-grid>.classifier-stack-card .classifier-stack-item-path,
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-workbench-grid>.classifier-stack-card .classifier-stack-item-source,
+.workspace-tab-panel[data-active-tab="Classify"] .classifier-workbench-grid>.classifier-stack-card .classifier-stack-item-steps{
+  grid-column:1 / -1!important;
+}
+
+@media(max-width:980px){
+  .workspace-tab-panel[data-active-tab="Classify"] .classifier-workbench-grid>.classifier-stack-card .classifier-stack-list{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}

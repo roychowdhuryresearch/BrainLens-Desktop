@@ -1,0 +1,76 @@
+/* Event Review view controls owner: the bottom toolbar is a flex row that WRAPS
+   instead of overflowing at narrow widths. The Frequency-range group is folded in
+   (compact + short) and pushed into the dead space on the right with
+   margin-inline-start:auto. The column track for this toolbar is minmax(38px,auto)
+   (event-review-detail.css) so it grows when the row wraps. */
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"]{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  min-block-size:38px!important;
+  gap:4px 4px!important;
+}
+
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"]>button,
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"]>.select-toggle,
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"]>[data-testid="pyqt-frequency_range_group"]{
+  flex:0 0 auto!important;
+}
+
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] button{
+  min-block-size:28px!important;
+  block-size:28px!important;
+}
+
+/* Uniform button sizing — two tidy tiers: the icon-glyph buttons (zoom/pan/snapshot)
+   are equal 30px squares; the text buttons (Reset/Back/Fwd, plus Apply via the freq
+   owner) share one 48px width. */
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-ZoomInButton"],
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-ZoomOutButton"],
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-PanLeftButton"],
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-PanRightButton"],
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-PanUpButton"],
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-PanDownButton"],
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-viewControlsExportSnapshotButton"]{
+  inline-size:34px!important;
+  min-inline-size:34px!important;
+  max-inline-size:34px!important;
+  block-size:34px!important;
+  min-block-size:34px!important;
+  padding-inline:0!important;
+}
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-ResetViewButton"],
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-BackViewButton"],
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] [data-testid="pyqt-ForwardViewButton"]{
+  inline-size:48px!important;
+  min-inline-size:48px!important;
+  max-inline-size:48px!important;
+  padding-inline:0!important;
+}
+
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"] .select-toggle{
+  display:grid!important;
+  grid-template-columns:16px minmax(0,1fr)!important;
+  gap:4px!important;
+  min-inline-size:0!important;
+  white-space:nowrap!important;
+}
+
+@media(max-width:1100px){
+  .event-review-dialog .event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"]{
+    gap:4px!important;
+    padding-inline-end:4px!important;
+  }
+}
+
+/* Read the strip as clusters, not one undifferentiated row: each functional group
+   gets a wider lead gap (12px vs the 4px intra-group gap) so proximity does the
+   grouping — [Reset Back Fwd] history · [+ −] zoom · [← → ↑ ↓] pan · [Sync X ·
+   Min/Max Hz Apply] axes+freq · [Snapshot] export. Spacing (not a border) keeps the
+   fixed 34px glyph buttons centered. */
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"]>[data-testid="pyqt-ZoomInButton"],
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"]>[data-testid="pyqt-PanLeftButton"],
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"]>.select-toggle,
+.event-review-left-panel [data-testid="pyqt-viewControlsGroupBox"]>[data-testid="pyqt-viewControlsExportSnapshotButton"]{
+  margin-inline-start:12px!important;
+}

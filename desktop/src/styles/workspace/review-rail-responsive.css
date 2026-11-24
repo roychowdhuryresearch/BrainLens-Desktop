@@ -1,0 +1,37 @@
+/* Review rail responsive owner. Compact-window rail card hiding and row
+   tightening stay here instead of living in generic card/control owners. */
+@media(max-width:1180px),(max-height:820px){
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .waveform-right-sidebar>.pyqt-sidebar-card{
+    align-self:start!important;
+    block-size:auto!important;
+    min-block-size:0!important;
+    gap:6px!important;
+  }
+
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .waveform-right-sidebar [data-testid="pyqt-sidebar_run_actions_card"]{
+    gap:5px!important;
+  }
+
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .waveform-right-sidebar [data-testid="pyqt-sidebar_run_actions_card"]>label:has([data-testid="pyqt-sidebar_active_run_selector"]),
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .waveform-right-sidebar [data-testid="pyqt-sidebar_workers_row"] label,
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .waveform-right-sidebar [data-testid="pyqt-sidebar_next_run_row"] label{
+    display:grid!important;
+    grid-template-columns:52px minmax(0,1fr)!important;
+    align-items:center!important;
+    gap:5px!important;
+    block-size:32px!important;
+    min-block-size:32px!important;
+    max-block-size:32px!important;
+  }
+
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .waveform-right-sidebar [data-testid="pyqt-sidebar_active_run_summary"]{
+    display:none!important;
+  }
+
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .waveform-right-sidebar [data-testid="pyqt-sidebar_zone_pipeline"],
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .waveform-right-sidebar [data-testid="pyqt-sidebar_signal_card"],
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .waveform-right-sidebar [data-testid="pyqt-sidebar_detection_card"],
+  .pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="waveform"] .waveform-right-sidebar [data-testid="pyqt-sidebar_classification_card"]{
+    display:none!important;
+  }
+}

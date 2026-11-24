@@ -1,0 +1,135 @@
+/* Workflow-expanded layout owner. When Prepare/Detect/Classify owns the
+   workspace, the hidden waveform splitter must not keep sizing columns alive. */
+/* Preprocessing workbench opens on demand from waveform review + rail; loaded EEG no longer auto-opens it.
+   Cross-page workflow geometry contract: Prepare, Detect, and Classify are the
+   same full-page React task surface. Waveform review is a separate stage. */
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]){
+  grid-template-rows:48px minmax(62px,auto) minmax(0,1fr) 32px!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"])>.pyqt-top-toolbar{
+  grid-row:1!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"])>.waveform-header{
+  grid-row:2!important;
+  margin-inline-end:0!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"])>.loaded-workspace{
+  grid-row:3!important;
+  margin-inline-end:0!important;
+  block-size:100%!important;
+  max-block-size:100%!important;
+  min-block-size:0!important;
+  overflow:hidden!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"])>.status-strip{
+  grid-row:4!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"])>.waveform-toolbar,
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]) .waveform-stage,
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]) .loaded-workspace-splitter-handle,
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]) [data-testid="pyqt-waveform_reset_view_button"]{
+  display:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"])>.loaded-workspace[data-workflow-expanded="true"],
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]) .loaded-workspace[data-workflow-expanded="true"]{
+  grid-column:1 / -1!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:minmax(0,1fr)!important;
+  gap:0!important;
+  block-size:100%!important;
+  max-block-size:100%!important;
+  min-block-size:0!important;
+  overflow:hidden!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"])>.loaded-workspace[data-workflow-expanded="true"]>.workspace-tabs,
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]) .workspace-tabs{
+  grid-column:1 / -1!important;
+  grid-row:1!important;
+  inline-size:100%!important;
+  block-size:100%!important;
+  max-block-size:100%!important;
+  min-block-size:0!important;
+  overflow:hidden!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]) .workspace-tabs>.tab-content,
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]) .workspace-tabs>.workspace-tab-panel,
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]) .workspace-tab-panel>.tab-content{
+  block-size:100%!important;
+  max-block-size:100%!important;
+  min-block-size:0!important;
+  overflow:auto!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]) .workspace-tabs-header{
+  border-bottom:1px solid var(--window-border,#cbd5e1)!important;
+  background:#f8fafc!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]) .loaded-workspace[data-workflow-expanded="true"]{
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:minmax(0,1fr)!important;
+  column-gap:0!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]) .loaded-workspace[data-workflow-expanded="true"]>.waveform-stage,
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]) .loaded-workspace[data-workflow-expanded="true"]>.loaded-workspace-splitter-handle{
+  display:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]) .loaded-workspace[data-workflow-expanded="true"]>.workspace-tabs{
+  grid-column:1!important;
+  grid-row:1!important;
+  inline-size:100%!important;
+  width:100%!important;
+  max-inline-size:100%!important;
+  justify-self:stretch!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="prepare"] .loaded-workspace[data-workflow-expanded="true"],
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="detect"] .loaded-workspace[data-workflow-expanded="true"],
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="classify"] .loaded-workspace[data-workflow-expanded="true"]{
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:minmax(0,1fr)!important;
+  column-gap:0!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="prepare"] .loaded-workspace[data-workflow-expanded="true"]>.workspace-tabs,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="detect"] .loaded-workspace[data-workflow-expanded="true"]>.workspace-tabs,
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="classify"] .loaded-workspace[data-workflow-expanded="true"]>.workspace-tabs{
+  grid-column:1!important;
+  grid-row:1!important;
+  inline-size:100%!important;
+  width:100%!important;
+  max-inline-size:100%!important;
+  justify-self:stretch!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="detect"] .loaded-workspace[data-workflow-expanded="true"]:has(.workspace-tab-panel[data-active-tab="Detect"]),
+.pyqt-workspace-shell[data-loaded="true"][data-active-workflow-tab="classify"] .loaded-workspace[data-workflow-expanded="true"]:has(.workspace-tab-panel[data-active-tab="Classify"]){
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:minmax(0,1fr)!important;
+  column-gap:0!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]) .loaded-workspace[data-workflow-expanded="true"]>.loaded-workspace-splitter-handle{
+  display:none!important;
+  visibility:hidden!important;
+  inline-size:0!important;
+  block-size:0!important;
+  min-inline-size:0!important;
+  min-block-size:0!important;
+  pointer-events:none!important;
+}
+
+.pyqt-workspace-shell[data-loaded="true"]:is([data-active-workflow-tab="prepare"],[data-active-workflow-tab="detect"],[data-active-workflow-tab="classify"]) .loaded-workspace[data-workflow-expanded="true"]>.loaded-workspace-splitter-handle::after{
+  content:none!important;
+  display:none!important;
+}
