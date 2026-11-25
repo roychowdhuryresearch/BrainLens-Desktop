@@ -81,9 +81,8 @@ curl http://127.0.0.1:8765/manifest
 
 ## Desktop app and agent runtime
 
-The Electron desktop app and the agent runtime built on this engine live in
-[roychowdhuryresearch/ieeg-agent](https://github.com/roychowdhuryresearch/ieeg-agent).
-[BrainLens](https://github.com/zyp5511/BrainLens) is a downstream clinical review workbench built on this engine.
+This engine is maintained in [BrainLens Desktop](https://github.com/roychowdhuryresearch/BrainLens-Desktop), the desktop app and agent built on it.
+[BrainLens](https://github.com/zyp5511/BrainLens) (AI co-review for EEG) also uses this engine. PyHFO 3.x, the PyQt desktop app, remains in [roychowdhuryresearch/pyHFO](https://github.com/roychowdhuryresearch/pyHFO).
 
 ## State and models
 
@@ -107,4 +106,4 @@ Zhang et al. introduced PyHFO in the *Journal of Neural Engineering* (2024). Din
 
 ## License
 
-The UCLA Academic Software License governs educational and academic research use. The license includes the required acknowledgment and commercial licensing contacts. [LICENSE.txt](https://github.com/roychowdhuryresearch/pyHFO/blob/main/LICENSE.txt)
+The UCLA Academic Software License governs educational and academic research use. The license includes the required acknowledgment and commercial licensing contacts. [LICENSE.txt](https://github.com/roychowdhuryresearch/BrainLens-Desktop/blob/main/pyhfo/LICENSE.txt)

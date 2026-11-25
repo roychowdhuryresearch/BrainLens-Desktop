@@ -1,6 +1,16 @@
-# Generic ReAct Agent
+# BrainLens Desktop
 
-`ieeg-agent` is a generic ReAct agent runtime. The core remains domain-neutral: it executes conversations, calls MCP/built-in tools, loads Skills, and records runtime history. EEG/iEEG/PyHFO behavior is injected through the `eeg-ieeg-pyhfo` Skill rather than hard-coded into the global system prompt.
+BrainLens Desktop is a desktop app for reviewing EEG, iEEG and SEEG with a built-in agent. It opens recordings and runs HFO, spike and spindle detection, event classification and scalp-EEG severity scoring on the PyHFO engine.
+
+- **Desktop app** (`desktop/`): an Electron app. It succeeds the PyHFO PyQt desktop app; [PyHFO v3.0.2](https://github.com/roychowdhuryresearch/pyHFO/releases/tag/v3.0.2) is the last PyQt release.
+- **Agent** (`runtime/`): a ReAct agent runtime built into the app. It drives the same backend through MCP and built-in tools.
+- **PyHFO engine** (`pyhfo/`): PyHFO 4, maintained in this repository.
+
+[BrainLens](https://github.com/zyp5511/BrainLens) is the companion workbench for reviewing with your own agent (Claude Code, Codex, Cursor, Antigravity) over MCP. BrainLens Desktop has its agent built in.
+
+## Agent runtime
+
+The agent runtime is a generic ReAct runtime. The core remains domain-neutral: it executes conversations, calls MCP/built-in tools, loads Skills, and records runtime history. EEG/iEEG/PyHFO behavior is injected through the `eeg-ieeg-pyhfo` Skill rather than hard-coded into the global system prompt.
 
 ## Responsibilities
 
@@ -24,7 +34,7 @@ The agent is an execution service and does not expose public browser-facing APIs
 ## Layout
 
 ```text
-ieeg-agent/               # monorepo root (this repository)
+BrainLens-Desktop/        # monorepo root (this repository)
 ├─ runtime/               # ReAct agent runtime (FastAPI service)
 │  ├─ agent_history/      # conversation history and telemetry
 │  ├─ agent_runtime/      # runtime tools, verification, follow-up input, orchestration
@@ -244,9 +254,9 @@ configuration. To use your own configuration, mount the directory containing
 both YAML files at `/app/config`.
 
 ```bash
-docker build -t ieeg-agent .
+docker build -t brainlens-desktop .
 docker run --rm -p 127.0.0.1:8001:8001 -e AGENT_SERVICE_TOKEN -e DASHSCOPE_API_KEY \
-  -v ieeg-data:/app/data ieeg-agent
+  -v ieeg-data:/app/data brainlens-desktop
 ```
 
 ## Backend-only CLI
@@ -295,8 +305,8 @@ python -m runtime.cli pyhfo --pyhfo-python pyhfo/.venv/bin/python info --input /
 
 ## Related projects
 
-- [pyHFO](https://github.com/roychowdhuryresearch/pyHFO) — the PyHFO EEG/iEEG analysis engine bundled here under `pyhfo/`, also published as the pip package `pyhfo`.
-- [BrainLens](https://github.com/zyp5511/BrainLens) — a clinician-facing SEEG/HFO review workbench that uses PyHFO.
+- [pyHFO](https://github.com/roychowdhuryresearch/pyHFO) — PyHFO 3.x, the original PyQt desktop app. The PyHFO 4 engine is maintained here under `pyhfo/`.
+- [BrainLens](https://github.com/zyp5511/BrainLens) — AI co-review for EEG: a review workbench that connects your own agent over MCP and uses the PyHFO engine.
 
 ## License
 

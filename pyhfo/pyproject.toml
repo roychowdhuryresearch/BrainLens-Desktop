@@ -43,10 +43,10 @@ gpu = ["torch", "torchvision", "transformers>=4.45,<6", "safetensors"]
 dev = ["pytest", "build", "edfio", "onnx>=1.15,<2"]
 
 [project.urls]
-Homepage = "https://github.com/roychowdhuryresearch/pyHFO"
+Homepage = "https://github.com/roychowdhuryresearch/BrainLens-Desktop"
 "Project page" = "https://roychowdhuryresearch.github.io/PyHFO_Project_Page/"
-Repository = "https://github.com/roychowdhuryresearch/pyHFO"
-Issues = "https://github.com/roychowdhuryresearch/pyHFO/issues"
+Repository = "https://github.com/roychowdhuryresearch/BrainLens-Desktop"
+Issues = "https://github.com/roychowdhuryresearch/BrainLens-Desktop/issues"
 
 [project.scripts]
 pyhfo = "pyhfo.agent_cli:main"
