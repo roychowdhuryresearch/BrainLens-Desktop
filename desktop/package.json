@@ -3,7 +3,10 @@
   "version": "0.1.3",
   "private": true,
   "type": "module",
-  "description": "Electron iEEG workstation shell backed by the local Python PyHFO backend.",
+  "description": "BrainLens Desktop for EEG analysis with the local Python PyHFO backend.",
+  "config": {
+    "product_name": "BrainLens Desktop"
+  },
   "main": "dist-electron/main.js",
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
@@ -62,7 +65,7 @@
     "qa:hf-onnx-runtime": "node scripts/hf-onnx-runtime-smoke.mjs",
     "qa:signoff": "node scripts/production-signoff-audit.mjs",
     "qa:production-parity": "npm run typecheck && npm run build && npm run qa:layout && npm run qa:geometry && npm run qa:overlay && npm run qa:stateful && npm run qa:buttons && npm run qa:electron-e2e && npm run qa:electron-real-recording && npm run qa:close-guard && npm run qa:interactions && npm test -- --runInBand && PYTHONPATH=../pyhfo/src python -m pytest ../pyhfo/tests/test_electron_parity_fixture_smoke.py -q",
-    "package:mac-smoke": "npm run build && node scripts/package-macos-app.mjs && PYHFO_PARITY_ELECTRON_APP=artifacts/packaged/iEEG.app npm run qa:packaged && PYHFO_PARITY_ELECTRON_APP=artifacts/packaged/iEEG.app npm run qa:packaged-cold-start && PYHFO_PARITY_ELECTRON_APP=artifacts/packaged/iEEG.app npm run qa:hf-onnx-runtime",
+    "package:mac-smoke": "npm run build && node scripts/package-macos-app.mjs && export PYHFO_PARITY_ELECTRON_APP=\"${PYHFO_PACKAGE_OUTPUT_APP:-artifacts/packaged/$npm_package_config_product_name.app}\" && npm run qa:packaged && npm run qa:packaged-cold-start && npm run qa:hf-onnx-runtime",
     "package:backend-win": "python -m PyInstaller --noconfirm --clean ../pyhfo/pyhfo_windows.spec --distpath ../pyhfo/dist --workpath ../pyhfo/build",
     "package:agent-runtime-win": "python -m PyInstaller --noconfirm --clean ../runtime/ieeg_agent_runtime_windows.spec --distpath ../runtime/dist --workpath ../runtime/build",
     "build:python": "node scripts/build-python-binaries.mjs",

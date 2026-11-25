@@ -119,7 +119,7 @@ test('packaged cold-start gate launches the released app with isolated caches an
   assert.equal(existsSync(coldStartSmokePath), true);
   const coldStartSource = readFileSync(coldStartSmokePath, 'utf8');
   assert.match(coldStartSource, /_electron as electron/);
-  assert.match(coldStartSource, /Contents.*MacOS.*iEEG/s);
+  assert.match(coldStartSource, /join\(appPath, 'Contents', 'MacOS', productName\)/);
   assert.match(coldStartSource, /IEEG_DISABLE_AGENT_RUNTIME/);
   assert.match(coldStartSource, /HF_HUB_OFFLINE/);
   assert.match(coldStartSource, /first_window_ms/);
@@ -178,7 +178,7 @@ test('macOS package builds, embeds, and signs the frozen PyHFO backend', () => {
   assert.match(packageSource, /chmodSync\(join\(resourcesAgentRuntime, 'ieeg-agent-runtime'\), 0o755\)/);
   assert.match(packageSource, /renameSync\(originalExecutable, packagedExecutable\)/);
   assert.match(packageSource, /Contents\/Resources\/default_app\.asar/);
-  assert.match(packageSource, /\['CFBundleExecutable', 'iEEG'\]/);
+  assert.match(packageSource, /\['CFBundleExecutable', productName\]/);
   assert.match(packageSource, /\['CFBundleShortVersionString', appVersion\]/);
   assert.match(packageSource, /\['CFBundleVersion', appVersion\]/);
   assert.match(packageSource, /\['-remove', 'ElectronAsarIntegrity'/);

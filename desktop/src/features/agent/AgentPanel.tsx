@@ -258,9 +258,9 @@ export const AgentPanel = memo(function AgentPanel({ activeTab, message, agentCh
   }
 
   return (
-    <section className="agent-panel" data-testid="agent-panel" aria-label="iEEG Agent panel">
+    <section className="agent-panel" data-testid="agent-panel" aria-label="BrainLens Agent panel">
       <header className="agent-panel-header">
-        <strong>iEEG Agent</strong>
+        <strong>BrainLens Agent</strong>
         {activeModel && (
           <span className="agent-panel-model" data-testid="agent-panel-model" title={`This conversation is using ${activeModel}`}>{activeModel}</span>
         )}
@@ -325,7 +325,7 @@ export const AgentPanel = memo(function AgentPanel({ activeTab, message, agentCh
                 <span className="agent-chat-empty-glyph" aria-hidden="true">
                   <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
                 </span>
-                <h3>iEEG analysis co-pilot</h3>
+                <h3>EEG analysis co-pilot</h3>
                 <p>Inspect the recording, tune detectors, and stage workspace actions — nothing runs without your approval.</p>
                 <div className="agent-chat-suggestions" data-testid="agent-chat-suggestions">
                   {AGENT_SUGGESTED_PROMPTS.map((prompt) => (

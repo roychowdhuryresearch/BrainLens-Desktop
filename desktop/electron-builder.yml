@@ -1,4 +1,4 @@
-# Windows packaging for the iEEG workstation.
+# Windows packaging for BrainLens Desktop.
 #
 # The app is Electron + a frozen Python backend. electron-builder packs the Electron half; the
 # backend is built separately by PyInstaller (pyhfo/pyhfo_windows.spec -> pyhfo/dist/pyhfo-backend)
@@ -15,7 +15,7 @@
 # well over a GB and the installer will be large. Converting the severity checkpoint to ONNX
 # (see pyhfo/docs/checkpoint-to-onnx.md) is what shrinks this.
 appId: org.roychowdhuryresearch.ieeg
-productName: iEEG
+productName: BrainLens Desktop
 directories:
   # Repo root, not desktop/artifacts. The installer plus the unpacked app run to several GB, so they
   # live in one gitignored place at the top level rather than buried under the desktop workspace.

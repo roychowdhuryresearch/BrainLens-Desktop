@@ -3,6 +3,7 @@ import { closeSync, existsSync, mkdirSync, openSync, readSync, readdirSync, rmSy
 import { spawnSync } from 'node:child_process';
 import { dirname, join, normalize, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { macBundleName } from './lib/product-name.mjs';
 
 const desktopRoot = normalize(join(dirname(fileURLToPath(import.meta.url)), '..'));
 const outputPath = join(desktopRoot, 'artifacts/hf-onnx-runtime-smoke.json');
@@ -23,7 +24,7 @@ function fail(status, message, extra = {}) {
     status,
     message,
     required_env: 'PYHFO_PARITY_ELECTRON_APP',
-    command: 'PYHFO_PARITY_ELECTRON_APP=/path/to/iEEG.app npm run qa:hf-onnx-runtime',
+    command: `PYHFO_PARITY_ELECTRON_APP="/path/to/${macBundleName}" npm run qa:hf-onnx-runtime`,
     cache_root: cacheRoot,
     ...extra,
   });

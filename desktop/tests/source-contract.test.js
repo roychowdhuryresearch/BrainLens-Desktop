@@ -36,7 +36,9 @@ test('package exposes development, build, typecheck, and test scripts', () => {
   assert.equal(pkg.scripts['qa:hf-onnx-runtime'], 'node scripts/hf-onnx-runtime-smoke.mjs');
   assert.equal(pkg.scripts['qa:signoff'], 'node scripts/production-signoff-audit.mjs');
   assert.ok(pkg.scripts['package:mac-smoke'].includes('scripts/package-macos-app.mjs'));
-  assert.ok(pkg.scripts['package:mac-smoke'].includes('PYHFO_PARITY_ELECTRON_APP=artifacts/packaged/iEEG.app'));
+  assert.equal(pkg.productName ?? pkg.name, 'ieeg-electron-desktop');
+  assert.equal(pkg.config.product_name, 'BrainLens Desktop');
+  assert.ok(pkg.scripts['package:mac-smoke'].includes('artifacts/packaged/$npm_package_config_product_name.app'));
   for (const phrase of ['npm run typecheck', 'npm run build', 'npm run qa:layout', 'npm run qa:geometry', 'npm run qa:buttons', 'npm run qa:electron-e2e', 'npm run qa:electron-real-recording', 'npm run qa:interactions', 'npm test -- --runInBand', 'test_electron_parity_fixture_smoke.py']) assert.ok(pkg.scripts['qa:production-parity'].includes(phrase), phrase);
 });
 

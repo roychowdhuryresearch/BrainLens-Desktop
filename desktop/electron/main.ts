@@ -21,6 +21,11 @@ import { getAgentChatResult, streamAgentChat, submitAgentChat } from './agentSer
 import { closePromptForState } from './closeGuard.js';
 import { shouldRestartOnExit, RestartCoordinator } from './childSupervisor.js';
 import { runStartupRetention } from './retention.js';
+import { configureUserDataPaths, PRODUCT_NAME } from './userDataPath.js';
+
+// Select the profile before ready, including Chromium's renderer storage. QA and
+// managed launches can supply their own isolated profile with --user-data-dir.
+configureUserDataPaths(app);
 
 const electronBundleDir = path.dirname(fileURLToPath(import.meta.url));
 // Below ~1268px the loaded-Review waveform toolbar's second row (nowrap) runs
@@ -588,7 +593,7 @@ async function createWindow(): Promise<void> {
     console.error('[main] PyHFO backend failed to start:', message);
     stopPythonBackend(agentRuntime);
     stopPythonBackend(uiBroker);
-    dialog.showErrorBox('iEEG Workstation failed to start', `The analysis backend did not start.\n\n${message}`);
+    dialog.showErrorBox(`${PRODUCT_NAME} failed to start`, `The analysis backend did not start.\n\n${message}`);
     app.exit(1);
     return;
   }
@@ -598,7 +603,7 @@ async function createWindow(): Promise<void> {
     height: 960,
     minWidth: MAIN_WINDOW_MIN_WIDTH,
     minHeight: MAIN_WINDOW_MIN_HEIGHT,
-    title: 'iEEG Workstation',
+    title: PRODUCT_NAME,
     webPreferences: {
       preload: path.join(electronBundleDir, 'preload.cjs'),
       contextIsolation: true,
@@ -648,8 +653,8 @@ async function createWindow(): Promise<void> {
       buttons: ['Cancel', 'Save Project', 'Discard Changes'],
       defaultId: 1,
       cancelId: 0,
-      title: 'Unsaved iEEG Workspace',
-      message: 'You have unsaved iEEG workspace changes.',
+      title: 'Unsaved Workspace',
+      message: 'You have unsaved workspace changes.',
       detail: 'Save the project before closing to preserve recording, run, waveform, and review state.'
     }).finally(() => { closePrimaryPromptInProgress = false; });
     if (result.response === 1) {
@@ -664,7 +669,7 @@ async function createWindow(): Promise<void> {
           defaultId: 0,
           title: 'Save Project Timed Out',
           message: 'The project save did not finish before the close timeout.',
-          detail: 'The iEEG workspace was kept open so you can retry Save Project or choose Discard Changes.'
+          detail: 'The workspace was kept open so you can retry Save Project or choose Discard Changes.'
         });
       }, 30000);
       return;
@@ -727,7 +732,7 @@ async function confirmDiscardWorkspace(payload: Record<string, unknown> = {}): P
     buttons: ['Cancel', 'Save Project', 'Discard Current Workspace'],
     defaultId: 1,
     cancelId: 0,
-    title: 'Unsaved iEEG Workspace',
+    title: 'Unsaved Workspace',
     message: `Save unsaved workspace changes before ${action}?`,
     detail: 'Choose Save Project to preserve the current recording, run, waveform, and review state; choose Discard only if you want to replace it.'
   });
@@ -1128,7 +1133,7 @@ app.whenReady().then(createWindow).then(() => {
   // otherwise leave a dead dock icon with no window and no message).
   const message = error instanceof Error ? error.message : String(error);
   console.error('[main] createWindow failed:', message);
-  try { dialog.showErrorBox('iEEG Workstation failed to start', message); } catch { /* ignore */ }
+  try { dialog.showErrorBox(`${PRODUCT_NAME} failed to start`, message); } catch { /* ignore */ }
   app.exit(1);
 });
 process.on('unhandledRejection', (reason) => {

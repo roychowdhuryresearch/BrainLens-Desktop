@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Drives the PACKAGED Windows app (artifacts/packaged-win/win-unpacked/iEEG.exe) end to end.
+// Drives the unpacked Windows build from electron-builder end to end.
 // Set SEVERITY_SMOKE_RECORDING to a scalp recording with the standard channels for the 18-pair bipolar montage.
 //
 // This is deliberately not severity-tab-smoke.mjs with a different executable path: that script

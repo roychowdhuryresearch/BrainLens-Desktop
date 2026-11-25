@@ -3,6 +3,7 @@ import { closeSync, existsSync, mkdirSync, openSync, readSync, readdirSync, stat
 import { spawnSync } from 'node:child_process';
 import { dirname, join, normalize, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { macBundleName, productName } from './lib/product-name.mjs';
 
 const desktopRoot = normalize(join(dirname(fileURLToPath(import.meta.url)), '..'));
 const outputPath = join(desktopRoot, 'artifacts/packaged-electron-smoke.json');
@@ -29,7 +30,7 @@ function writeReport(report) {
 }
 
 function fail(status, message, extra = {}) {
-  writeReport({ status, message, required_env: 'PYHFO_PARITY_ELECTRON_APP', command: 'PYHFO_PARITY_ELECTRON_APP=/path/to/iEEG.app npm run qa:packaged', ...extra });
+  writeReport({ status, message, required_env: 'PYHFO_PARITY_ELECTRON_APP', command: `PYHFO_PARITY_ELECTRON_APP="/path/to/${macBundleName}" npm run qa:packaged`, ...extra });
   console.error(message);
   console.error(`Report: ${outputPath}`);
   process.exit(2);
@@ -196,7 +197,7 @@ for (const [key, value] of Object.entries(checks)) {
   if (key === 'macos_executables') continue;
   if (!value) failures.push(`Missing packaged app contract: ${key}`);
 }
-if (Array.isArray(checks.macos_executables) && !checks.macos_executables.length) failures.push('Packaged app Contents/MacOS contains no executable entry.');
+if (checks.has_macos_executable_dir && !checks.macos_executables.includes(productName)) failures.push(`Packaged app Contents/MacOS is missing ${productName}.`);
 
 writeReport({
   status: failures.length ? 'failed' : 'passed',

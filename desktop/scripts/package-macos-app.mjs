@@ -1,18 +1,19 @@
 #!/usr/bin/env node
-import { chmodSync, cpSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, cpSync, existsSync, mkdirSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { dirname, join, normalize } from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
+import desktopPackage from '../package.json' with { type: 'json' };
+import { macBundleName, productName } from './lib/product-name.mjs';
 
 const desktopRoot = normalize(join(dirname(fileURLToPath(import.meta.url)), '..'));
 const repoRoot = normalize(join(desktopRoot, '..'));
-const desktopPackage = JSON.parse(readFileSync(join(desktopRoot, 'package.json'), 'utf8'));
 const appVersion = String(desktopPackage.version || '').trim();
 if (!/^\d+(?:\.\d+){0,2}$/.test(appVersion)) fail(`Invalid desktop package version for macOS bundle metadata: ${appVersion || '(empty)'}`);
 const agentRuntimeRoot = join(repoRoot, 'runtime');
 const require = createRequire(import.meta.url);
-const outputApp = normalize(process.env.PYHFO_PACKAGE_OUTPUT_APP || join(desktopRoot, 'artifacts/packaged/iEEG.app'));
+const outputApp = normalize(process.env.PYHFO_PACKAGE_OUTPUT_APP || join(desktopRoot, 'artifacts/packaged', macBundleName));
 const pyhfoRoot = join(repoRoot, 'pyhfo');
 const backendBundleSourceRoot = normalize(process.env.PYHFO_BACKEND_BUNDLE_DIR || join(pyhfoRoot, 'dist', 'pyhfo-backend'));
 const backendExecutableSource = join(backendBundleSourceRoot, 'pyhfo-backend');
@@ -116,7 +117,7 @@ mkdirSync(dirname(outputApp), { recursive: true });
 cpSync(electronAppRoot, outputApp, { recursive: true, verbatimSymlinks: true });
 
 const originalExecutable = join(outputApp, 'Contents/MacOS/Electron');
-const packagedExecutable = join(outputApp, 'Contents/MacOS/iEEG');
+const packagedExecutable = join(outputApp, 'Contents/MacOS', productName);
 if (!existsSync(originalExecutable)) fail(`Copied Electron runtime is missing its main executable: ${originalExecutable}`);
 renameSync(originalExecutable, packagedExecutable);
 rmSync(join(outputApp, 'Contents/Resources/default_app.asar'), { force: true });
@@ -137,11 +138,11 @@ mkdirSync(dirname(resourcesAgentRuntime), { recursive: true });
 cpSync(agentRuntimeBundleSourceRoot, resourcesAgentRuntime, { recursive: true, verbatimSymlinks: true });
 chmodSync(join(resourcesAgentRuntime, 'ieeg-agent-runtime'), 0o755);
 writeFileSync(join(resourcesApp, 'package.json'), JSON.stringify({
-  name: 'ieeg-electron-desktop',
+  name: desktopPackage.name,
   version: appVersion,
   type: 'module',
   main: 'dist-electron/main.js',
-  description: 'Packaged iEEG Electron parity smoke app assembled from production build outputs.'
+  description: desktopPackage.description
 }, null, 2));
 writeFileSync(
   join(resourcesApp, 'PACKAGED_FROM.txt'),
@@ -150,9 +151,9 @@ writeFileSync(
 
 if (process.platform === 'darwin') {
   for (const [key, value] of [
-    ['CFBundleExecutable', 'iEEG'],
-    ['CFBundleDisplayName', 'iEEG Workstation'],
-    ['CFBundleName', 'iEEG'],
+    ['CFBundleExecutable', productName],
+    ['CFBundleDisplayName', productName],
+    ['CFBundleName', productName],
     ['CFBundleIdentifier', 'org.pyhfo.ieeg-workstation'],
     ['CFBundleShortVersionString', appVersion],
     ['CFBundleVersion', appVersion],

@@ -65,7 +65,7 @@ test('QA checks require a selected recording and respect the script override', (
 });
 
 test('external QA gates pass when production signoff evidence artifacts are present', (t) => {
-  // The fixture builds a macOS bundle (iEEG.app/Contents/..., Electron Framework) and links its
+  // The fixture builds a macOS bundle with an Electron Framework and links its
   // backend executable with symlinkSync. Creating symlinks on Windows needs Developer Mode or an
   // elevated shell, so this fails with EPERM there rather than testing the gates.
   if (process.platform === 'win32') {
@@ -82,7 +82,7 @@ test('external QA gates pass when production signoff evidence artifacts are pres
   if (!existsSync(rendererIndex)) writeFileSync(rendererIndex, '<div id="root"></div>');
   if (!existsSync(electronMain)) writeFileSync(electronMain, 'export {};');
 
-  const appRoot = join(runtimeDir, 'iEEG.app');
+  const appRoot = join(runtimeDir, 'BrainLens Desktop.app');
   rmSync(appRoot, { recursive: true, force: true });
   mkdirSync(join(appRoot, 'Contents/MacOS'), { recursive: true });
   mkdirSync(join(appRoot, 'Contents/Resources'), { recursive: true });
@@ -108,7 +108,7 @@ test('external QA gates pass when production signoff evidence artifacts are pres
   );
   chmodSync(backendExecutable, 0o755);
   writeFileSync(join(appRoot, 'Contents/Info.plist'), '<plist><dict></dict></plist>');
-  writeFileSync(join(appRoot, 'Contents/MacOS/iEEG'), '#!/bin/sh\n');
+  writeFileSync(join(appRoot, 'Contents/MacOS/BrainLens Desktop'), '#!/bin/sh\n');
   const symlinkedModel = join(appRoot, 'Contents/Resources/model_a.onnx');
   symlinkSync(backendExecutable, symlinkedModel);
   const rejectedBundledModel = runNodeScript('scripts/packaged-electron-smoke.mjs', { PYHFO_PARITY_ELECTRON_APP: appRoot });

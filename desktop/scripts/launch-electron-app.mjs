@@ -7,6 +7,7 @@ import { createRequire } from 'node:module';
 import { homedir } from 'node:os';
 import { basename, dirname, join, normalize, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { productName } from './lib/product-name.mjs';
 
 const require = createRequire(import.meta.url);
 const desktopRoot = normalize(join(dirname(fileURLToPath(import.meta.url)), '..'));
@@ -53,12 +54,12 @@ function parseArgs(args) {
 function printHelp() {
   console.log(`Usage: npm run app -- [options]
 
-Launch the production Electron iEEG workstation with the local PyHFO backend.
+Launch ${productName} with the local PyHFO backend.
 
 Options:
   --rebuild                 Run npm run build before launching.
   --no-build                Fail instead of rebuilding missing or stale dist outputs.
-  --keep-existing           Do not terminate existing ieeg-agent Electron instances first.
+  --keep-existing           Do not terminate existing ${productName} instances first.
   --no-agent                Disable the local agent runtime.
   --ui-broker               Enable the UI MCP broker. Default.
   --no-ui-broker            Disable the UI MCP broker.
@@ -332,7 +333,7 @@ async function cleanExisting() {
   const mains = rows.filter(matchingMainProcess).map((row) => row.pid);
   if (!mains.length) return;
   const targets = [...descendantsOf(rows, mains)].filter((pid) => pid !== process.pid);
-  info(`Stopping existing ieeg-agent Electron process tree: ${targets.join(', ')}`);
+  info(`Stopping existing ${productName} process tree: ${targets.join(', ')}`);
   for (const pid of targets) {
     try { process.kill(pid, 'SIGTERM'); } catch {}
   }

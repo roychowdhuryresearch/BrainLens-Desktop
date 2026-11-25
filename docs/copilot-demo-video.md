@@ -1,6 +1,6 @@
 # Co-pilot demo video — story, shot list, narration & recording guide
 
-A repeatable, screen-recordable demo where a clinician **talks to the iEEG app's built-in AI co-pilot**
+A repeatable, screen-recordable demo where a clinician **talks to the built-in AI co-pilot in BrainLens Desktop**
 and it drives the whole UI — loading nothing fake, using the real model + real scientific backend on a
 real epilepsy recording.
 

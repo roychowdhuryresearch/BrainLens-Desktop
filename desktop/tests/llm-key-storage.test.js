@@ -8,6 +8,7 @@ import ts from 'typescript';
 const root = new URL('..', import.meta.url).pathname;
 let userDataPath = '';
 let decryptShouldReEncrypt = false;
+let decryptFails = false;
 let encryptionCount = 0;
 
 async function transpiledModule(path) {
@@ -34,6 +35,7 @@ async function loadLlmKey() {
         return Buffer.from(value, 'utf8');
       },
       decryptStringAsync: async (value) => {
+        if (decryptFails) throw new Error('Cannot decrypt this ciphertext');
         const shouldReEncrypt = decryptShouldReEncrypt;
         decryptShouldReEncrypt = false;
         return { result: Buffer.from(value).toString('utf8'), shouldReEncrypt };
@@ -66,6 +68,7 @@ function isolatedUserData(t) {
   const directory = mkdtempSync(join(tmpdir(), 'ieeg-llm-key-storage-'));
   userDataPath = directory;
   decryptShouldReEncrypt = false;
+  decryptFails = false;
   encryptionCount = 0;
   t.after(() => rmSync(directory, { recursive: true, force: true }));
   return directory;
@@ -136,3 +139,22 @@ test('profile ciphertext is rotated when safeStorage requests re-encryption', as
   assert.equal(profile.provider, 'openai');
   assert.equal(encryptionCount, beforeRotation + 1);
 });
+
+for (const file of ['llm-api-profiles.bin', 'llm-api-key.bin']) {
+  test(`unreadable ${file} shows the no-key state and preserves the ciphertext`, async (t) => {
+    const storage = await storagePromise;
+    const directory = isolatedUserData(t);
+    const ciphertext = Buffer.from([0x76, 0x31, 0x30, 0xff]);
+    const path = join(directory, file);
+    writeFileSync(path, ciphertext);
+    decryptFails = true;
+
+    const status = await storage.getStoredLlmProfileStatus();
+    assert.equal(status.hasKey, false);
+    assert.equal(status.activeHasKey, false);
+    assert.deepEqual(status.profiles, []);
+    assert.equal(await storage.getActiveStoredLlmProfile(), undefined);
+    assert.deepEqual(readFileSync(path), ciphertext);
+    assert.equal(encryptionCount, 0);
+  });
+}

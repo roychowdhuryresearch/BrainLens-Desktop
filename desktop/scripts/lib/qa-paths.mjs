@@ -1,9 +1,10 @@
 import { statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { productName } from './product-name.mjs';
 
 export const packagedAppPath = process.env.PYHFO_PACKAGED_APP
-  || fileURLToPath(new URL('../../artifacts/packaged-win/win-unpacked/iEEG.exe', import.meta.url));
+  || fileURLToPath(new URL(`../../../ieeg-release/win-unpacked/${productName}.exe`, import.meta.url));
 
 export function requiredRecording(...variables) {
   const variable = variables.find((name) => process.env[name]?.trim());

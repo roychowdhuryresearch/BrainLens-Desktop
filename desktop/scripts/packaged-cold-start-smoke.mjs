@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { performance } from 'node:perf_hooks';
 import { _electron as electron } from 'playwright';
+import { macBundleName, productName } from './lib/product-name.mjs';
 
 const desktopRoot = normalize(join(dirname(fileURLToPath(import.meta.url)), '..'));
 const outputPath = join(desktopRoot, 'artifacts/packaged-cold-start-smoke.json');
@@ -29,7 +30,7 @@ function fail(status, message, extra = {}) {
     status,
     message,
     required_env: 'PYHFO_PARITY_ELECTRON_APP',
-    command: 'PYHFO_PARITY_ELECTRON_APP=/path/to/iEEG.app node scripts/packaged-cold-start-smoke.mjs',
+    command: `PYHFO_PARITY_ELECTRON_APP="/path/to/${macBundleName}" node scripts/packaged-cold-start-smoke.mjs`,
     ...extra,
   });
   console.error(message);
@@ -85,7 +86,7 @@ const appPath = resolve(appPathRaw);
 if (!existsSync(appPath)) fail('missing_app', `Packaged Electron app path does not exist: ${appPath}`, { app_path: appPath });
 if (!statSync(appPath).isDirectory()) fail('not_directory', `Packaged Electron app path must be a directory: ${appPath}`, { app_path: appPath });
 
-const executablePath = join(appPath, 'Contents', 'MacOS', 'iEEG');
+const executablePath = join(appPath, 'Contents', 'MacOS', productName);
 if (!existsSync(executablePath)) fail('missing_executable', `Packaged app executable not found: ${executablePath}`, { app_path: appPath, executable_path: executablePath });
 
 const temp = tempWorkspace();
